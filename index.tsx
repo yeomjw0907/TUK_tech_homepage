@@ -562,6 +562,8 @@ const PopupOverlay = ({ popups, onClose }: { popups: Popup[], onClose: (id: numb
                              </div>
                         )}
                     </div>
+
+                    {/* Text content removed as requested */}
                     
                     {/* Footer */}
                     <div className="bg-slate-50 p-3 flex justify-between items-center text-xs border-t border-slate-100 mt-auto">
@@ -1925,132 +1927,6 @@ const InvestmentContent = ({ subPage }: { subPage: string }) => {
             </div>
         )
     }
-
-    if (subPage === 'fields') {
-         return (
-             <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                 <div className="grid md:grid-cols-3 gap-8">
-                    {[
-                        { icon: TrendingUp, title: "IT/SW", desc: "인공지능, 빅데이터, 클라우드, 사물인터넷 등 4차 산업혁명 핵심 기술 분야" },
-                        { icon: Target, title: "바이오/헬스케어", desc: "디지털 헬스케어, 의료기기, 바이오 소재 등 국민 건강 증진을 위한 혁신 기술" },
-                        { icon: Briefcase, title: "제조/소재/부품", desc: "첨단 제조 공정, 신소재, 고기능성 부품 등 산업 경쟁력 강화를 위한 기반 기술" }
-                    ].map((item, idx) => (
-                        <Card key={idx} className="text-center p-12 h-full flex flex-col items-center hover:border-blue-200 group">
-                            <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 text-[#003E7E] shadow-inner group-hover:scale-110 transition-transform duration-300">
-                                <item.icon className="w-10 h-10" />
-                            </div>
-                            <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">{item.title}</h3>
-                            <p className="text-slate-600 leading-relaxed text-lg tracking-tight">{item.desc}</p>
-                        </Card>
-                    ))}
-                 </div>
-                 
-                 <div className="bg-slate-50 rounded-3xl p-6 md:p-12 border border-slate-200 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-                    
-                    <div className="relative z-10">
-                        <SectionTitle title="투자 조합 운용 현황" subtitle="Investment Funds" />
-                        
-                        {/* Desktop Table View (Visible on LG and larger) */}
-                        <div className="hidden lg:block overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200">
-                            <table className="min-w-full text-sm text-left border-collapse">
-                                <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-xs">
-                                    <tr>
-                                        <th className="px-8 py-6 font-bold border-b border-slate-200 w-[35%]">구분</th>
-                                        <th className="px-6 py-6 font-bold border-b border-slate-200 text-center w-[15%]">소관부처</th>
-                                        <th className="px-6 py-6 font-bold border-b border-slate-200 text-right w-[15%]">결성규모</th>
-                                        <th className="px-6 py-6 font-bold border-b border-slate-200 text-center w-[10%]">진행현황</th>
-                                        <th className="px-8 py-6 font-bold border-b border-slate-200 text-right w-[25%]">운용기간</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-100">
-                                    {FUNDS_DATA.map((fund, idx) => (
-                                        <tr key={idx} className="group hover:bg-blue-50/30 transition-colors duration-200">
-                                            <td className="px-8 py-6 align-middle">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#003E7E] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-[#003E7E] group-hover:text-white transition-all duration-300 shadow-sm">
-                                                        <PieChart className="w-5 h-5" />
-                                                    </div>
-                                                    <span className="font-bold text-slate-800 text-base tracking-tight group-hover:text-[#003E7E] transition-colors">{fund.name}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-6 text-center align-middle">
-                                                <span className="inline-block px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
-                                                    {fund.agency.split('(')[0]}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-6 align-middle text-right">
-                                                <span className="font-extrabold text-[#003E7E] text-lg whitespace-nowrap">{fund.size}</span>
-                                            </td>
-                                            <td className="px-6 py-6 text-center align-middle">
-                                                <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold border border-emerald-100 shadow-sm whitespace-nowrap">
-                                                    <span className="relative flex h-2 w-2">
-                                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                                    </span>
-                                                    {fund.status}
-                                                </span>
-                                            </td>
-                                            <td className="px-8 py-6 text-slate-500 text-right font-mono text-sm tracking-tight align-middle whitespace-nowrap">
-                                                {fund.period}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* Mobile/Tablet Card View (Visible on smaller than LG) */}
-                        <div className="lg:hidden space-y-4">
-                            {FUNDS_DATA.map((fund, idx) => (
-                                <div key={idx} className="bg-white p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col gap-5 relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
-                                    
-                                    <div className="flex justify-between items-start gap-4 relative z-10">
-                                        <div className="flex items-center gap-3.5 w-full">
-                                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 to-white text-[#003E7E] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
-                                                <PieChart className="w-5 h-5" />
-                                            </div>
-                                            <div className="flex flex-col flex-grow min-w-0">
-                                                <h4 className="font-bold text-slate-900 text-lg leading-tight mb-1 pr-8 truncate">{fund.name}</h4>
-                                                <span className="text-xs font-bold text-slate-400 truncate">{fund.agency}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50">
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">결성규모</span>
-                                            <span className="text-xl font-black text-[#003E7E]">{fund.size}</span>
-                                        </div>
-                                        <div className="flex flex-col gap-1 items-end">
-                                            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">상태</span>
-                                            <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-emerald-100">
-                                                <span className="relative flex h-1.5 w-1.5">
-                                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                                                </span>
-                                                {fund.status}
-                                            </span>
-                                        </div>
-                                        <div className="col-span-2 flex flex-col gap-1 bg-slate-50 p-3 rounded-xl border border-slate-100 mt-1">
-                                            <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">운용기간</span>
-                                            <span className="text-sm font-mono text-slate-600 font-medium">{fund.period}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <p className="text-right text-slate-500 font-bold mt-8 flex justify-end items-center text-sm">
-                          <Briefcase className="w-4 h-4 mr-2 text-[#003E7E]" /> 총 <span className="text-[#003E7E] mx-1">6개</span> 투자조합 운용 중 / 총 <span className="text-[#003E7E] mx-1">113억원</span> 규모
-                        </p>
-                    </div>
-                 </div>
-             </div>
-         )
-     }
-
     return null;
 }
 
@@ -2485,8 +2361,8 @@ const App = () => {
                     <div className="relative z-10">
                         <SectionTitle title="투자 조합 운용 현황" subtitle="Investment Funds" />
                         
-                        {/* Desktop Table View (Visible on LG and larger) */}
-                        <div className="hidden lg:block overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200">
+                        {/* Desktop Table View */}
+                        <div className="hidden md:block overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200">
                             <table className="min-w-full text-sm text-left border-collapse">
                                 <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-xs">
                                     <tr>
@@ -2534,20 +2410,20 @@ const App = () => {
                             </table>
                         </div>
 
-                        {/* Mobile/Tablet Card View (Visible on smaller than LG) */}
-                        <div className="lg:hidden space-y-4">
+                        {/* Mobile Card View */}
+                        <div className="md:hidden space-y-4">
                             {FUNDS_DATA.map((fund, idx) => (
                                 <div key={idx} className="bg-white p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col gap-5 relative overflow-hidden">
                                     <div className="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
                                     
                                     <div className="flex justify-between items-start gap-4 relative z-10">
-                                        <div className="flex items-center gap-3.5 w-full">
+                                        <div className="flex items-center gap-3.5">
                                             <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 to-white text-[#003E7E] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
                                                 <PieChart className="w-5 h-5" />
                                             </div>
-                                            <div className="flex flex-col flex-grow min-w-0">
-                                                <h4 className="font-bold text-slate-900 text-lg leading-tight mb-1 pr-8 truncate">{fund.name}</h4>
-                                                <span className="text-xs font-bold text-slate-400 truncate">{fund.agency}</span>
+                                            <div className="flex flex-col">
+                                                <h4 className="font-bold text-slate-900 text-lg leading-tight mb-1 pr-8">{fund.name}</h4>
+                                                <span className="text-xs font-bold text-slate-400">{fund.agency}</span>
                                             </div>
                                         </div>
                                     </div>
