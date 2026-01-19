@@ -397,8 +397,8 @@ const App: React.FC = () => {
         }
 
         // About
-        if (activePage === 'about' && (activeSubPage === 'history' || activeSubPage === 'overview' || activeSubPage === 'location')) {
-            return <AboutContent subPage={activeSubPage} />;
+        if (activePage === 'about' && ['history', 'overview', 'location', 'ceo', 'vision', 'org'].includes(activeSubPage!)) {
+            return <AboutContent subPage={activeSubPage!} />;
         }
 
         if (activePage === 'about') {
@@ -406,7 +406,7 @@ const App: React.FC = () => {
         }
 
         // Investment
-        if (activePage === 'investment' && ['process', 'growth', 'tips'].includes(activeSubPage!)) {
+        if (activePage === 'investment' && ['process', 'growth', 'tips', 'fields', 'apply'].includes(activeSubPage!)) {
             return <InvestmentContent subPage={activeSubPage!} />;
         }
 

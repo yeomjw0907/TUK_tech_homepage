@@ -92,23 +92,29 @@ const SubsidiaryContent: React.FC<SubsidiaryContentProps> = ({ subPage }) => {
 
     if (subPage === 'support') {
         return (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[
-                    { title: "공간 지원", desc: "시흥비즈니스센터 및 교내 창업보육센터 입주 우대", icon: Building },
-                    { title: "R&D 연계", desc: "대학 교수진과의 공동 연구 및 기술 지도 매칭", icon: Lightbulb },
-                    { title: "정책 자금", desc: "정부 R&D 과제 및 정책 자금 수주 지원", icon: FileText },
-                    { title: "네트워킹", desc: "가족회사 및 동문 기업과의 비즈니스 네트워킹", icon: Users },
-                    { title: "홍보 마케팅", desc: "전시회 참가 및 언론 홍보 지원", icon: Presentation },
-                    { title: "법률/특허", desc: "전문가 자문단(법무, 세무, 특허) 매칭 지원", icon: Gavel }
-                ].map((item, i) => (
-                    <Card key={i} className="hover:border-blue-200 transition-colors">
-                        <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center text-slate-600 mb-4">
-                            <item.icon className="w-6 h-6" />
-                        </div>
-                        <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
-                        <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
-                    </Card>
-                ))}
+            <div className="space-y-12">
+                <div className="text-center max-w-3xl mx-auto">
+                    <h2 className="text-3xl font-black text-slate-900 mb-4">자회사 성장지원</h2>
+                    <p className="text-lg text-slate-500">한국공학대학교 기술지주회사는 자회사의 지속적인 성장을 위해 다양한 지원 프로그램을 운영합니다.</p>
+                </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {[
+                        { title: "공간 지원", desc: "시흥비즈니스센터 및 교내 창업보육센터 입주 우대", icon: Building, color: "bg-blue-50 text-blue-600" },
+                        { title: "R&D 연계", desc: "대학 교수진과의 공동 연구 및 기술 지도 매칭", icon: Lightbulb, color: "bg-amber-50 text-amber-600" },
+                        { title: "정책 자금", desc: "정부 R&D 과제 및 정책 자금 수주 지원", icon: FileText, color: "bg-green-50 text-green-600" },
+                        { title: "네트워킹", desc: "가족회사 및 동문 기업과의 비즈니스 네트워킹", icon: Users, color: "bg-purple-50 text-purple-600" },
+                        { title: "홍보 마케팅", desc: "전시회 참가 및 언론 홍보 지원", icon: Presentation, color: "bg-rose-50 text-rose-600" },
+                        { title: "법률/특허", desc: "전문가 자문단(법무, 세무, 특허) 매칭 지원", icon: Gavel, color: "bg-slate-100 text-slate-600" }
+                    ].map((item, i) => (
+                        <Card key={i} className="hover:border-blue-200 hover:-translate-y-1 transition-all">
+                            <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center mb-5`}>
+                                <item.icon className="w-7 h-7" />
+                            </div>
+                            <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                            <p className="text-slate-500 leading-relaxed">{item.desc}</p>
+                        </Card>
+                    ))}
+                </div>
             </div>
         );
     }

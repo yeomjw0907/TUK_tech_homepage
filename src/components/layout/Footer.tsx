@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Building, Lock } from 'lucide-react';
+import { ChevronDown, Lock } from 'lucide-react';
 
 interface FooterProps {
     onAdminLogin: () => void;
@@ -35,13 +35,11 @@ const Footer: React.FC<FooterProps> = ({ onAdminLogin }) => {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12 pb-12 border-b border-slate-800">
                     <div className="flex flex-col md:flex-row md:items-center gap-8 w-full md:w-auto">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-white text-slate-900 rounded-lg flex items-center justify-center">
-                                <Building className="w-6 h-6" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-white font-bold text-lg leading-none">한국공학대학교</span>
-                                <span className="text-slate-400 font-medium text-xs tracking-wider mt-1">기술지주회사</span>
-                            </div>
+                            <img
+                                src="/logo_white.svg"
+                                alt="한국공학대학교 기술지주회사"
+                                className="h-10 w-auto object-contain"
+                            />
                         </div>
                         <div className="flex flex-wrap gap-6 text-xs font-bold text-slate-400 md:ml-8">
                             <a href="#" className="hover:text-white transition-colors">개인정보취급방침</a>

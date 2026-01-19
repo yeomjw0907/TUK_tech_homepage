@@ -8,6 +8,51 @@ interface InvestmentContentProps {
 }
 
 const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
+    if (subPage === 'fields') {
+        return (
+            <div className="space-y-12">
+                <div className="text-center max-w-3xl mx-auto">
+                    <h2 className="text-3xl font-black text-slate-900 mb-4">투자 분야</h2>
+                    <p className="text-lg text-slate-500">미래 성장 가능성이 높은 기술 기반 스타트업에 집중 투자합니다.</p>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[
+                        { icon: "🤖", title: "AI / SW", desc: "인공지능, 빅데이터, 클라우드, SaaS 등 디지털 혁신 기술", highlight: true },
+                        { icon: "🧬", title: "바이오 / 헬스케어", desc: "신약 개발, 의료기기, 디지털 헬스케어 솔루션", highlight: false },
+                        { icon: "🔋", title: "친환경 / 에너지", desc: "신재생 에너지, 탄소중립 기술, 친환경 소재", highlight: false },
+                        { icon: "🏭", title: "스마트 제조", desc: "스마트 팩토리, 산업용 IoT, 로봇 자동화", highlight: false }
+                    ].map((item, i) => (
+                        <div key={i} className={`p-8 rounded-2xl border-2 transition-all hover:-translate-y-1 ${item.highlight ? 'bg-[#003E7E] text-white border-[#003E7E]' : 'bg-white border-slate-100 hover:border-[#003E7E]'}`}>
+                            <div className="text-4xl mb-4">{item.icon}</div>
+                            <h3 className={`text-xl font-bold mb-3 ${item.highlight ? 'text-white' : 'text-slate-900'}`}>{item.title}</h3>
+                            <p className={item.highlight ? 'text-blue-100' : 'text-slate-500'}>{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="bg-slate-50 rounded-3xl p-8 md:p-12">
+                    <h3 className="text-xl font-bold text-slate-900 mb-6 text-center">투자 기준</h3>
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                            { title: "기술성", desc: "혁신적이고 차별화된 원천 기술 보유" },
+                            { title: "시장성", desc: "명확한 타겟 시장과 성장 가능성" },
+                            { title: "팀 역량", desc: "실행력 있는 창업팀과 전문성" }
+                        ].map((item, i) => (
+                            <div key={i} className="text-center">
+                                <div className="w-12 h-12 bg-[#003E7E] text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg">
+                                    {i + 1}
+                                </div>
+                                <h4 className="font-bold text-slate-900 mb-2">{item.title}</h4>
+                                <p className="text-slate-600 text-sm">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (subPage === 'process') {
         return (
             <div className="max-w-5xl mx-auto">
@@ -97,6 +142,62 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                             <p className="text-slate-500 leading-relaxed">{item.desc}</p>
                         </div>
                     ))}
+                </div>
+            </div>
+        );
+    }
+
+    if (subPage === 'apply') {
+        return (
+            <div className="max-w-4xl mx-auto">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-black text-slate-900 mb-4">투자 신청</h2>
+                    <p className="text-lg text-slate-500">혁신적인 기술을 보유한 스타트업의 투자 상담을 환영합니다.</p>
+                </div>
+
+                <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12">
+                    <div className="space-y-8">
+                        <div className="bg-blue-50 rounded-2xl p-6 border border-blue-100">
+                            <h3 className="font-bold text-[#003E7E] mb-4">📋 투자 신청 전 확인사항</h3>
+                            <ul className="space-y-2 text-slate-600">
+                                <li className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
+                                    <span>기술 기반 스타트업 또는 예비 창업자</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
+                                    <span>혁신적인 기술 아이템 또는 원천 기술 보유</span>
+                                </li>
+                                <li className="flex items-start">
+                                    <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
+                                    <span>시장 성장 가능성 및 사업화 계획 보유</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="bg-slate-50 rounded-2xl p-6">
+                                <h4 className="font-bold text-slate-900 mb-3">📧 이메일 상담</h4>
+                                <p className="text-slate-600 text-sm mb-4">사업계획서를 첨부하여 이메일로 투자 상담을 신청하세요.</p>
+                                <a href="mailto:tuholdings@tukorea.ac.kr" className="text-[#003E7E] font-bold hover:underline">
+                                    tuholdings@tukorea.ac.kr
+                                </a>
+                            </div>
+                            <div className="bg-slate-50 rounded-2xl p-6">
+                                <h4 className="font-bold text-slate-900 mb-3">📞 전화 상담</h4>
+                                <p className="text-slate-600 text-sm mb-4">투자사업팀으로 직접 연락하시면 빠른 상담이 가능합니다.</p>
+                                <a href="tel:031-8041-0965" className="text-[#003E7E] font-bold hover:underline">
+                                    031-8041-0965
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="text-center pt-4">
+                            <p className="text-slate-500 text-sm">
+                                또는 <a href="#contact" className="text-[#003E7E] font-bold hover:underline">문의하기</a> 페이지를 통해 온라인으로 상담을 신청하실 수 있습니다.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

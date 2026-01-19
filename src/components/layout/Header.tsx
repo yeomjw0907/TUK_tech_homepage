@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, Building, ExternalLink } from 'lucide-react';
+import { Menu, X, ChevronDown, ExternalLink } from 'lucide-react';
 import { PageId } from '../../types';
 import { MENU_STRUCTURE } from '../../data/constants';
 
@@ -28,8 +28,8 @@ const Header: React.FC<HeaderProps> = ({ activePage, activeSubPage, onNavigate, 
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${isTransparent
-                    ? 'bg-transparent py-4'
-                    : 'bg-white/95 backdrop-blur-xl shadow-lg shadow-slate-200/40 border-b border-slate-200/60 py-2'
+                ? 'bg-transparent py-4'
+                : 'bg-white/95 backdrop-blur-xl shadow-lg shadow-slate-200/40 border-b border-slate-200/60 py-2'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,18 +38,11 @@ const Header: React.FC<HeaderProps> = ({ activePage, activeSubPage, onNavigate, 
                         className="flex items-center cursor-pointer group gap-3.5"
                         onClick={() => onNavigate('home')}
                     >
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center shadow-lg transition-colors duration-300 ${isTransparent
-                                ? 'bg-white text-[#003E7E]'
-                                : 'bg-[#003E7E] text-white shadow-blue-900/20 group-hover:bg-[#002952]'
-                            }`}>
-                            <Building className="w-6 h-6" />
-                        </div>
-                        <div className="flex flex-col justify-center">
-                            <span className={`font-black text-xl leading-none tracking-tight transition-colors duration-300 ${isTransparent ? 'text-white' : 'text-[#003E7E]'
-                                }`}>한국공학대학교</span>
-                            <span className={`text-[11px] font-bold tracking-[0.25em] mt-0.5 uppercase transition-colors duration-300 ${isTransparent ? 'text-blue-100' : 'text-slate-500'
-                                }`}>기술지주회사</span>
-                        </div>
+                        <img
+                            src={isTransparent ? "/logo_white.svg" : "/logo.svg"}
+                            alt="한국공학대학교 기술지주회사"
+                            className="h-12 w-auto object-contain"
+                        />
                     </div>
 
                     <nav className="hidden md:flex h-full items-center gap-2">
@@ -62,8 +55,8 @@ const Header: React.FC<HeaderProps> = ({ activePage, activeSubPage, onNavigate, 
                             >
                                 <button
                                     className={`relative px-5 py-2.5 text-[16px] transition-all duration-300 rounded-md ${activePage === item.id
-                                            ? 'font-bold'
-                                            : 'font-medium'
+                                        ? 'font-bold'
+                                        : 'font-medium'
                                         } ${isTransparent
                                             ? (activePage === item.id ? 'text-white' : 'text-white/80 hover:text-white')
                                             : (activePage === item.id ? 'text-[#003E7E]' : 'text-slate-600 hover:text-[#003E7E]')
@@ -72,8 +65,8 @@ const Header: React.FC<HeaderProps> = ({ activePage, activeSubPage, onNavigate, 
                                 >
                                     {item.label}
                                     <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 ${activePage === item.id
-                                            ? `opacity-100 scale-100 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'}`
-                                            : `opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'}`
+                                        ? `opacity-100 scale-100 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'}`
+                                        : `opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'}`
                                         }`}></span>
                                 </button>
 
@@ -102,8 +95,8 @@ const Header: React.FC<HeaderProps> = ({ activePage, activeSubPage, onNavigate, 
                         <div className={`h-5 w-px mx-5 transition-colors duration-300 ${isTransparent ? 'bg-white/30' : 'bg-slate-200'}`}></div>
 
                         <a href="https://bi.tukorea.ac.kr" target="_blank" rel="noreferrer" className={`flex items-center px-4 py-2 rounded-full text-xs font-bold border transition-all uppercase tracking-wide group ${isTransparent
-                                ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-[#003E7E]'
-                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-[#003E7E] hover:text-[#003E7E]'
+                            ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-[#003E7E]'
+                            : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-[#003E7E] hover:text-[#003E7E]'
                             }`}>
                             창업보육센터 <ExternalLink className="w-3 h-3 ml-1.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
@@ -111,8 +104,8 @@ const Header: React.FC<HeaderProps> = ({ activePage, activeSubPage, onNavigate, 
 
                     <button
                         className={`md:hidden p-2 transition-colors rounded-lg ${isTransparent
-                                ? 'text-white hover:bg-white/10'
-                                : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
+                            ? 'text-white hover:bg-white/10'
+                            : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
                             }`}
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     >

@@ -16,42 +16,61 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostClick, notices }) => {
     return (
         <div className="animate-in fade-in duration-500">
+            <style>{`
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                .animate-fade-in-up {
+                    animation: fadeInUp 0.8s ease-out forwards;
+                }
+            `}</style>
             {/* Hero Section */}
             <section className="relative bg-slate-900 text-white min-h-screen flex flex-col justify-center overflow-hidden">
                 <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center opacity-30"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-slate-900 to-transparent"></div>
+                    <div className="absolute inset-0 bg-[url('/hero_bg_abstract.png')] bg-cover bg-center opacity-60"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/20 to-slate-900"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 pt-20 pb-24 flex flex-col justify-center flex-grow">
-                    <div className="mb-10 flex items-center">
-                        <span className="bg-white/10 backdrop-blur-sm text-blue-200 text-xs font-bold px-4 py-2 rounded-full border border-white/20">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 flex flex-col justify-center items-center flex-grow text-center">
+                    <div className="mb-6 flex items-center animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s' }}>
+                        <span className="bg-white/5 backdrop-blur-md text-blue-100 text-xs font-bold px-4 py-2 rounded-full border border-white/10 shadow-lg tracking-wider uppercase">
                             대학 기술사업화의 선도적 파트너
                         </span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-10 leading-[0.9] tracking-tight">
+
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.1] tracking-tight animate-fade-in-up opacity-0" style={{ animationDelay: '0.2s' }}>
                         Turning<br />
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-white to-blue-200 bg-300%">
                             University Tech
                         </span><br />
-                        <span className="text-white/60">into Reality</span>
+                        <span className="text-white/40">into Reality</span>
                     </h1>
-                    <p className="text-xl md:text-2xl text-slate-300 max-w-2xl mb-16 leading-relaxed font-medium tracking-tight">
-                        한국공학대학교의 혁신적인 연구 성과를 발굴하고, <br className="hidden md:block" />
-                        성공적인 사업화를 통해 함께 성장합니다.
+
+                    <p className="text-lg md:text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed font-light tracking-wide animate-fade-in-up opacity-0 mx-auto" style={{ animationDelay: '0.3s' }}>
+                        한국공학대학교의 <span className="text-white font-medium">혁신적인 연구 성과</span>를 발굴하고,<br className="hidden md:block" />
+                        <span className="text-white font-medium">성공적인 사업화</span>를 통해 더 나은 미래를 만듭니다.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-5">
-                        <Button size="xl" onClick={() => onNavigate('investment', 'fields')}>
-                            투자 분야 살펴보기 <ArrowRight className="w-5 h-5 ml-2" />
+
+                    <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up opacity-0 items-center justify-center" style={{ animationDelay: '0.5s' }}>
+                        <Button size="lg" className="bg-[#003E7E] hover:bg-[#002e5e] text-white shadow-xl shadow-blue-900/20 border-0" onClick={() => onNavigate('investment', 'fields')}>
+                            투자 분야 살펴보기 <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
-                        <Button variant="outline" size="xl" onClick={() => onNavigate('contact')}>
+                        <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 hover:border-white/40 backdrop-blur-sm" onClick={() => onNavigate('contact')}>
                             투자 상담 신청
                         </Button>
                     </div>
                 </div>
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/40 animate-bounce">
-                    <ArrowDown className="w-7 h-7" />
+
+                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-white/20 animate-bounce duration-[2000ms]">
+                    <ArrowDown className="w-8 h-8" />
                 </div>
             </section>
 
