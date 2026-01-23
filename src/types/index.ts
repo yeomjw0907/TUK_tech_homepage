@@ -26,6 +26,12 @@ export interface Company {
   shortDesc?: string;
 }
 
+export interface PostFile {
+  name: string;
+  type?: string;
+  size?: number;
+}
+
 export interface Post {
   id: number;
   category: 'notice' | 'press' | 'resources' | 'faq';
@@ -36,7 +42,8 @@ export interface Post {
   content?: string;
   isNew?: boolean;
   fileType?: string;
-  fileName?: string;
+  fileName?: string; // 기존 호환성을 위해 유지
+  files?: PostFile[]; // 여러 파일 지원
 }
 
 export interface Inquiry {

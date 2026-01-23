@@ -3,7 +3,7 @@ import {
     Building, Bell, Layers, Inbox, LayoutDashboard,
     Settings, Home, LogOut, Plus, Trash2, Edit, Eye,
     Paperclip, HelpCircle, XCircle, Image as ImageIcon,
-    Phone, Mail
+    Phone, Mail, ArrowLeft
 } from 'lucide-react';
 import { Company, Post, Inquiry, Popup } from '../../types';
 import { Button, Modal } from '../common';
@@ -33,6 +33,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
     const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
     const [isPopupModalOpen, setIsPopupModalOpen] = useState(false);
+    
+    // Post editor mode: 'list' | 'edit' | null
+    const [postEditorMode, setPostEditorMode] = useState<'list' | 'edit' | null>(null);
 
     // State for viewing inquiry detail
     const [viewingInquiry, setViewingInquiry] = useState<Inquiry | null>(null);
@@ -51,7 +54,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
     });
 
     const [postFormData, setPostFormData] = useState<Partial<Post>>({
-        title: '', author: '관리자', content: '', category: 'notice', fileName: ''
+        title: '', author: '관리자', content: '', category: 'notice', files: []
     });
 
     const [popupFormData, setPopupFormData] = useState<Partial<Popup>>({
@@ -129,26 +132,41 @@ const AdminPage: React.FC<AdminPageProps> = ({
     };
 
     // Post Handlers
-    const openPostModal = (post?: Post) => {
+    const openPostEditor = (post?: Post) => {
         if (post) {
             setEditingId(post.id);
-            setPostFormData(post);
+            // 기존 fileName을 files 배열로 변환 (호환성)
+            const files = post.files || (post.fileName ? [{ name: post.fileName, type: post.fileType }] : []);
+            setPostFormData({ ...post, files });
         } else {
             setEditingId(null);
-            setPostFormData({ title: '', author: '관리자', content: '', category: 'notice', fileName: '' });
+            setPostFormData({ title: '', author: '관리자', content: '', category: 'notice', files: [] });
         }
-        setIsPostModalOpen(true);
+        setPostEditorMode('edit');
+    };
+
+    const closePostEditor = () => {
+        setPostEditorMode('list');
+        setEditingId(null);
+        setPostFormData({ title: '', author: '관리자', content: '', category: 'notice', files: [] });
     };
 
     const handleSavePost = () => {
         if (!postFormData.title) return alert("제목을 입력해주세요");
 
+        // files 배열을 기반으로 저장 (기존 fileName은 호환성을 위해 첫 번째 파일명으로 설정)
+        const saveData = {
+            ...postFormData,
+            fileName: postFormData.files && postFormData.files.length > 0 ? postFormData.files[0].name : undefined,
+            fileType: postFormData.files && postFormData.files.length > 0 ? postFormData.files[0].type : undefined,
+        };
+
         if (editingId) {
-            setPosts(posts.map(p => p.id === editingId ? { ...p, ...postFormData } as Post : p));
+            setPosts(posts.map(p => p.id === editingId ? { ...p, ...saveData } as Post : p));
         } else {
             const newId = Date.now();
             const newPost = {
-                ...postFormData,
+                ...saveData,
                 id: newId,
                 date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
                 isNew: true,
@@ -156,7 +174,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
             } as Post;
             setPosts([newPost, ...posts]);
         }
-        setIsPostModalOpen(false);
+        closePostEditor();
     };
 
     // Popup Handlers
@@ -189,13 +207,36 @@ const AdminPage: React.FC<AdminPageProps> = ({
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'post' | 'company_logo' | 'company_bg' | 'popup_img') => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            if (type === 'post') setPostFormData({ ...postFormData, fileName: file.name });
-            if (type === 'company_logo') setCompanyFormData({ ...companyFormData, logo: URL.createObjectURL(file) });
-            if (type === 'company_bg') setCompanyFormData({ ...companyFormData, bgImage: URL.createObjectURL(file) });
-            if (type === 'popup_img') setPopupFormData({ ...popupFormData, image: URL.createObjectURL(file) });
+        if (e.target.files) {
+            if (type === 'post') {
+                const newFiles = Array.from(e.target.files).map(file => ({
+                    name: file.name,
+                    type: file.type || file.name.split('.').pop()?.toUpperCase(),
+                    size: file.size
+                }));
+                const currentFiles = postFormData.files || [];
+                setPostFormData({ ...postFormData, files: [...currentFiles, ...newFiles] });
+            }
+            if (type === 'company_logo' && e.target.files[0]) {
+                const file = e.target.files[0];
+                setCompanyFormData({ ...companyFormData, logo: URL.createObjectURL(file) });
+            }
+            if (type === 'company_bg' && e.target.files[0]) {
+                const file = e.target.files[0];
+                setCompanyFormData({ ...companyFormData, bgImage: URL.createObjectURL(file) });
+            }
+            if (type === 'popup_img' && e.target.files[0]) {
+                const file = e.target.files[0];
+                setPopupFormData({ ...popupFormData, image: URL.createObjectURL(file) });
+            }
         }
+        // 파일 입력 초기화 (같은 파일 다시 선택 가능하도록)
+        e.target.value = '';
+    };
+
+    const removeFile = (index: number) => {
+        const currentFiles = postFormData.files || [];
+        setPostFormData({ ...postFormData, files: currentFiles.filter((_, i) => i !== index) });
     };
 
     const getFilteredPosts = () => {
@@ -325,7 +366,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                     </div>
                 )}
 
-                {activeTab === 'posts' && (
+                {activeTab === 'posts' && postEditorMode !== 'edit' && (
                     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center bg-slate-50 gap-4">
                             <h3 className="font-bold text-slate-700 flex items-center">게시글 목록 <span className="ml-2 text-xs font-normal text-slate-500">({getFilteredPosts().length})</span></h3>
@@ -341,7 +382,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                         </button>
                                     ))}
                                 </div>
-                                <Button size="sm" onClick={() => openPostModal()}><Plus className="w-4 h-4 mr-1" /> 글쓰기</Button>
+                                <Button size="sm" onClick={() => openPostEditor()}><Plus className="w-4 h-4 mr-1" /> 글쓰기</Button>
                             </div>
                         </div>
                         <div className="overflow-x-auto">
@@ -368,11 +409,20 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                             <td className="px-6 py-4 text-slate-600">{post.author}</td>
                                             <td className="px-6 py-4 text-slate-500">{post.date}</td>
                                             <td className="px-6 py-4 text-center">
-                                                {(post.fileName || post.fileType) && <Paperclip className="w-4 h-4 text-slate-400 mx-auto" />}
+                                                {(post.fileName || post.fileType || (post.files && post.files.length > 0)) && (
+                                                    <div className="flex items-center justify-center gap-1">
+                                                        <Paperclip className="w-4 h-4 text-slate-400" />
+                                                        {post.files && post.files.length > 1 && (
+                                                            <span className="text-xs text-slate-500 font-bold">
+                                                                {post.files.length}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <button onClick={() => openPostModal(post)} className="text-slate-400 hover:text-[#003E7E] transition-colors p-2">
+                                                    <button onClick={() => openPostEditor(post)} className="text-slate-400 hover:text-[#003E7E] transition-colors p-2">
                                                         <Edit className="w-4 h-4" />
                                                     </button>
                                                     <button onClick={() => deletePost(post.id)} className="text-slate-400 hover:text-red-600 transition-colors p-2">
@@ -384,6 +434,155 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                     ))}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                )}
+
+                {/* Post Editor Full Page */}
+                {activeTab === 'posts' && postEditorMode === 'edit' && (
+                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 min-h-[calc(100vh-200px)] flex flex-col">
+                        {/* Editor Header */}
+                        <div className="p-6 border-b border-slate-200 bg-slate-50 flex items-center justify-between sticky top-0 z-10">
+                            <div className="flex items-center gap-4">
+                                <button
+                                    onClick={closePostEditor}
+                                    className="text-slate-500 hover:text-slate-700 transition-colors p-2 hover:bg-white rounded-lg flex items-center gap-2"
+                                    title="목록으로 돌아가기"
+                                >
+                                    <ArrowLeft className="w-5 h-5" />
+                                    <span className="text-sm font-bold">목록으로</span>
+                                </button>
+                                <h3 className="font-bold text-xl text-slate-900">
+                                    {editingId ? '게시글 수정' : '게시글 작성'}
+                                </h3>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Button variant="ghost" onClick={closePostEditor} className="text-slate-600 hover:text-slate-800">
+                                    취소
+                                </Button>
+                                <Button onClick={handleSavePost} className="bg-[#003E7E] hover:bg-[#002d5c]">
+                                    {editingId ? '수정완료' : '작성완료'}
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Editor Content */}
+                        <div className="flex-grow p-8 overflow-y-auto">
+                            <div className="max-w-4xl mx-auto space-y-6">
+                                {/* Category Selection */}
+                                <div>
+                                    <label className={labelClass}>카테고리 *</label>
+                                    <select 
+                                        className={inputClass} 
+                                        value={postFormData.category} 
+                                        onChange={e => setPostFormData({ ...postFormData, category: e.target.value as 'notice' | 'press' | 'resources' | 'faq' })}
+                                    >
+                                        {POST_CATEGORIES.filter(c => c.id !== 'all').map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.label}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Title */}
+                                <div>
+                                    <label className={labelClass}>제목 *</label>
+                                    <input 
+                                        type="text" 
+                                        className={`${inputClass} text-2xl font-bold`} 
+                                        value={postFormData.title} 
+                                        onChange={e => setPostFormData({ ...postFormData, title: e.target.value })} 
+                                        placeholder="제목을 입력하세요" 
+                                    />
+                                </div>
+
+                                {/* Author */}
+                                <div>
+                                    <label className={labelClass}>작성자</label>
+                                    <input 
+                                        type="text" 
+                                        className={inputClass} 
+                                        value={postFormData.author} 
+                                        onChange={e => setPostFormData({ ...postFormData, author: e.target.value })} 
+                                        placeholder="작성자명"
+                                    />
+                                </div>
+
+                                {/* Content Editor */}
+                                <div>
+                                    <label className={labelClass}>내용 *</label>
+                                    <textarea 
+                                        rows={20} 
+                                        className={`${inputClass} font-mono text-base leading-relaxed resize-none`} 
+                                        value={postFormData.content} 
+                                        onChange={e => setPostFormData({ ...postFormData, content: e.target.value })} 
+                                        placeholder="내용을 입력하세요. 여러 줄 입력이 가능합니다."
+                                    />
+                                </div>
+
+                                {/* File Attachment */}
+                                <div className="border-t border-slate-200 pt-6">
+                                    <label className={labelClass}>첨부파일</label>
+                                    <div className="space-y-4">
+                                        <label className="cursor-pointer inline-flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-3 rounded-lg border border-slate-200 hover:bg-slate-200 transition-colors text-sm font-bold">
+                                            <Paperclip className="w-4 h-4" />
+                                            파일 선택 (여러 개 선택 가능)
+                                            <input 
+                                                type="file" 
+                                                className="hidden" 
+                                                onChange={(e) => handleFileChange(e, 'post')} 
+                                                multiple
+                                            />
+                                        </label>
+                                        
+                                        {/* 파일 목록 */}
+                                        {postFormData.files && postFormData.files.length > 0 && (
+                                            <div className="bg-slate-50 rounded-lg border border-slate-200 p-4 space-y-2">
+                                                <div className="text-xs font-bold text-slate-500 mb-2">
+                                                    첨부된 파일 ({postFormData.files.length}개)
+                                                </div>
+                                                {postFormData.files.map((file, index) => (
+                                                    <div 
+                                                        key={index}
+                                                        className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors group"
+                                                    >
+                                                        <div className="flex items-center gap-3 flex-grow min-w-0">
+                                                            <Paperclip className="w-4 h-4 text-slate-400 shrink-0" />
+                                                            <div className="flex-grow min-w-0">
+                                                                <div className="text-sm font-medium text-slate-800 truncate">
+                                                                    {file.name}
+                                                                </div>
+                                                                {file.size && (
+                                                                    <div className="text-xs text-slate-400 mt-0.5">
+                                                                        {(file.size / 1024).toFixed(1)} KB
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            {file.type && (
+                                                                <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-bold rounded border border-blue-100 shrink-0">
+                                                                    {file.type}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <button
+                                                            onClick={() => removeFile(index)}
+                                                            className="ml-3 text-slate-400 hover:text-red-600 transition-colors p-1 shrink-0"
+                                                            title="파일 제거"
+                                                        >
+                                                            <XCircle className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        
+                                        {(!postFormData.files || postFormData.files.length === 0) && (
+                                            <div className="text-sm text-slate-400 italic">
+                                                첨부된 파일이 없습니다.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -617,50 +816,6 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
             </Modal>
 
-            {/* Add/Edit Post Modal */}
-            <Modal isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} title={editingId ? "게시글 수정" : "게시글 작성"}>
-                <div className="space-y-5">
-                    <div>
-                        <label className={labelClass}>카테고리 *</label>
-                        <select className={inputClass} value={postFormData.category} onChange={e => setPostFormData({ ...postFormData, category: e.target.value as 'notice' | 'press' | 'resources' | 'faq' })}>
-                            {POST_CATEGORIES.filter(c => c.id !== 'all').map(cat => (
-                                <option key={cat.id} value={cat.id}>{cat.label}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className={labelClass}>제목 *</label>
-                        <input type="text" className={inputClass} value={postFormData.title} onChange={e => setPostFormData({ ...postFormData, title: e.target.value })} placeholder="제목을 입력하세요" />
-                    </div>
-                    <div>
-                        <label className={labelClass}>작성자</label>
-                        <input type="text" className={inputClass} value={postFormData.author} onChange={e => setPostFormData({ ...postFormData, author: e.target.value })} />
-                    </div>
-                    <div>
-                        <label className={labelClass}>내용 *</label>
-                        <textarea rows={8} className={inputClass} value={postFormData.content} onChange={e => setPostFormData({ ...postFormData, content: e.target.value })} placeholder="내용을 입력하세요"></textarea>
-                    </div>
-                    <div>
-                        <label className={labelClass}>첨부파일</label>
-                        <div className="flex items-center gap-3">
-                            <label className="cursor-pointer bg-slate-100 text-slate-600 px-4 py-2 rounded-lg border border-slate-200 hover:bg-slate-200 transition-colors text-sm font-bold flex items-center shrink-0">
-                                <Paperclip className="w-4 h-4 mr-2" />
-                                파일 선택
-                                <input type="file" className="hidden" onChange={(e) => handleFileChange(e, 'post')} />
-                            </label>
-                            <div className="flex items-center gap-2 overflow-hidden">
-                                <span className="text-sm text-slate-500 truncate">{postFormData.fileName || "선택된 파일 없음"}</span>
-                                {postFormData.fileName && (
-                                    <button onClick={() => setPostFormData({ ...postFormData, fileName: '' })} className="text-red-500 hover:text-red-700">
-                                        <XCircle className="w-4 h-4" />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <Button className="w-full mt-4" onClick={handleSavePost}>{editingId ? '수정완료' : '작성완료'}</Button>
-                </div>
-            </Modal>
 
             {/* Add/Edit Popup Modal */}
             <Modal isOpen={isPopupModalOpen} onClose={() => setIsPopupModalOpen(false)} title={editingId ? "팝업 수정" : "팝업 추가"}>

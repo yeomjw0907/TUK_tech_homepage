@@ -33,8 +33,8 @@ const CompanyDetail: React.FC<CompanyDetailProps> = ({ company, onBack }) => {
                             )}
                         </div>
                         <div className="mb-4 text-white">
-                            <h1 className="text-4xl font-black mb-2 shadow-sm">{company.name}</h1>
-                            <p className="text-lg opacity-90 font-medium">{company.shortDesc || company.business}</p>
+                            <h1 className="text-2xl md:text-3xl font-black mb-2 shadow-sm">{company.name}</h1>
+                            <p className="text-base md:text-lg opacity-90 font-medium">{company.shortDesc || company.business}</p>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ const CompanyDetail: React.FC<CompanyDetailProps> = ({ company, onBack }) => {
                                 </span>
                                 {company.isTips && <span className="px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-indigo-50 text-indigo-600">TIPS</span>}
                             </div>
-                            <p className="text-xl text-slate-500 font-medium">{company.business}</p>
+                            <p className="text-base md:text-lg text-slate-500 font-medium">{company.business}</p>
                         </div>
                         {company.homepage && (
                             <a href={company.homepage} target="_blank" rel="noreferrer" className="flex items-center justify-center w-12 h-12 bg-slate-50 hover:bg-[#003E7E] hover:text-white rounded-full transition-all text-slate-400 border border-slate-100">

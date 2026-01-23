@@ -29,7 +29,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
 
             <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
                 <div className="p-8 md:p-10 border-b border-slate-100 bg-slate-50/30">
-                    <h1 className="text-3xl font-black text-slate-900 mb-6 leading-tight tracking-tight">{post.title}</h1>
+                    <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-6 leading-tight tracking-tight">{post.title}</h1>
                     <div className="flex flex-wrap gap-y-2 text-sm text-slate-500 font-medium">
                         <div className="flex items-center mr-6">
                             <User className="w-4 h-4 mr-2 text-slate-400" /> {post.author || '관리자'}
@@ -49,17 +49,47 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
                     </div>
                 </div>
 
-                {(post.fileName || post.fileType) && (
+                {((post.files && post.files.length > 0) || post.fileName || post.fileType) && (
                     <div className="bg-slate-50 p-6 md:p-8 border-t border-slate-100">
-                        <h4 className="font-bold text-slate-900 mb-4 flex items-center"><Paperclip className="w-4 h-4 mr-2 text-[#003E7E]" /> 첨부파일</h4>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center p-3 bg-white border border-slate-200 rounded-lg hover:border-[#003E7E] cursor-pointer transition-colors group">
-                                <FileIcon className="w-5 h-5 text-slate-400 group-hover:text-[#003E7E] mr-3" />
-                                <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 flex-grow truncate">
-                                    {post.fileName || `${post.title} 관련 첨부파일.${post.fileType?.toLowerCase() || 'pdf'}`}
+                        <h4 className="font-bold text-slate-900 mb-4 flex items-center">
+                            <Paperclip className="w-4 h-4 mr-2 text-[#003E7E]" /> 
+                            첨부파일
+                            {post.files && post.files.length > 1 && (
+                                <span className="ml-2 text-sm font-normal text-slate-500">
+                                    ({post.files.length}개)
                                 </span>
-                                <Download className="w-4 h-4 text-slate-300 group-hover:text-[#003E7E]" />
-                            </div>
+                            )}
+                        </h4>
+                        <div className="flex flex-col gap-2">
+                            {/* 여러 파일 표시 */}
+                            {post.files && post.files.length > 0 ? (
+                                post.files.map((file, index) => (
+                                    <div 
+                                        key={index}
+                                        className="flex items-center p-3 bg-white border border-slate-200 rounded-lg hover:border-[#003E7E] cursor-pointer transition-colors group"
+                                    >
+                                        <FileIcon className="w-5 h-5 text-slate-400 group-hover:text-[#003E7E] mr-3 shrink-0" />
+                                        <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 flex-grow truncate">
+                                            {file.name}
+                                        </span>
+                                        {file.type && (
+                                            <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-bold rounded border border-blue-100 mr-2 shrink-0">
+                                                {file.type}
+                                            </span>
+                                        )}
+                                        <Download className="w-4 h-4 text-slate-300 group-hover:text-[#003E7E] shrink-0" />
+                                    </div>
+                                ))
+                            ) : (
+                                // 기존 단일 파일 호환성
+                                <div className="flex items-center p-3 bg-white border border-slate-200 rounded-lg hover:border-[#003E7E] cursor-pointer transition-colors group">
+                                    <FileIcon className="w-5 h-5 text-slate-400 group-hover:text-[#003E7E] mr-3" />
+                                    <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 flex-grow truncate">
+                                        {post.fileName || `${post.title} 관련 첨부파일.${post.fileType?.toLowerCase() || 'pdf'}`}
+                                    </span>
+                                    <Download className="w-4 h-4 text-slate-300 group-hover:text-[#003E7E]" />
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

@@ -46,7 +46,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                         </span>
                     </div>
 
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.1] tracking-tight animate-fade-in-up opacity-0" style={{ animationDelay: '0.2s' }}>
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-[1.1] tracking-tight animate-fade-in-up opacity-0" style={{ animationDelay: '0.2s' }}>
                         Turning<br />
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 via-white to-blue-200 bg-300%">
                             University Tech
@@ -54,7 +54,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                         <span className="text-white/40">into Reality</span>
                     </h1>
 
-                    <p className="text-lg md:text-xl text-slate-300 max-w-2xl mb-10 leading-relaxed font-light tracking-wide animate-fade-in-up opacity-0 mx-auto" style={{ animationDelay: '0.3s' }}>
+                    <p className="text-base md:text-lg text-slate-300 max-w-2xl mb-10 leading-relaxed font-light tracking-wide animate-fade-in-up opacity-0 mx-auto" style={{ animationDelay: '0.3s' }}>
                         한국공학대학교의 <span className="text-white font-medium">혁신적인 연구 성과</span>를 발굴하고,<br className="hidden md:block" />
                         <span className="text-white font-medium">성공적인 사업화</span>를 통해 더 나은 미래를 만듭니다.
                     </p>
@@ -88,8 +88,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                                 <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-5 text-[#003E7E] group-hover:scale-110 group-hover:bg-[#003E7E] group-hover:text-white transition-all duration-300">
                                     <item.icon className="w-7 h-7" />
                                 </div>
-                                <div className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight mb-2">{item.value}</div>
-                                <div className="text-sm text-slate-500 font-bold tracking-tight">{item.label}</div>
+                                <div className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-2">{item.value}</div>
+                                <div className="text-xs md:text-sm text-slate-500 font-bold tracking-tight">{item.label}</div>
                             </div>
                         ))}
                     </div>
@@ -101,7 +101,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="text-center mb-16">
                         <span className="text-[#3B82F6] font-bold tracking-widest text-xs uppercase block mb-3">Investment Focus</span>
-                        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-6">주요 투자분야</h2>
+                        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight mb-6">주요 투자분야</h2>
                         <div className="w-16 h-1.5 bg-[#003E7E] mx-auto rounded-full"></div>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -115,8 +115,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                                 <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-[#003E7E] mb-6">
                                     <item.icon className="w-7 h-7" />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                                <p className="text-slate-600 leading-relaxed">{item.desc}</p>
+                                <h3 className="text-lg font-bold text-slate-900 mb-3">{item.title}</h3>
+                                <p className="text-sm text-slate-600 leading-relaxed">{item.desc}</p>
                             </Card>
                         ))}
                     </div>
@@ -132,7 +132,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                     <div className="flex justify-between items-end mb-12">
                         <div>
                             <span className="text-[#3B82F6] font-bold tracking-widest text-xs uppercase block mb-3">News & Notice</span>
-                            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">회사 소식</h2>
+                            <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">회사 소식</h2>
                         </div>
                         <button onClick={() => onNavigate('news', 'notice')} className="text-slate-500 font-bold hover:text-[#003E7E] flex items-center transition-colors">
                             전체보기 <ArrowRight className="w-4 h-4 ml-2" />
@@ -147,8 +147,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                                         {notice.date}
                                     </div>
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-[#003E7E] transition-colors line-clamp-2">{notice.title}</h3>
-                                <p className="text-slate-500 line-clamp-2 text-sm leading-relaxed">{notice.content?.slice(0, 100)}...</p>
+                                <h3 className="text-lg font-bold text-slate-900 mb-3 group-hover:text-[#003E7E] transition-colors line-clamp-2">{notice.title}</h3>
+                                <p className="text-slate-500 line-clamp-2 text-xs md:text-sm leading-relaxed">{notice.content?.slice(0, 100)}...</p>
                             </div>
                         ))}
                     </div>

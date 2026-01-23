@@ -42,6 +42,15 @@ const App: React.FC = () => {
     const handleNavigate = (page: PageId, subPage?: string) => {
         setIsLoading(true);
         setActivePage(page);
+        
+        // 서브페이지가 지정되지 않았고, 메뉴에 서브아이템이 있으면 첫 번째 서브아이템을 기본값으로 설정
+        if (!subPage) {
+            const menuItem = MENU_STRUCTURE.find(item => item.id === page);
+            if (menuItem?.subItems && menuItem.subItems.length > 0) {
+                subPage = menuItem.subItems[0].id;
+            }
+        }
+        
         setActiveSubPage(subPage);
         setSelectedCompany(null);
         setSelectedPost(null);
@@ -406,7 +415,7 @@ const App: React.FC = () => {
         }
 
         // Investment
-        if (activePage === 'investment' && ['process', 'growth', 'tips', 'fields', 'apply'].includes(activeSubPage!)) {
+        if (activePage === 'investment' && ['process', 'growth', 'tips', 'fields', 'portfolio', 'apply'].includes(activeSubPage!)) {
             return <InvestmentContent subPage={activeSubPage!} />;
         }
 
@@ -417,7 +426,7 @@ const App: React.FC = () => {
 
         // Contact
         if (activePage === 'contact') {
-            return <ContactForm onSubmit={handleInquirySubmit} />;
+            return <ContactForm onSubmit={handleInquirySubmit} subPage={activeSubPage || 'general'} />;
         }
 
         // Default Empty State
@@ -438,7 +447,16 @@ const App: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-[#003E7E] selection:text-white flex flex-col antialiased">
-            <Header activePage={activePage} activeSubPage={activeSubPage} onNavigate={handleNavigate} hasHero={hasHero} />
+            <Header 
+                activePage={activePage} 
+                activeSubPage={activeSubPage} 
+                onNavigate={handleNavigate} 
+                hasHero={hasHero}
+                posts={posts}
+                companies={companies}
+                onPostClick={handlePostClick}
+                onCompanyClick={handleCompanyClick}
+            />
 
             <main className={`flex-grow ${hasHero && activePage !== 'admin' ? '' : 'pt-20'}`}>
                 {renderContent()}

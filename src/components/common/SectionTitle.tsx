@@ -12,7 +12,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({ title, subtitle }) => (
                 {subtitle}
             </span>
         )}
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
             {title}
         </h2>
         <div className="w-16 h-1.5 bg-[#003E7E] mx-auto rounded-full"></div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lightbulb, Rocket, TrendingUp, MapPin } from 'lucide-react';
+import { Lightbulb, Rocket, TrendingUp, MapPin, Target, Building2, Users, Briefcase, Award, CheckCircle, Sparkles } from 'lucide-react';
 import { Card, Button } from '../common';
 import { HISTORY_DATA } from '../../data/constants';
 
@@ -40,31 +40,146 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
 
     if (subPage === 'overview') {
         return (
-            <div className="space-y-24">
-                <div className="text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-bold text-slate-900 mb-6 flex flex-col items-center gap-4">
-                        <span>기술이 가치를 만나는 곳,</span>
+            <div className="space-y-20">
+                {/* 헤더 */}
+                <div className="text-center max-w-4xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-6 flex flex-col items-center gap-4">
+                        <span className="bg-gradient-to-r from-[#003E7E] to-indigo-600 bg-clip-text text-transparent">About Us</span>
                         <img src="/logo.svg" alt="한국공학대학교 기술지주회사" className="h-16 w-auto object-contain mt-2" />
                     </h2>
-                    <p className="text-lg text-slate-600 leading-relaxed">
+                    <p className="text-base md:text-lg text-slate-700 leading-relaxed font-medium">
                         대학이 보유한 우수한 연구성과를 발굴하고, <br className="hidden md:block" />
                         직접 사업화를 통해 기술창업 활성화와 국가 산업 발전에 기여합니다.
                     </p>
                 </div>
-                <div className="grid md:grid-cols-3 gap-8">
-                    {[
-                        { icon: Lightbulb, title: "기술발굴", desc: "대학 내 우수 연구성과 및 유망기술 발굴" },
-                        { icon: Rocket, title: "직접사업화", desc: "자회사 설립 및 육성을 통한 기술 사업화" },
-                        { icon: TrendingUp, title: "수익창출", desc: "기술사업화 수익의 연구개발 재투자 선순환" }
-                    ].map((item, i) => (
-                        <Card key={i} className="text-center h-full">
-                            <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#003E7E]">
-                                <item.icon className="w-8 h-8" />
+
+                {/* 설립 목적 */}
+                <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-3xl -z-10"></div>
+                    <div className="bg-white rounded-3xl border-2 border-slate-200 shadow-xl overflow-hidden">
+                        <div className="relative bg-gradient-to-r from-[#003E7E] via-[#004a8f] to-indigo-700 p-8 md:p-12 text-white">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30">
+                                        <Target className="w-8 h-8" />
+                                    </div>
+                                    <h3 className="text-2xl md:text-3xl font-black">설립 목적</h3>
+                                </div>
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                            <p className="text-slate-600">{item.desc}</p>
-                        </Card>
-                    ))}
+                        </div>
+                        <div className="p-8 md:p-12 space-y-6">
+                            <div className="grid md:grid-cols-3 gap-6">
+                                {[
+                                    {
+                                        icon: Lightbulb,
+                                        title: "산학협력기반 투자 활성화",
+                                        desc: "대학의 혁신 기술과 비즈니스 아이디어를 발굴하여 창업으로 연계하고, 교원·학생 창업은 물론 외부 창업기업에도 투자와 집중 보육을 제공"
+                                    },
+                                    {
+                                        icon: Rocket,
+                                        title: "직접 기술 사업화 실행",
+                                        desc: "한국공학대학교가 보유한 우수한 기술을 활용하여 유망 스타트업을 대상으로 자회사 설립 또는 편입을 통한 직접 기술 사업화 실행"
+                                    },
+                                    {
+                                        icon: TrendingUp,
+                                        title: "재투자 실현",
+                                        desc: "자회사의 성장을 통한 투자 수익으로 연구개발 및 연구역량 제고를 위한 재투자 실현"
+                                    }
+                                ].map((item, i) => (
+                                    <div key={i} className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-6 border-2 border-slate-200 hover:border-[#003E7E] transition-colors h-full">
+                                        <div className="w-14 h-14 bg-[#003E7E] text-white rounded-xl flex items-center justify-center mb-4">
+                                            <item.icon className="w-7 h-7" />
+                                        </div>
+                                        <h4 className="text-lg font-black text-slate-900 mb-3">{item.title}</h4>
+                                        <p className="text-slate-700 leading-relaxed text-sm">{item.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 핵심 기능 및 주요 사업 영역 */}
+                <div className="space-y-12">
+                    <div className="text-center max-w-3xl mx-auto">
+                        <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4">핵심 기능 및 주요 사업 영역</h3>
+                        <p className="text-base md:text-lg text-slate-600">기술사업화를 위한 전문적인 서비스와 프로그램을 제공합니다</p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {[
+                            {
+                                icon: Building2,
+                                title: "유망 벤처기업 발굴 및 육성",
+                                desc: "기술사업화 투자를 위한 유망 벤처기업의 발굴 및 육성",
+                                color: "from-blue-50 to-blue-100",
+                                iconColor: "bg-blue-600"
+                            },
+                            {
+                                icon: Briefcase,
+                                title: "투자조합 결성 및 운용",
+                                desc: "개인투자조합 및 벤처투자조합 결성과 운용",
+                                color: "from-indigo-50 to-indigo-100",
+                                iconColor: "bg-indigo-600"
+                            },
+                            {
+                                icon: Users,
+                                title: "창업보육센터 운영",
+                                desc: "인큐베이팅 & 액셀러레이팅 창업보육센터 운영",
+                                color: "from-purple-50 to-purple-100",
+                                iconColor: "bg-purple-600"
+                            },
+                            {
+                                icon: Award,
+                                title: "TU-RN Up & TIPS 프로그램",
+                                desc: "TU-RN Up과 TIPS 프로그램 운영을 통한 체계적인 성장 지원",
+                                color: "from-pink-50 to-pink-100",
+                                iconColor: "bg-pink-600"
+                            }
+                        ].map((item, i) => (
+                            <div key={i} className="group bg-white rounded-2xl border-2 border-slate-200 shadow-lg hover:shadow-xl hover:border-[#003E7E] transition-all duration-300 overflow-hidden">
+                                <div className={`bg-gradient-to-br ${item.color} p-6 border-b-2 border-slate-200`}>
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-16 h-16 ${item.iconColor} text-white rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                                            <item.icon className="w-8 h-8" />
+                                        </div>
+                                        <h4 className="text-lg md:text-xl font-black text-slate-900 flex-grow">{item.title}</h4>
+                                    </div>
+                                </div>
+                                <div className="p-6">
+                                    <p className="text-sm text-slate-700 leading-relaxed">{item.desc}</p>
+                                    {i === 3 && (
+                                        <div className="mt-4 pt-4 border-t border-slate-200">
+                                            <p className="text-xs text-slate-500 leading-relaxed">
+                                                <strong className="text-[#003E7E]">TU-RN Up 프로그램</strong>: 자회사 설립이나 기술사업화를 통한 신사업 발굴을 목표로하는 벤처기업들을 위해 필요한 비즈니스 모델 수립과 Scale Up에 필요한 성장 지원활동에 대한 당사 독자적인 컴퍼니 빌딩 및 프로그램
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* 핵심 가치 */}
+                <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl p-8 md:p-12">
+                    <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-8 text-center">핵심 가치</h3>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            { icon: Lightbulb, title: "기술발굴", desc: "대학 내 우수 연구성과 및 유망기술 발굴" },
+                            { icon: Rocket, title: "직접사업화", desc: "자회사 설립 및 육성을 통한 기술 사업화" },
+                            { icon: TrendingUp, title: "수익창출", desc: "기술사업화 수익의 연구개발 재투자 선순환" }
+                        ].map((item, i) => (
+                            <div key={i} className="bg-white rounded-2xl p-6 border-2 border-slate-200 text-center hover:border-[#003E7E] transition-colors">
+                                <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-[#003E7E]">
+                                    <item.icon className="w-8 h-8" />
+                                </div>
+                                <h4 className="text-xl font-black text-slate-900 mb-2">{item.title}</h4>
+                                <p className="text-slate-600 text-sm">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
@@ -95,12 +210,12 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                                 <div className="text-5xl">👨‍💼</div>
                             </div>
                             <h3 className="text-xl font-bold">대표이사</h3>
-                            <p className="text-blue-200 font-medium">김 성 호</p>
+                            <p className="text-blue-200 font-medium">정인호</p>
                         </div>
                         <div className="md:w-2/3 p-8 md:p-12">
-                            <h2 className="text-2xl font-black text-slate-900 mb-6">CEO 인사말</h2>
+                            <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-6">CEO 인사말</h2>
                             <div className="space-y-4 text-slate-600 leading-relaxed">
-                                <p>안녕하십니까,<br />한국공학대학교 기술지주회사 대표이사 김성호입니다.</p>
+                                <p>안녕하십니까,<br />한국공학대학교 기술지주회사 대표이사 정인호입니다.</p>
                                 <p>저희 기술지주회사는 한국공학대학교의 우수한 연구 성과를 발굴하고, 이를 성공적으로 사업화하여 대학과 사회가 함께 성장하는 선순환 구조를 만들어 나가고 있습니다.</p>
                                 <p>급변하는 기술 환경 속에서 대학이 보유한 원천 기술은 그 어느 때보다 큰 가치를 지니고 있습니다. 저희는 이러한 기술들이 실제 산업 현장에서 꽃피울 수 있도록 투자, 보육, 네트워킹 등 전방위적인 지원을 아끼지 않겠습니다.</p>
                                 <p>앞으로도 기술 기반 창업 생태계 활성화에 앞장서며, 대한민국 산업 발전에 기여하는 기술지주회사가 되겠습니다.</p>
@@ -117,16 +232,16 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
         return (
             <div className="space-y-16">
                 <div className="text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-black text-slate-900 mb-4">비전 & 미션</h2>
-                    <p className="text-lg text-slate-500">대학 기술의 가치를 극대화하고, 지속 가능한 혁신 생태계를 구축합니다.</p>
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-4">비전 & 미션</h2>
+                    <p className="text-base md:text-lg text-slate-500">대학 기술의 가치를 극대화하고, 지속 가능한 혁신 생태계를 구축합니다.</p>
                 </div>
 
                 <div className="bg-gradient-to-br from-[#003E7E] to-[#002e5e] rounded-3xl p-12 md:p-16 text-center text-white">
                     <p className="text-blue-200 font-bold uppercase tracking-widest text-sm mb-4">VISION</p>
-                    <h3 className="text-3xl md:text-4xl font-black mb-6 leading-tight">
+                    <h3 className="text-2xl md:text-3xl font-black mb-6 leading-tight">
                         "기술이 가치를 만나는 곳,<br />함께 성장하는 미래"
                     </h3>
-                    <p className="text-blue-100 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-base md:text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
                         대학의 혁신적인 연구 성과를 사업화하여 기술 창업 생태계를 활성화하고,<br className="hidden md:block" />
                         대학-기업-사회가 상생하는 선순환 구조를 만들어 갑니다.
                     </p>
@@ -140,8 +255,8 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                     ].map((item, i) => (
                         <Card key={i} className="text-center h-full">
                             <div className="text-4xl mb-4">{item.icon}</div>
-                            <h4 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h4>
-                            <p className="text-slate-600">{item.desc}</p>
+                            <h4 className="text-lg font-bold text-slate-900 mb-3">{item.title}</h4>
+                            <p className="text-sm text-slate-600">{item.desc}</p>
                         </Card>
                     ))}
                 </div>
@@ -150,12 +265,12 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                     <p className="text-[#003E7E] font-bold uppercase tracking-widest text-sm mb-4 text-center">MISSION</p>
                     <div className="grid md:grid-cols-2 gap-8">
                         <div className="bg-white rounded-2xl p-8 border border-slate-100">
-                            <h4 className="font-bold text-lg text-slate-900 mb-3">기술사업화 전문기관</h4>
-                            <p className="text-slate-600">대학 보유 기술의 사업화를 위한 전문적인 투자, 보육, 컨설팅 서비스를 제공합니다.</p>
+                            <h4 className="font-bold text-base md:text-lg text-slate-900 mb-3">기술사업화 전문기관</h4>
+                            <p className="text-sm text-slate-600">대학 보유 기술의 사업화를 위한 전문적인 투자, 보육, 컨설팅 서비스를 제공합니다.</p>
                         </div>
                         <div className="bg-white rounded-2xl p-8 border border-slate-100">
-                            <h4 className="font-bold text-lg text-slate-900 mb-3">창업 생태계 허브</h4>
-                            <p className="text-slate-600">예비 창업자, 스타트업, 투자자를 연결하는 네트워크 플랫폼 역할을 수행합니다.</p>
+                            <h4 className="font-bold text-base md:text-lg text-slate-900 mb-3">창업 생태계 허브</h4>
+                            <p className="text-sm text-slate-600">예비 창업자, 스타트업, 투자자를 연결하는 네트워크 플랫폼 역할을 수행합니다.</p>
                         </div>
                     </div>
                 </div>
@@ -167,8 +282,8 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
         return (
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-black text-slate-900 mb-4">조직도</h2>
-                    <p className="text-slate-500">효율적인 기술사업화를 위한 전문 조직 체계</p>
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-4">조직도</h2>
+                    <p className="text-sm md:text-base text-slate-500">효율적인 기술사업화를 위한 전문 조직 체계</p>
                 </div>
 
                 <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 md:p-12">

@@ -22,6 +22,7 @@ export const MENU_STRUCTURE: MenuItem[] = [
             { id: 'process', label: '투자프로세스' },
             { id: 'growth', label: '성장지원(TU-RN Up)' },
             { id: 'tips', label: 'TIPS 프로그램' },
+            { id: 'portfolio', label: '투자 포트폴리오' },
             { id: 'apply', label: 'Apply' },
         ]
     },
@@ -53,7 +54,14 @@ export const MENU_STRUCTURE: MenuItem[] = [
             { id: 'faq', label: 'FAQ' },
         ]
     },
-    { id: 'contact', label: '문의하기' },
+    {
+        id: 'contact',
+        label: '문의하기',
+        subItems: [
+            { id: 'general', label: '일반문의' },
+            { id: 'tips', label: 'TIPS 지원하기' },
+        ]
+    },
 ];
 
 // Investment Funds Data
