@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense, Component, ReactNode } from 'react';
 import {
     Building, Bell, Layers, Inbox, LayoutDashboard,
     Settings, Home, LogOut, Plus, Trash2, Edit, Eye,
@@ -7,6 +7,31 @@ import {
 } from 'lucide-react';
 import { Company, Post, Inquiry, Popup } from '../../types';
 import { Button, Modal } from '../common';
+
+const RichTextEditor = lazy(() => import('../common/RichTextEditor'));
+
+// 에러 바운더리 컴포넌트
+class ErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode }, { hasError: boolean }> {
+    constructor(props: { children: ReactNode; fallback: ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+        console.error('RichTextEditor Error:', error, errorInfo);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return this.props.fallback;
+        }
+        return this.props.children;
+    }
+}
 
 interface AdminPageProps {
     companies: Company[];
@@ -510,13 +535,29 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 {/* Content Editor */}
                                 <div>
                                     <label className={labelClass}>내용 *</label>
-                                    <textarea 
-                                        rows={20} 
-                                        className={`${inputClass} font-mono text-base leading-relaxed resize-none`} 
-                                        value={postFormData.content} 
-                                        onChange={e => setPostFormData({ ...postFormData, content: e.target.value })} 
-                                        placeholder="내용을 입력하세요. 여러 줄 입력이 가능합니다."
-                                    />
+                                    <Suspense fallback={
+                                        <div className="border border-slate-300 rounded-xl p-8 text-center text-slate-500 min-h-[400px] flex items-center justify-center bg-slate-50">
+                                            <div>
+                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003E7E] mx-auto mb-2"></div>
+                                                <p>에디터를 로드하는 중...</p>
+                                            </div>
+                                        </div>
+                                    }>
+                                        <ErrorBoundary fallback={
+                                            <div className="border border-red-300 rounded-xl p-8 text-center text-red-500 min-h-[400px] flex items-center justify-center bg-red-50">
+                                                <div>
+                                                    <p className="font-bold mb-2">에디터 로드 오류</p>
+                                                    <p className="text-sm">페이지를 새로고침해주세요.</p>
+                                                </div>
+                                            </div>
+                                        }>
+                                            <RichTextEditor
+                                                content={postFormData.content || ''}
+                                                onChange={(content) => setPostFormData({ ...postFormData, content })}
+                                                placeholder="내용을 입력하세요. 서식, 이미지, 링크 등을 사용할 수 있습니다."
+                                            />
+                                        </ErrorBoundary>
+                                    </Suspense>
                                 </div>
 
                                 {/* File Attachment */}

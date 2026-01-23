@@ -44,9 +44,10 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
                 </div>
 
                 <div className="p-8 md:p-10 min-h-[400px]">
-                    <div className="prose max-w-none text-slate-700 leading-8 whitespace-pre-wrap">
-                        {post.content}
-                    </div>
+                    <div 
+                        className="prose prose-slate max-w-none text-slate-700 leading-8"
+                        dangerouslySetInnerHTML={{ __html: post.content || '' }}
+                    />
                 </div>
 
                 {((post.files && post.files.length > 0) || post.fileName || post.fileType) && (
