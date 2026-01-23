@@ -18,6 +18,14 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      // SPA 라우팅을 위한 fallback 설정
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks: undefined
+          }
+        }
       }
     };
 });

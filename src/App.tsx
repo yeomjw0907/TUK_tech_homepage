@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import {
     ChevronDown, Download, Clock, User, Building,
     Filter, ArrowUpDown, PieChart, Briefcase, FileText
@@ -22,6 +23,10 @@ import { AdminPage } from './components/admin';
 import PopupOverlay from './components/PopupOverlay';
 
 const App: React.FC = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const params = useParams();
+    
     const [activePage, setActivePage] = useState<PageId>('home');
     const [activeSubPage, setActiveSubPage] = useState<string | undefined>(undefined);
     const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
@@ -38,6 +43,58 @@ const App: React.FC = () => {
     // Filters
     const [portfolioSort, setPortfolioSort] = useState('name_asc');
     const [portfolioCategoryFilter, setPortfolioCategoryFilter] = useState('all');
+
+    // URL에서 상태 복원
+    useEffect(() => {
+        const path = location.pathname;
+        const pathParts = path.split('/').filter(Boolean);
+        
+        if (pathParts.length === 0) {
+            // 홈
+            setActivePage('home');
+            setActiveSubPage(undefined);
+            setSelectedPost(null);
+            setSelectedCompany(null);
+        } else if (pathParts[0] === 'post' && pathParts[1]) {
+            // /post/:id - 게시글 상세
+            const postId = parseInt(pathParts[1]);
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                const typeMap: Record<string, string> = {
+                    'notice': '공지사항',
+                    'press': '보도소식',
+                    'resources': '자료실',
+                    'faq': 'FAQ'
+                };
+                setSelectedPost(post);
+                setPostType(typeMap[post.category] || '공지사항');
+                setActivePage('news');
+                setActiveSubPage(post.category === 'notice' ? 'notice' : 
+                                post.category === 'press' ? 'press' :
+                                post.category === 'resources' ? 'resources' : 'faq');
+            }
+        } else if (pathParts[0] === 'company' && pathParts[1]) {
+            // /company/:id - 기업 상세
+            const companyId = pathParts[1];
+            const company = companies.find(c => c.id === companyId);
+            if (company) {
+                setSelectedCompany(company);
+                setActivePage('portfolio');
+                setActiveSubPage(company.category === 'subsidiary' ? 'subsidiaries' : 'all_portfolio');
+            }
+        } else {
+            // 일반 페이지
+            const page = pathParts[0] as PageId;
+            const subPage = pathParts[1];
+            
+            if (['home', 'about', 'investment', 'subsidiary', 'portfolio', 'news', 'contact', 'admin'].includes(page)) {
+                setActivePage(page);
+                setActiveSubPage(subPage);
+                setSelectedPost(null);
+                setSelectedCompany(null);
+            }
+        }
+    }, [location.pathname, posts, companies]);
 
     const handleNavigate = (page: PageId, subPage?: string) => {
         setIsLoading(true);
@@ -58,6 +115,15 @@ const App: React.FC = () => {
         setPortfolioSort('name_asc');
         setPortfolioCategoryFilter('all');
 
+        // URL 업데이트
+        if (page === 'home') {
+            navigate('/');
+        } else if (subPage) {
+            navigate(`/${page}/${subPage}`);
+        } else {
+            navigate(`/${page}`);
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(() => setIsLoading(false), 600);
     };
@@ -69,6 +135,13 @@ const App: React.FC = () => {
         setPortfolioSort('name_asc');
         setPortfolioCategoryFilter('all');
 
+        // URL 업데이트
+        if (activePage === 'home') {
+            navigate('/');
+        } else {
+            navigate(`/${activePage}/${subPage}`);
+        }
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(() => setIsLoading(false), 400);
     };
@@ -77,6 +150,7 @@ const App: React.FC = () => {
         setIsLoading(true);
         setTimeout(() => {
             setSelectedCompany(company);
+            navigate(`/company/${company.id}`);
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setIsLoading(false);
         }, 300);
@@ -87,6 +161,7 @@ const App: React.FC = () => {
         setTimeout(() => {
             setSelectedPost(post);
             setPostType(type);
+            navigate(`/post/${post.id}`);
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setIsLoading(false);
         }, 300);
@@ -135,7 +210,15 @@ const App: React.FC = () => {
                     <PostDetail
                         post={selectedPost}
                         type={postType}
-                        onBack={() => setSelectedPost(null)}
+                        onBack={() => {
+                            setSelectedPost(null);
+                            const category = selectedPost.category;
+                            if (category === 'notice') navigate('/news/notice');
+                            else if (category === 'press') navigate('/news/press');
+                            else if (category === 'resources') navigate('/news/resources');
+                            else if (category === 'faq') navigate('/news/faq');
+                            else navigate('/news/notice');
+                        }}
                         onPostClick={(post) => handlePostClick(post, postType)}
                         allPosts={posts.filter(p => p.category === selectedPost.category)}
                     />
@@ -147,7 +230,17 @@ const App: React.FC = () => {
             if (isLoading) return <SkeletonLoader />;
             return (
                 <div className="py-24 px-4 bg-slate-50 animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-screen">
-                    <CompanyDetail company={selectedCompany} onBack={() => setSelectedCompany(null)} />
+                    <CompanyDetail 
+                        company={selectedCompany} 
+                        onBack={() => {
+                            setSelectedCompany(null);
+                            if (selectedCompany.category === 'subsidiary') {
+                                navigate('/portfolio/subsidiaries');
+                            } else {
+                                navigate('/portfolio/all_portfolio');
+                            }
+                        }} 
+                    />
                 </div>
             );
         }
