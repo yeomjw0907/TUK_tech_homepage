@@ -15,21 +15,33 @@ interface SubPageHeaderProps {
 
 const SubPageHeader: React.FC<SubPageHeaderProps> = ({ title, parent, menuItems, activeSub, onSubNav }) => {
     return (
-        <div className="bg-[#003E7E] pt-32 pb-20 px-4 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
-            <div className="relative z-10 animate-in slide-in-from-bottom-5 fade-in duration-700">
-                <span className="text-blue-200 font-bold tracking-widest text-xs uppercase mb-4 block">{parent}</span>
-                <h1 className="text-3xl md:text-4xl font-black text-white mb-10 tracking-tight">{title}</h1>
-                {menuItems && (
-                    <div className="inline-flex flex-wrap justify-center gap-2 p-1.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/10">
+        <div className="pt-32 pb-14 px-4 text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #003E7E 0%, #001E4A 100%)' }}>
+            {/* Subtle grid */}
+            <div className="absolute inset-0 grid-pattern opacity-20" />
+            {/* Orbs */}
+            <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-white/5 orb -translate-y-1/2" />
+            <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-[#0099D6]/10 orb -translate-y-1/2" style={{ animationDelay: '-5s' }} />
+            {/* Bottom fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#001E4A]/50 to-transparent" />
+
+            <div className="relative z-10 fade-up">
+                {parent && (
+                    <span className="mb-4 inline-block px-3 py-1 rounded-full text-[0.65rem] font-bold tracking-widest uppercase border border-white/25 text-white/80 bg-white/10">
+                        {parent}
+                    </span>
+                )}
+                <h1 className="text-3xl md:text-4xl font-black text-white mb-8 tracking-tight">{title}</h1>
+                {menuItems && menuItems.length > 0 && (
+                    <div className="inline-flex flex-wrap justify-center gap-2 p-1.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/15">
                         {menuItems.map((item) => (
                             <button
                                 key={item.id}
                                 onClick={() => onSubNav(item.id)}
-                                className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${activeSub === item.id
-                                        ? 'bg-white text-[#003E7E] shadow-lg'
+                                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                                    activeSub === item.id
+                                        ? 'sub-tab-active'
                                         : 'text-white/70 hover:bg-white/10 hover:text-white'
-                                    }`}
+                                }`}
                             >
                                 {item.label}
                             </button>

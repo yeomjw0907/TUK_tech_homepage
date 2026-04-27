@@ -5,10 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>한국공학대학교 기술지주회사</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
+      :root {
+        --bg:          #FFFFFF;
+        --bg-alt:      #F5F8FC;
+        --bg-alt2:     #EBF2FF;
+        --surface:     #FFFFFF;
+        --surface-2:   #F0F5FB;
+        --navy:        #003E7E;
+        --navy-hover:  #002D5C;
+        --navy-light:  #0055CC;
+        --cyan:        #0099D6;
+        --gold:        #C8A84A;
+        --gold-light:  #E8C870;
+        --text:        #1A2840;
+        --text-muted:  #4B6080;
+        --text-sub:    #8A9BB5;
+        --border:      rgba(0,62,126,0.08);
+        --border-md:   rgba(0,62,126,0.14);
+        --border-accent: rgba(0,85,204,0.30);
+        --danger:      #DC2626;
+        --success:     #059669;
+      }
+
       body {
         font-family: 'Pretendard', sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── Display Numbers ── */
+      .display-num {
+        font-family: 'Bebas Neue', sans-serif;
+        letter-spacing: 0.03em;
+        line-height: 1;
+      }
+
+      /* ── Gradient Text ── */
+      .gradient-text {
+        background: linear-gradient(135deg, #003E7E 0%, #0099D6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .gradient-gold {
+        background: linear-gradient(135deg, #C8A84A 0%, #E8C870 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* ── Glass ── */
+      .glass {
+        background: rgba(255,255,255,0.85);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+      .glass-hover:hover {
+        background: rgba(255,255,255,0.95);
+        border-color: var(--border-accent);
+      }
+
+      /* ── Card shadows ── */
+      .card-shadow {
+        box-shadow: 0 2px 12px rgba(0,62,126,0.07), 0 1px 3px rgba(0,62,126,0.05);
+      }
+      .card-shadow-lg {
+        box-shadow: 0 8px 32px rgba(0,62,126,0.10), 0 2px 8px rgba(0,62,126,0.06);
+      }
+
+      /* ── Grid pattern ── */
+      .grid-pattern {
+        background-image:
+          linear-gradient(rgba(0,62,126,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,62,126,0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+
+      /* ── Animated gradient orb ── */
+      @keyframes orb-float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33%       { transform: translate(30px, -20px) scale(1.05); }
+        66%       { transform: translate(-20px, 15px) scale(0.97); }
+      }
+      .orb {
+        animation: orb-float 14s ease-in-out infinite;
+        border-radius: 50%;
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      /* ── Scroll reveal ── */
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      .fade-up {
+        animation: fadeUp 0.6s ease-out forwards;
+      }
+
+      /* ── Tag / badge ── */
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 1px solid rgba(0,85,204,0.22);
+        color: #0055CC;
+        background: rgba(0,85,204,0.07);
+      }
+
+      /* ── Section divider line ── */
+      .section-rule {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(0,62,126,0.12), transparent);
+      }
+
+      /* ── Scrollbar ── */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: var(--bg-alt); }
+      ::-webkit-scrollbar-thumb { background: #C5D5E8; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #8AA5C8; }
+
+      /* ── Sub-page active tab ── */
+      .sub-tab-active {
+        background: var(--navy) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(0,62,126,0.30);
       }
       .hide-scrollbar::-webkit-scrollbar {
           display: none;

@@ -15,10 +15,10 @@ interface HeaderProps {
     onCompanyClick?: (company: Company) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-    activePage, 
-    activeSubPage, 
-    onNavigate, 
+const Header: React.FC<HeaderProps> = ({
+    activePage,
+    activeSubPage,
+    onNavigate,
     hasHero,
     posts = [],
     companies = [],
@@ -93,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
         <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${isTransparent
                 ? 'bg-transparent py-4'
-                : 'bg-white/95 backdrop-blur-xl shadow-lg shadow-slate-200/40 border-b border-slate-200/60 py-2'
+                : 'bg-white/95 backdrop-blur-xl border-b border-[rgba(0,62,126,0.07)] py-2 shadow-sm'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({
                         onClick={() => onNavigate('home')}
                     >
                         <img
-                            src={isTransparent ? "/logo_white.svg" : "/logo.svg"}
+                            src={isTransparent ? '/logo_white.svg' : '/logo.svg'}
                             alt="한국공학대학교 기술지주회사"
                             className="h-10 md:h-11 w-auto object-contain"
                         />
@@ -118,35 +118,37 @@ const Header: React.FC<HeaderProps> = ({
                                 onMouseLeave={() => setHoveredMenu(null)}
                             >
                                 <button
-                                    className={`relative px-3 py-2 text-sm whitespace-nowrap transition-all duration-300 rounded-md ${activePage === item.id
-                                        ? 'font-bold'
-                                        : 'font-medium'
-                                        } ${isTransparent
-                                            ? (activePage === item.id ? 'text-white' : 'text-white/80 hover:text-white')
-                                            : (activePage === item.id ? 'text-[#003E7E]' : 'text-slate-600 hover:text-[#003E7E]')
-                                        }`}
+                                    className={`relative px-3 py-2 text-sm whitespace-nowrap transition-all duration-200 rounded-md ${
+                                        isTransparent
+                                            ? activePage === item.id
+                                                ? 'font-bold text-white bg-white/15'
+                                                : 'font-medium text-white hover:bg-white/10'
+                                            : activePage === item.id
+                                                ? 'font-bold text-[#003E7E] bg-[#EBF2FF]'
+                                                : 'font-medium text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC]'
+                                    }`}
                                     onClick={() => onNavigate(item.id, item.subItems?.[0]?.id)}
                                 >
                                     {item.label}
-                                    <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 ${activePage === item.id
-                                        ? `opacity-100 scale-100 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'}`
-                                        : `opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'}`
+                                    <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 ${isTransparent ? 'bg-white' : 'bg-[#003E7E]'} ${activePage === item.id
+                                        ? 'opacity-100 scale-100'
+                                        : 'opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100'
                                         }`}></span>
                                 </button>
 
                                 {item.subItems && hoveredMenu === item.id && (
                                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 pt-3 w-64 z-50">
-                                        <div className="bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] rounded-lg border border-slate-100 overflow-hidden relative">
-                                            <div className="absolute top-0 left-0 w-full h-1 bg-[#003E7E]"></div>
+                                        <div className="bg-white border border-[rgba(0,62,126,0.08)] shadow-[0_20px_50px_rgba(0,62,126,0.12)] rounded-xl overflow-hidden relative">
+                                            <div className="h-0.5 bg-[#003E7E]"></div>
                                             <div className="py-2.5">
                                                 {item.subItems.map((sub) => (
                                                     <button
                                                         key={sub.id}
-                                                        className="relative block w-full text-left px-7 py-3.5 text-[15px] text-slate-500 hover:text-[#003E7E] hover:bg-slate-50 hover:font-bold transition-all duration-200 group/item"
+                                                        className="relative block w-full text-left px-6 py-3 text-sm text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC] transition-all duration-200 group/item"
                                                         onClick={() => onNavigate(item.id, sub.id)}
                                                     >
                                                         <span className="relative z-10">{sub.label}</span>
-                                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#003E7E] opacity-0 group-hover/item:opacity-100 transition-opacity duration-200"></div>
+                                                        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[#003E7E] opacity-0 group-hover/item:opacity-100 transition-opacity duration-200"></div>
                                                     </button>
                                                 ))}
                                             </div>
@@ -156,16 +158,13 @@ const Header: React.FC<HeaderProps> = ({
                             </div>
                         ))}
 
-                        <div className={`h-4 w-px mx-3 transition-colors duration-300 ${isTransparent ? 'bg-white/30' : 'bg-slate-200'}`}></div>
+                        <div className="h-4 w-px mx-3 bg-[rgba(0,62,126,0.08)]"></div>
 
                         {/* 글자 크기 조절 (데스크톱) */}
                         <div className="hidden md:block relative">
                             <button
                                 onClick={() => setIsFontSizeMenuOpen(!isFontSizeMenuOpen)}
-                                className={`p-2 rounded-lg transition-all ${isTransparent
-                                    ? 'text-white hover:bg-white/10'
-                                    : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
-                                }`}
+                                className={`p-2 rounded-lg transition-all ${isTransparent ? 'text-white hover:bg-white/10' : 'text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC]'}`}
                                 aria-label="글자 크기 조절"
                             >
                                 <div className="flex items-center gap-0.5">
@@ -174,15 +173,15 @@ const Header: React.FC<HeaderProps> = ({
                                     <ZoomIn className="w-3.5 h-3.5" />
                                 </div>
                             </button>
-                            
+
                             {isFontSizeMenuOpen && (
-                                <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 p-3 min-w-[180px] z-50">
+                                <div className="absolute top-full right-0 mt-2 bg-white border border-[rgba(0,62,126,0.10)] rounded-xl shadow-lg p-3 min-w-[180px] z-50">
                                     <div className="space-y-2">
-                                        <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
-                                            <span className="text-xs font-bold text-slate-700">글자 크기</span>
+                                        <div className="flex items-center justify-between mb-3 pb-2 border-b border-[rgba(0,62,126,0.08)]">
+                                            <span className="text-xs font-bold text-[#1A2840]">글자 크기</span>
                                             <button
                                                 onClick={handleReset}
-                                                className="text-xs text-slate-500 hover:text-[#003E7E] font-medium"
+                                                className="text-xs text-[#4B6080] hover:text-[#003E7E] font-medium"
                                             >
                                                 초기화
                                             </button>
@@ -191,7 +190,7 @@ const Header: React.FC<HeaderProps> = ({
                                             <button
                                                 onClick={handleZoomOut}
                                                 disabled={fontSize <= 75}
-                                                className="flex-1 px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium flex items-center justify-center gap-1"
+                                                className="flex-1 px-3 py-2 rounded-lg bg-[#F5F8FC] hover:bg-[#EBF2FF] text-[#1A2840] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium flex items-center justify-center gap-1"
                                             >
                                                 <ZoomOut className="w-4 h-4" />
                                                 작게
@@ -199,14 +198,14 @@ const Header: React.FC<HeaderProps> = ({
                                             <button
                                                 onClick={handleZoomIn}
                                                 disabled={fontSize >= 150}
-                                                className="flex-1 px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium flex items-center justify-center gap-1"
+                                                className="flex-1 px-3 py-2 rounded-lg bg-[#F5F8FC] hover:bg-[#EBF2FF] text-[#1A2840] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium flex items-center justify-center gap-1"
                                             >
                                                 <ZoomIn className="w-4 h-4" />
                                                 크게
                                             </button>
                                         </div>
                                         <div className="text-center pt-1">
-                                            <span className="text-xs text-slate-500">현재: {fontSize}%</span>
+                                            <span className="text-xs text-[#4B6080]">현재: {fontSize}%</span>
                                         </div>
                                     </div>
                                 </div>
@@ -216,19 +215,21 @@ const Header: React.FC<HeaderProps> = ({
                         {/* 검색 버튼 (데스크톱) */}
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className={`hidden md:block p-2 rounded-lg transition-all ${isTransparent
-                                ? 'text-white hover:bg-white/10'
-                                : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
-                            }`}
+                            className={`hidden md:block p-2 rounded-lg transition-all ${isTransparent ? 'text-white hover:bg-white/10' : 'text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC]'}`}
                             aria-label="검색"
                         >
                             <Search className="w-4 h-4" />
                         </button>
 
-                        <a href="https://bi.tukorea.ac.kr" target="_blank" rel="noreferrer" className={`hidden md:flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold border transition-all uppercase tracking-wide group whitespace-nowrap ${isTransparent
-                            ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-[#003E7E]'
-                            : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-[#003E7E] hover:text-[#003E7E]'
-                            }`}>
+                        <a
+                            href="https://bi.tukorea.ac.kr"
+                            target="_blank"
+                            rel="noreferrer"
+                            className={`hidden md:flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold border transition-all uppercase tracking-wide group whitespace-nowrap ${isTransparent
+                                ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-[#003E7E]'
+                                : 'bg-[#F5F8FC] border-[rgba(0,62,126,0.15)] text-[#4B6080] hover:border-[#003E7E] hover:text-[#003E7E]'
+                                }`}
+                        >
                             창업보육센터 <ExternalLink className="w-3 h-3 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
                     </nav>
@@ -238,10 +239,7 @@ const Header: React.FC<HeaderProps> = ({
                         <div className="md:hidden relative">
                             <button
                                 onClick={() => setIsFontSizeMenuOpen(!isFontSizeMenuOpen)}
-                                className={`p-2 transition-colors rounded-lg ${isTransparent
-                                    ? 'text-white hover:bg-white/10'
-                                    : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
-                                }`}
+                                className={`p-2 transition-colors rounded-lg ${isTransparent ? 'text-white hover:bg-white/10' : 'text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC]'}`}
                                 aria-label="글자 크기 조절"
                             >
                                 <div className="flex items-center gap-0.5">
@@ -250,15 +248,15 @@ const Header: React.FC<HeaderProps> = ({
                                     <ZoomIn className="w-4 h-4" />
                                 </div>
                             </button>
-                            
+
                             {isFontSizeMenuOpen && (
-                                <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-lg border border-slate-200 p-3 min-w-[160px] z-50">
+                                <div className="absolute top-full right-0 mt-2 bg-white border border-[rgba(0,62,126,0.10)] rounded-xl shadow-lg p-3 min-w-[160px] z-50">
                                     <div className="space-y-2">
-                                        <div className="flex items-center justify-between mb-2 pb-2 border-b border-slate-100">
-                                            <span className="text-xs font-bold text-slate-700">글자 크기</span>
+                                        <div className="flex items-center justify-between mb-2 pb-2 border-b border-[rgba(0,62,126,0.08)]">
+                                            <span className="text-xs font-bold text-[#1A2840]">글자 크기</span>
                                             <button
                                                 onClick={handleReset}
-                                                className="text-xs text-slate-500 hover:text-[#003E7E] font-medium"
+                                                className="text-xs text-[#4B6080] hover:text-[#003E7E] font-medium"
                                             >
                                                 초기화
                                             </button>
@@ -267,7 +265,7 @@ const Header: React.FC<HeaderProps> = ({
                                             <button
                                                 onClick={handleZoomOut}
                                                 disabled={fontSize <= 75}
-                                                className="flex-1 px-2 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-medium flex items-center justify-center gap-1"
+                                                className="flex-1 px-3 py-2 rounded-lg bg-[#F5F8FC] hover:bg-[#EBF2FF] text-[#1A2840] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium flex items-center justify-center gap-1"
                                             >
                                                 <ZoomOut className="w-3 h-3" />
                                                 작게
@@ -275,7 +273,7 @@ const Header: React.FC<HeaderProps> = ({
                                             <button
                                                 onClick={handleZoomIn}
                                                 disabled={fontSize >= 150}
-                                                className="flex-1 px-2 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-xs font-medium flex items-center justify-center gap-1"
+                                                className="flex-1 px-3 py-2 rounded-lg bg-[#F5F8FC] hover:bg-[#EBF2FF] text-[#1A2840] disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium flex items-center justify-center gap-1"
                                             >
                                                 <ZoomIn className="w-3 h-3" />
                                                 크게
@@ -289,20 +287,14 @@ const Header: React.FC<HeaderProps> = ({
                         {/* 검색 버튼 (모바일) */}
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className={`md:hidden p-2 transition-colors rounded-lg ${isTransparent
-                                ? 'text-white hover:bg-white/10'
-                                : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
-                            }`}
+                            className={`md:hidden p-2 transition-colors rounded-lg ${isTransparent ? 'text-white hover:bg-white/10' : 'text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC]'}`}
                             aria-label="검색"
                         >
                             <Search className="w-6 h-6" />
                         </button>
-                        
+
                         <button
-                            className={`md:hidden p-2 transition-colors rounded-lg ${isTransparent
-                                ? 'text-white hover:bg-white/10'
-                                : 'text-slate-600 hover:text-[#003E7E] hover:bg-slate-50'
-                            }`}
+                            className={`md:hidden p-2 transition-colors rounded-lg ${isTransparent ? 'text-white hover:bg-white/10' : 'text-[#4B6080] hover:text-[#003E7E] hover:bg-[#F5F8FC]'}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
@@ -325,26 +317,26 @@ const Header: React.FC<HeaderProps> = ({
             )}
 
             {isMobileMenuOpen && (
-                <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-slate-100 absolute w-full shadow-2xl h-[calc(100vh-80px)] overflow-y-auto animate-in slide-in-from-top-5 duration-300 text-slate-900">
+                <div className="md:hidden bg-white border-t border-[rgba(0,62,126,0.06)] absolute w-full shadow-2xl shadow-[rgba(0,62,126,0.12)] h-[calc(100vh-80px)] overflow-y-auto">
                     <div className="px-5 py-6 space-y-6">
                         {MENU_STRUCTURE.map((item) => (
                             <div key={item.id} className="space-y-3">
                                 <button
-                                    className="w-full text-left font-black text-lg py-2 border-l-4 border-transparent hover:border-[#003E7E] pl-2 hover:pl-4 transition-all duration-300 flex items-center justify-between group"
+                                    className="w-full text-left font-black text-base py-3 border-l-2 border-transparent hover:border-[#003E7E] pl-3 hover:pl-5 transition-all duration-300 flex items-center justify-between group text-[#1A2840] hover:text-[#003E7E]"
                                     onClick={() => {
                                         onNavigate(item.id, item.subItems?.[0]?.id);
                                         setIsMobileMenuOpen(false);
                                     }}
                                 >
-                                    <span className="group-hover:text-[#003E7E] transition-colors">{item.label}</span>
-                                    {item.subItems && <ChevronDown className="w-5 h-5 text-slate-300 group-hover:text-[#003E7E]" />}
+                                    <span>{item.label}</span>
+                                    {item.subItems && <ChevronDown className="w-5 h-5 text-[#8A9BB5] group-hover:text-[#003E7E]" />}
                                 </button>
                                 {item.subItems && (
                                     <div className="pl-4 grid grid-cols-2 gap-2">
                                         {item.subItems.map((sub) => (
                                             <button
                                                 key={sub.id}
-                                                className="text-left text-sm text-slate-500 py-3 px-4 bg-slate-50 rounded-lg hover:bg-blue-50 hover:text-[#003E7E] hover:font-bold transition-all"
+                                                className="text-left text-sm text-[#4B6080] py-3 px-4 bg-[#F5F8FC] rounded-xl hover:bg-[#EBF2FF] hover:text-[#003E7E] transition-all"
                                                 onClick={() => {
                                                     onNavigate(item.id, sub.id);
                                                     setIsMobileMenuOpen(false);
