@@ -34,6 +34,7 @@ export const createCompany = (name: string, isTips = false, category: 'subsidiar
     const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
     const nameHash = name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
     const companyId = name.replace(/\s/g, '-').replace(/[()*]/g, '');
+    const logoKey = companyId.replace(/㈜/g, '').replace(/^주/, '').replace(/\*/g, '');
 
     return {
         id: companyId,
@@ -47,7 +48,7 @@ export const createCompany = (name: string, isTips = false, category: 'subsidiar
         note: '-',
         isTips: name.includes('*') || isTips,
         category,
-        logo: `/company-logos/${companyId}`,
+        logo: `/company-logos/${logoKey}`,
         bgImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop',
         shortDesc: SHORT_DESCS[nameHash % SHORT_DESCS.length]
     };
