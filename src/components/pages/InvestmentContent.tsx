@@ -636,7 +636,7 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
             '셀바크이노베이션*',
             '이트렌코텍*',
             '쉘피아',
-            '㈜제이케이테크롤러지*',
+            '㈜제이케이테크놀로지*',
             '스카일리*',
             '퀀텀매트릭스*',
             '액티부키',

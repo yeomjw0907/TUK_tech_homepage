@@ -33,9 +33,10 @@ export const createCompany = (name: string, isTips = false, category: 'subsidiar
     const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
     const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
     const nameHash = name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    const companyId = name.replace(/\s/g, '-').replace(/[()*]/g, '');
 
     return {
-        id: name.replace(/\s/g, '-').replace(/[()*]/g, ''),
+        id: companyId,
         name: name.replace('*', ''),
         ceo: CEO_NAMES[nameHash % CEO_NAMES.length],
         foundedDate: `${year}-${month}-${day}`,
@@ -46,7 +47,7 @@ export const createCompany = (name: string, isTips = false, category: 'subsidiar
         note: '-',
         isTips: name.includes('*') || isTips,
         category,
-        logo: `https://via.placeholder.com/100x100.png?text=${name.charAt(0)}`,
+        logo: `/company-logos/${companyId}`,
         bgImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop',
         shortDesc: SHORT_DESCS[nameHash % SHORT_DESCS.length]
     };
@@ -54,7 +55,7 @@ export const createCompany = (name: string, isTips = false, category: 'subsidiar
 
 
 const RAW_SUBSIDIARIES = [
-    "(주)링크솔루션", "㈜이노테코", "㈜더웨이", "㈜제이케이테크롤러지",
+    "(주)링크솔루션", "㈜이노테크", "㈜더웨이", "㈜제이케이테크놀로지",
     "(주)비타민상상력", "이트렌코텍", "㈜에이치엠오", "㈜퓨처리스텍",
     "㈜비오에스", "㈜이소프트", "㈜이코모스", "㈜제노", "㈜티케이",
     "㈜스태커스", "㈜케이제이테크", "㈜에스비에너지"
@@ -63,7 +64,7 @@ const RAW_SUBSIDIARIES = [
 const RAW_PORTFOLIO = [
     "(주)링크솔루션", "엘포톤*", "기억*", "와첸", "네이앤컴퍼니", "유쾌한프로젝트",
     "메디앤리서치", "이안나노텍", "셀바크이노베이션*", "이트렌코텍*", "쉘피아",
-    "㈜제이케이테크롤러지*", "스카일리*", "퀀텀매트릭스*", "액티부키", "큐티뮨바이오*",
+    "㈜제이케이테크놀로지*", "스카일리*", "퀀텀매트릭스*", "액티부키", "큐티뮨바이오*",
     "어플라이드서멀", "크림", "에버트레져", "프로미엘*", "엘엠케이"
 ];
 
@@ -182,7 +183,7 @@ export const INITIAL_POSTS: Post[] = [
         isNew: false,
         views: 567,
         author: '홍보팀',
-        content: `한국공학대학교 기술지주회사가 자회사 5곳의 CES 2025 참가를 지원했다.\n\n이번에 참가한 자회사는 ㈜이노테코, ㈜에이치엠오, ㈜더웨이, ㈜나노누리, ㈜스태커스 등 5개 기업이다.\n\n각 기업은 AI, IoT, 친환경 기술 분야에서 혁신적인 제품을 선보였으며, 현지에서 글로벌 바이어들과 활발한 상담을 진행했다.\n\n기술지주회사는 자회사들의 해외 전시회 참가 비용 일부와 부스 운영을 지원했다.`
+        content: `한국공학대학교 기술지주회사가 자회사 5곳의 CES 2025 참가를 지원했다.\n\n이번에 참가한 자회사는 ㈜이노테크, ㈜에이치엠오, ㈜더웨이, ㈜나노누리, ㈜스태커스 등 5개 기업이다.\n\n각 기업은 AI, IoT, 친환경 기술 분야에서 혁신적인 제품을 선보였으며, 현지에서 글로벌 바이어들과 활발한 상담을 진행했다.\n\n기술지주회사는 자회사들의 해외 전시회 참가 비용 일부와 부스 운영을 지원했다.`
     },
     {
         id: 12,

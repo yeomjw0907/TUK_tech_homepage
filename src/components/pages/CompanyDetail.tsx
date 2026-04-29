@@ -8,6 +8,13 @@ interface CompanyDetailProps {
 }
 
 const CompanyDetail: React.FC<CompanyDetailProps> = ({ company, onBack }) => {
+    const getDetailLogoSrc = (logo?: string) => {
+        if (!logo) return '';
+        // If explicit filename is already provided, use it as-is.
+        if (/\.[a-zA-Z0-9]+($|\?)/.test(logo)) return logo;
+        return `${logo}2.svg`;
+    };
+
     return (
         <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-500">
             <button onClick={onBack} className="flex items-center text-slate-500 hover:text-[#003E7E] font-bold mb-8 transition-colors">
@@ -27,7 +34,7 @@ const CompanyDetail: React.FC<CompanyDetailProps> = ({ company, onBack }) => {
                     <div className="absolute -bottom-10 left-10 flex items-end gap-6">
                         <div className="w-32 h-32 bg-white rounded-2xl shadow-lg border-4 border-white flex items-center justify-center overflow-hidden">
                             {company.logo ? (
-                                <img src={company.logo} alt="logo" className="w-full h-full object-contain p-2" />
+                                <img src={getDetailLogoSrc(company.logo)} alt="logo" className="w-full h-full object-contain p-2 bg-white" />
                             ) : (
                                 <Building className="w-12 h-12 text-slate-300" />
                             )}

@@ -26,6 +26,13 @@ const App: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const params = useParams();
+
+    const getListLogoSrc = (logo?: string) => {
+        if (!logo) return '';
+        // If explicit filename is already provided, use it as-is.
+        if (/\.[a-zA-Z0-9]+($|\?)/.test(logo)) return logo;
+        return `${logo}1.svg`;
+    };
     
     const [activePage, setActivePage] = useState<PageId>('home');
     const [activeSubPage, setActiveSubPage] = useState<string | undefined>(undefined);
@@ -339,9 +346,9 @@ const App: React.FC = () => {
                                     onClick={() => handleCompanyClick(company)}
                                     className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 hover:border-blue-100 transition-all cursor-pointer group"
                                 >
-                                    <div className="aspect-video bg-slate-50 rounded-xl mb-5 flex items-center justify-center border border-slate-100 group-hover:bg-blue-50 transition-colors relative overflow-hidden">
+                                    <div className="aspect-video bg-white rounded-xl mb-5 flex items-center justify-center border border-slate-100 transition-colors relative overflow-hidden">
                                         {company.logo ? (
-                                            <img src={company.logo} alt={company.name} className="w-full h-full object-contain p-4" />
+                                            <img src={getListLogoSrc(company.logo)} alt={company.name} className="w-full h-full object-contain p-4 bg-white" />
                                         ) : (
                                             <Building className="w-10 h-10 text-slate-300 group-hover:text-[#003E7E]" />
                                         )}
