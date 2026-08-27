@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
-    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'gold';
+    variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'gold' | 'inverse';
     size?: 'sm' | 'md' | 'lg' | 'xl';
     className?: string;
 }
@@ -14,7 +14,7 @@ const Button: React.FC<ButtonProps> = ({
     className = '',
     ...props
 }) => {
-    const base = "inline-flex items-center justify-center font-bold tracking-tight transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#003E7E]/30 focus:ring-offset-1 disabled:opacity-40 disabled:cursor-not-allowed relative overflow-hidden rounded-xl";
+    const base = "inline-flex items-center justify-center font-bold tracking-tight transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-navy/30 focus-visible:ring-offset-1 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl";
 
     const sizes = {
         sm:  "px-4 py-2 text-xs gap-1.5",
@@ -25,17 +25,20 @@ const Button: React.FC<ButtonProps> = ({
 
     const variants = {
         primary:
-            "bg-[#003E7E] text-white hover:bg-[#002D5C] shadow-md shadow-[#003E7E]/20 hover:shadow-lg hover:shadow-[#003E7E]/25 hover:-translate-y-0.5 border border-[#003E7E]",
+            "bg-navy text-white hover:bg-navy-hover shadow-md shadow-navy/20 hover:shadow-lg hover:shadow-navy/25 hover:-translate-y-0.5",
         secondary:
-            "bg-white text-[#003E7E] border border-[rgba(0,62,126,0.20)] hover:bg-[#F5F8FC] hover:border-[rgba(0,62,126,0.35)] hover:-translate-y-0.5 shadow-sm",
+            "bg-white text-navy border border-line-md hover:bg-surface-alt hover:border-line-strong hover:-translate-y-0.5 shadow-sm",
         outline:
-            "bg-transparent text-[#1A2840] border border-[rgba(0,62,126,0.18)] hover:border-[#003E7E] hover:text-[#003E7E] hover:bg-[#F5F8FC]",
+            "bg-transparent text-ink border border-line-md hover:border-navy hover:text-navy hover:bg-surface-alt",
         ghost:
-            "bg-transparent text-[#4B6080] hover:bg-[#F5F8FC] hover:text-[#1A2840]",
+            "bg-transparent text-ink-soft hover:bg-surface-alt hover:text-ink",
         danger:
-            "bg-[rgba(220,38,38,0.07)] text-[#DC2626] border border-[rgba(220,38,38,0.20)] hover:bg-[rgba(220,38,38,0.12)]",
+            "bg-danger/5 text-danger border border-danger/20 hover:bg-danger/10",
         gold:
-            "bg-gradient-to-r from-[#C8A84A] to-[#E8C870] text-white font-black shadow-md shadow-[#C8A84A]/20 hover:shadow-lg hover:shadow-[#C8A84A]/30 hover:-translate-y-0.5",
+            "bg-gradient-to-r from-gold to-gold-light text-white shadow-md shadow-gold/20 hover:shadow-lg hover:shadow-gold/30 hover:-translate-y-0.5",
+        /* 다크(네이비) 배경 위 전용 */
+        inverse:
+            "bg-transparent text-white border border-white/25 hover:bg-white/10 hover:border-white/40",
     };
 
     return (

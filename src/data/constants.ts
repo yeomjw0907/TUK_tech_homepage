@@ -1,5 +1,28 @@
 import { MenuItem } from '../types';
 
+/* ── 표기 통일 상수 — 회사명·프로그램명·핵심 수치는 반드시 여기서 가져다 쓴다 ── */
+
+/** 일반(본문·화면) 표기 */
+export const COMPANY_NAME = '한국공학대학교 기술지주회사';
+/** 법인 공식 표기 — 푸터 카피라이트·공문서 맥락에서만 사용 */
+export const COMPANY_NAME_LEGAL = '㈜한국공학대학교기술지주회사';
+/** 성장지원 프로그램 공식 표기 (TU-RN UP / TU RN-UP 등 변형 금지) */
+export const PROGRAM_TURN_UP = 'TU-RN Up';
+
+/**
+ * 핵심 성과 수치 — 화면에 노출되는 모든 통계는 이 객체를 단일 기준으로 사용.
+ * 자회사/포트폴리오 개수는 가능한 곳에서는 companies 데이터의 filter().length로 산출한다.
+ */
+export const KEY_STATS = {
+    baseDate: '2025년 12월 기준',
+    /** FUNDS_DATA 합계 (3+3+30+3+70+4 = 113억) */
+    fundTotal: '113억+',
+    fundTotalLabel: '총 113억원 규모',
+    subsidiaries: '16',
+    /** TODO(확인 필요): 기존 코드에 313억/3.13억원이 혼재 — 정확한 값 확정 후 이 한 곳만 수정 */
+    cumulativeInvestment: '313억+',
+} as const;
+
 // Menu Structure
 export const MENU_STRUCTURE: MenuItem[] = [
     {

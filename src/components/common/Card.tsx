@@ -4,21 +4,26 @@ interface CardProps {
     title?: string;
     children: React.ReactNode;
     className?: string;
-    glow?: boolean;
+    /** 카드 내부 여백 — 콘텐츠 밀도에 따라 선택 */
+    padding?: 'sm' | 'md' | 'lg';
+    /** hover 부양·보더 강조 효과 (기본 켜짐) */
+    hover?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ title, children, className = '', glow = false }) => (
+const PADDINGS = {
+    sm: 'p-6',
+    md: 'p-7',
+    lg: 'p-8',
+};
+
+const Card: React.FC<CardProps> = ({ title, children, className = '', padding = 'md', hover = true }) => (
     <div className={`
-        relative rounded-2xl border transition-all duration-300 group
-        bg-white border-[rgba(0,62,126,0.08)]
-        hover:border-[rgba(0,62,126,0.20)] hover:-translate-y-1
-        card-shadow hover:card-shadow-lg shadow-sm hover:shadow-md
-        p-8 ${className}
+        relative rounded-2xl bg-white border border-line shadow-card transition-all duration-300 group
+        ${hover ? 'hover:border-line-strong hover:-translate-y-1 hover:shadow-card-hover' : ''}
+        ${PADDINGS[padding]} ${className}
     `}>
-        {/* top accent line on hover */}
-        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#003E7E]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl" />
         {title && (
-            <h3 className="text-base font-bold text-[#1A2840] mb-6 pb-4 border-b border-[rgba(0,62,126,0.07)]">
+            <h3 className="text-base font-bold text-ink mb-6 pb-4 border-b border-line">
                 {title}
             </h3>
         )}
