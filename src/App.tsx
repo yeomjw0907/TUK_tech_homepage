@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import {
     ChevronDown, Download, Clock, User, Building,
-    ArrowUpDown, PieChart, Briefcase, FileText,
-    Cpu, Microscope, Factory, Layers
+    ArrowUpDown, PieChart, Briefcase, FileText
 } from 'lucide-react';
 
 // Types
 import { PageId, Company, Post, Inquiry, Popup } from './types';
 
 // Data
-import { MENU_STRUCTURE, FUNDS_DATA } from './data/constants';
+import { MENU_STRUCTURE, FUNDS_DATA, KEY_STATS } from './data/constants';
 import { INITIAL_COMPANIES, INITIAL_POSTS, INITIAL_INQUIRIES, INITIAL_POPUPS } from './data/initialData';
 
+// Utils
+import { formatDate } from './utils/format';
+
 // Components
-import { Button, Card, SectionTitle, SkeletonLoader, HomeSkeleton } from './components/common';
+import { Button, Badge, SectionTitle, SkeletonLoader, HomeSkeleton } from './components/common';
 import { Header, Footer, QuickMenu, SubPageHeader } from './components/layout';
 import {
     HomePage, PostDetail, CompanyDetail, ContactForm,
@@ -211,7 +213,7 @@ const App: React.FC = () => {
         if (selectedPost) {
             if (isLoading) return <SkeletonLoader />;
             return (
-                <div className="py-24 px-4 bg-slate-50 animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-screen">
+                <div className="py-24 px-4 bg-surface-alt animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-screen">
                     <PostDetail
                         post={selectedPost}
                         type={postType}
@@ -234,8 +236,8 @@ const App: React.FC = () => {
         if (selectedCompany) {
             if (isLoading) return <SkeletonLoader />;
             return (
-                <div className="py-24 px-4 bg-slate-50 animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-screen">
-                    <CompanyDetail 
+                <div className="py-24 px-4 bg-surface-alt animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-screen">
+                    <CompanyDetail
                         company={selectedCompany} 
                         onBack={() => {
                             setSelectedCompany(null);
@@ -299,14 +301,14 @@ const App: React.FC = () => {
 
             return (
                 <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <div className="flex flex-col md:flex-row justify-between items-center mb-10 pb-4 border-b border-slate-200 gap-4">
-                        <div className="text-slate-500 font-medium">총 <strong className="text-[#003E7E] text-lg">{filteredCompanies.length}</strong>개의 기업이 있습니다.</div>
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-10 pb-4 border-b border-line gap-4">
+                        <div className="text-ink-soft font-medium">총 <strong className="text-navy text-lg">{filteredCompanies.length}</strong>개의 기업이 있습니다.</div>
 
                         <div className="flex gap-3 flex-wrap justify-end">
                             <div className="relative">
-                                <ArrowUpDown className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                                <ArrowUpDown className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint pointer-events-none" />
                                 <select
-                                    className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#003E7E] bg-white appearance-none cursor-pointer hover:border-[#003E7E] transition-colors"
+                                    className="pl-9 pr-4 py-2 border border-line rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-navy bg-white appearance-none cursor-pointer hover:border-line-strong transition-colors"
                                     value={portfolioSort}
                                     onChange={(e) => setPortfolioSort(e.target.value)}
                                 >
@@ -325,27 +327,27 @@ const App: React.FC = () => {
                                 <div
                                     key={company.id}
                                     onClick={() => handleCompanyClick(company)}
-                                    className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 hover:border-blue-100 transition-all cursor-pointer group"
+                                    className="bg-white p-6 rounded-2xl shadow-card border border-line hover:shadow-card-hover hover:-translate-y-1 hover:border-line-strong transition-all cursor-pointer group"
                                 >
-                                    <div className="aspect-video bg-white rounded-xl mb-5 flex items-center justify-center border border-slate-100 transition-colors relative overflow-hidden">
+                                    <div className="aspect-video bg-white rounded-xl mb-5 flex items-center justify-center border border-line transition-colors relative overflow-hidden">
                                         {company.logo ? (
                                             <img src={getListLogoSrc(company.logo)} alt={company.name} className="w-full h-full object-contain p-4 bg-white" />
                                         ) : (
-                                            <Building className="w-10 h-10 text-slate-300 group-hover:text-[#003E7E]" />
+                                            <Building className="w-10 h-10 text-ink-faint group-hover:text-navy" />
                                         )}
                                     </div>
-                                    <h4 className="font-bold text-slate-900 text-lg mb-2 truncate group-hover:text-[#003E7E] transition-colors tracking-tight">{company.name}</h4>
-                                    <p className="text-xs text-slate-500 truncate font-medium mb-4">{company.shortDesc || company.business}</p>
+                                    <h4 className="font-bold text-ink text-lg mb-2 truncate group-hover:text-navy transition-colors tracking-tight">{company.name}</h4>
+                                    <p className="text-xs text-ink-soft truncate font-medium mb-4">{company.shortDesc || company.business}</p>
                                     <div className="flex gap-2 flex-wrap mb-2">
-                                        {company.isTips && <span className="text-[10px] font-bold text-[#003E7E] bg-blue-50 px-2 py-1 rounded-full border border-blue-100">TIPS</span>}
-                                        <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{company.category === 'subsidiary' ? '자회사' : '투자기업'}</span>
+                                        {company.isTips && <Badge variant="gold">TIPS</Badge>}
+                                        <Badge variant="navy">{company.category === 'subsidiary' ? '자회사' : '투자기업'}</Badge>
                                     </div>
-                                    <div className="text-[10px] text-slate-400 text-right">설립일: {company.foundedDate}</div>
+                                    <div className="text-xs text-ink-faint text-right">설립일: {formatDate(company.foundedDate)}</div>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="py-20 text-center text-slate-500 bg-slate-50 rounded-2xl border border-slate-100 border-dashed">
+                        <div className="py-20 text-center text-ink-soft bg-surface-alt rounded-2xl border border-line border-dashed">
                             조건에 맞는 기업이 없습니다.
                         </div>
                     )}
@@ -353,11 +355,11 @@ const App: React.FC = () => {
             );
         }
 
-        // Investment Fields
+        // Investment Fields — 분야 소개는 InvestmentContent에 위임하고, 조합 운용 현황 표만 이어서 노출
         if (activePage === 'investment' && activeSubPage === 'fields') {
             return (
                 <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <InvestmentFieldsSection onNavigate={handleNavigate} />
+                    <InvestmentContent subPage="fields" onNavigate={handleNavigate} />
                     <FundsSection />
                 </div>
             );
@@ -368,28 +370,25 @@ const App: React.FC = () => {
             const noticePosts = posts.filter(p => p.category === 'notice');
             return (
                 <div className="space-y-10 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <div className="flex justify-between items-center pb-6 border-b border-slate-200">
-                        <span className="text-slate-500 font-medium">총 <span className="text-[#003E7E] font-bold text-lg">{noticePosts.length}</span>건</span>
-                        <div className="flex gap-3">
-                            <input type="text" placeholder="검색어 입력" className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#003E7E] w-64 shadow-sm" />
-                            <Button size="sm">검색</Button>
-                        </div>
+                    <div className="flex justify-between items-center pb-6 border-b border-line">
+                        <span className="text-ink-soft font-medium">총 <span className="text-navy font-bold text-lg">{noticePosts.length}</span>건</span>
+                        <SearchBar />
                     </div>
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 divide-y divide-slate-100 overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-card border border-line divide-y divide-line overflow-hidden">
                         {noticePosts.map((notice) => (
-                            <div key={notice.id} onClick={() => handlePostClick(notice, '공지사항')} className="flex flex-col md:flex-row md:items-center p-6 hover:bg-slate-50 transition-colors cursor-pointer group">
-                                <div className="w-20 text-center text-slate-400 text-sm font-bold mb-2 md:mb-0 bg-slate-100 rounded py-1 mr-6">No.{notice.id}</div>
+                            <div key={notice.id} onClick={() => handlePostClick(notice, '공지사항')} className="flex flex-col md:flex-row md:items-center p-6 hover:bg-surface-alt transition-colors cursor-pointer group">
+                                <div className="w-20 text-center text-ink-faint text-sm font-bold mb-2 md:mb-0 bg-surface-alt rounded py-1 mr-6">No.{notice.id}</div>
                                 <div className="flex-grow">
-                                    <h4 className="text-slate-800 font-bold text-lg group-hover:text-[#003E7E] transition-colors flex items-center gap-3 tracking-tight">
+                                    <h4 className="text-ink font-bold text-lg group-hover:text-navy transition-colors flex items-center gap-3 tracking-tight">
                                         {notice.title}
-                                        {notice.isNew && <span className="px-2 py-0.5 bg-red-50 text-red-600 text-[10px] border border-red-100 rounded-full font-bold">NEW</span>}
+                                        {notice.isNew && <Badge variant="danger">NEW</Badge>}
                                     </h4>
                                 </div>
-                                <div className="text-slate-400 text-sm w-32 text-center mt-2 md:mt-0 font-medium">{notice.date}</div>
+                                <div className="text-ink-faint text-sm w-32 text-center mt-2 md:mt-0 font-medium">{formatDate(notice.date)}</div>
                             </div>
                         ))}
                         {noticePosts.length === 0 && (
-                            <div className="text-center py-20 text-slate-400">등록된 공지사항이 없습니다.</div>
+                            <div className="text-center py-20 text-ink-faint">등록된 공지사항이 없습니다.</div>
                         )}
                     </div>
                 </div>
@@ -401,25 +400,22 @@ const App: React.FC = () => {
             const pressPosts = posts.filter(p => p.category === 'press');
             return (
                 <div className="space-y-10 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <div className="flex justify-between items-center pb-6 border-b border-slate-200">
-                        <span className="text-slate-500 font-medium">총 <span className="text-[#003E7E] font-bold text-lg">{pressPosts.length}</span>건</span>
-                        <div className="flex gap-3">
-                            <input type="text" placeholder="검색어 입력" className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#003E7E] w-64 shadow-sm" />
-                            <Button size="sm">검색</Button>
-                        </div>
+                    <div className="flex justify-between items-center pb-6 border-b border-line">
+                        <span className="text-ink-soft font-medium">총 <span className="text-navy font-bold text-lg">{pressPosts.length}</span>건</span>
+                        <SearchBar />
                     </div>
                     <div className="grid gap-6">
                         {pressPosts.map((post) => (
-                            <div key={post.id} onClick={() => handlePostClick(post, '언론보도')} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
+                            <div key={post.id} onClick={() => handlePostClick(post, '언론보도')} className="bg-white p-6 rounded-2xl border border-line shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all cursor-pointer group">
                                 <div className="flex items-center justify-between mb-4">
-                                    <span className="px-3 py-1 bg-blue-50 text-[#003E7E] text-xs font-bold rounded-full">PRESS</span>
-                                    <span className="text-slate-400 text-sm">{post.date}</span>
+                                    <Badge variant="neutral">PRESS</Badge>
+                                    <span className="text-ink-faint text-sm">{formatDate(post.date)}</span>
                                 </div>
-                                <h4 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-[#003E7E] transition-colors line-clamp-1">{post.title}</h4>
-                                <p className="text-slate-600 line-clamp-2 text-sm">{post.content?.slice(0, 150)}...</p>
+                                <h4 className="text-xl font-bold text-ink mb-3 group-hover:text-navy transition-colors line-clamp-1">{post.title}</h4>
+                                <p className="text-ink-soft line-clamp-2 text-sm">{post.content?.slice(0, 150)}...</p>
                             </div>
                         ))}
-                        {pressPosts.length === 0 && <div className="text-center py-20 text-slate-400">등록된 보도자료가 없습니다.</div>}
+                        {pressPosts.length === 0 && <div className="text-center py-20 text-ink-faint">등록된 보도자료가 없습니다.</div>}
                     </div>
                 </div>
             );
@@ -430,14 +426,11 @@ const App: React.FC = () => {
             const resourcePosts = posts.filter(p => p.category === 'resources');
             return (
                 <div className="space-y-10 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <div className="flex justify-between items-center pb-6 border-b border-slate-200">
-                        <span className="text-slate-500 font-medium">총 <span className="text-[#003E7E] font-bold text-lg">{resourcePosts.length}</span>건</span>
-                        <div className="flex gap-3">
-                            <input type="text" placeholder="검색어 입력" className="border border-slate-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#003E7E] w-64 shadow-sm" />
-                            <Button size="sm">검색</Button>
-                        </div>
+                    <div className="flex justify-between items-center pb-6 border-b border-line">
+                        <span className="text-ink-soft font-medium">총 <span className="text-navy font-bold text-lg">{resourcePosts.length}</span>건</span>
+                        <SearchBar />
                     </div>
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100">
+                    <div className="bg-white rounded-2xl shadow-card border border-line">
                         {resourcePosts.map((resource, idx) => {
                             const downloadUrl = resource.fileUrl || (resource.fileName ? `/files/${resource.fileName}` : undefined);
                             return (
@@ -451,24 +444,24 @@ const App: React.FC = () => {
                                         handlePostClick(resource, '자료실');
                                     }
                                 }}
-                                className={`flex p-6 items-center gap-6 hover:bg-slate-50 transition-colors cursor-pointer ${idx !== resourcePosts.length - 1 ? 'border-b border-slate-100' : ''}`}
+                                className={`flex p-6 items-center gap-6 hover:bg-surface-alt transition-colors cursor-pointer ${idx !== resourcePosts.length - 1 ? 'border-b border-line' : ''}`}
                             >
-                                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-sm font-black text-slate-500 flex-shrink-0 border border-slate-200 uppercase">
+                                <div className="w-14 h-14 rounded-xl bg-surface-alt flex items-center justify-center text-sm font-bold text-ink-soft flex-shrink-0 border border-line uppercase">
                                     {resource.fileType || 'FILE'}
                                 </div>
                                 <div className="flex-grow min-w-0">
-                                    <h4 className="text-slate-800 font-bold text-lg mb-2 hover:text-[#003E7E] transition-colors tracking-tight">{resource.title}</h4>
-                                    <div className="flex items-center text-sm text-slate-400 gap-4">
-                                        <span className="flex items-center"><Clock className="w-3 h-3 mr-1" /> {resource.date}</span>
+                                    <h4 className="text-ink font-bold text-lg mb-2 hover:text-navy transition-colors tracking-tight">{resource.title}</h4>
+                                    <div className="flex items-center text-sm text-ink-faint gap-4">
+                                        <span className="flex items-center"><Clock className="w-3 h-3 mr-1" /> {formatDate(resource.date)}</span>
                                         <span className="flex items-center"><User className="w-3 h-3 mr-1" /> {resource.author}</span>
                                     </div>
                                 </div>
-                                <Download className="w-5 h-5 text-slate-300 hover:text-[#003E7E]" />
+                                <Download className="w-5 h-5 text-ink-faint hover:text-navy" />
                             </a>
                             );
                         })}
                         {resourcePosts.length === 0 && (
-                            <div className="text-center py-20 text-slate-400">등록된 자료가 없습니다.</div>
+                            <div className="text-center py-20 text-ink-faint">등록된 자료가 없습니다.</div>
                         )}
                     </div>
                 </div>
@@ -481,26 +474,26 @@ const App: React.FC = () => {
             return (
                 <div className="space-y-10 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Q&A</h2>
-                        <p className="text-slate-600">궁금하신 점을 빠르게 확인해보세요.</p>
+                        <h2 className="text-h2 text-ink mb-4">Q&A</h2>
+                        <p className="text-ink-soft">궁금하신 점을 빠르게 확인해보세요.</p>
                     </div>
                     <div className="space-y-4">
                         {faqPosts.map((post) => (
-                            <details key={post.id} className="group bg-white rounded-2xl border border-slate-200 open:border-[#003E7E] transition-all duration-300 shadow-sm open:shadow-md">
-                                <summary className="flex items-center justify-between p-6 font-bold cursor-pointer list-none text-slate-800 text-lg">
+                            <details key={post.id} className="group bg-white rounded-2xl border border-line-md open:border-navy transition-all duration-300 shadow-card open:shadow-card-hover">
+                                <summary className="flex items-center justify-between p-6 font-bold cursor-pointer list-none text-ink text-lg">
                                     <div className="flex items-start gap-4">
-                                        <span className="text-[#003E7E] font-black mt-0.5">Q.</span>
-                                        <span className="group-hover:text-[#003E7E] transition-colors">{post.title}</span>
+                                        <span className="text-navy font-bold mt-0.5">Q.</span>
+                                        <span className="group-hover:text-navy transition-colors">{post.title}</span>
                                     </div>
-                                    <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-4" />
+                                    <ChevronDown className="w-5 h-5 text-ink-faint group-open:rotate-180 transition-transform shrink-0 ml-4" />
                                 </summary>
-                                <div className="px-6 pb-8 pt-2 text-slate-600 leading-relaxed border-t border-slate-100 mx-6 mt-2 flex gap-4">
-                                    <span className="font-black text-slate-300">A.</span>
+                                <div className="px-6 pb-8 pt-2 text-ink-soft leading-relaxed border-t border-line mx-6 mt-2 flex gap-4">
+                                    <span className="font-bold text-ink-faint">A.</span>
                                     <div className="whitespace-pre-wrap">{post.content}</div>
                                 </div>
                             </details>
                         ))}
-                        {faqPosts.length === 0 && <div className="text-center py-20 text-slate-400">등록된 Q&A가 없습니다.</div>}
+                        {faqPosts.length === 0 && <div className="text-center py-20 text-ink-faint">등록된 Q&A가 없습니다.</div>}
                     </div>
                 </div>
             );
@@ -512,7 +505,7 @@ const App: React.FC = () => {
         }
 
         if (activePage === 'about') {
-            return <div className="py-32 text-center text-slate-400 font-light text-lg">준비중인 페이지입니다. ({activeSubPage})</div>;
+            return <div className="py-20 text-center text-ink-faint font-light text-lg">준비중인 페이지입니다. ({activeSubPage})</div>;
         }
 
         // Investment
@@ -532,22 +525,22 @@ const App: React.FC = () => {
 
         // Default Empty State
         return (
-            <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-500">
-                <div className="w-24 h-24 bg-slate-50 rounded-full mb-8 flex items-center justify-center text-slate-300 border border-slate-100">
+            <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in duration-500">
+                <div className="w-24 h-24 bg-surface-alt rounded-full mb-8 flex items-center justify-center text-ink-faint border border-line">
                     <FileText className="w-10 h-10" />
                 </div>
-                <h3 className="text-3xl font-bold text-slate-300 mb-4 tracking-tight">페이지 준비 중</h3>
-                <p className="text-slate-500 max-w-md mx-auto text-lg tracking-tight">
+                <h3 className="text-h2 text-ink-faint mb-4">페이지 준비 중</h3>
+                <p className="text-ink-soft max-w-md mx-auto text-lg tracking-tight">
                     현재 페이지는 준비 중입니다. <br />
                     빠른 시일 내에 유용한 정보로 찾아뵙겠습니다.
                 </p>
-                <Button variant="outline" className="mt-10 text-slate-500 border-slate-300 hover:bg-slate-50 hover:text-slate-900" onClick={() => handleNavigate('home')}>홈으로 돌아가기</Button>
+                <Button variant="outline" className="mt-10" onClick={() => handleNavigate('home')}>홈으로 돌아가기</Button>
             </div>
         );
     };
 
     return (
-        <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-[#003E7E] selection:text-white flex flex-col antialiased">
+        <div className="min-h-screen bg-white font-sans text-ink selection:bg-navy selection:text-white flex flex-col antialiased">
             <Header 
                 activePage={activePage} 
                 activeSubPage={activeSubPage} 
@@ -573,78 +566,56 @@ const App: React.FC = () => {
     );
 };
 
-// Helper Components for Investment Fields Page
-const InvestmentFieldsSection: React.FC<{ onNavigate: (page: PageId, subPage?: string) => void }> = ({ onNavigate }) => {
-    return (
-        <div className="grid md:grid-cols-2 gap-8">
-            {[
-                { Icon: Cpu, title: "AI·ICT", desc: "인공지능(AI), 빅데이터, 클라우드, IoT, SW 등 디지털 혁신을 선도하는 첨단 ICT 기술 분야" },
-                { Icon: Microscope, title: "바이오·헬스케어", desc: "디지털 헬스케어, 의료기기, 바이오 소재 및 바이오테크 분야의 혁신 기술" },
-                { Icon: Factory, title: "스마트제조·반도체", desc: "스마트 제조, 반도체 공정·장비, 첨단 제조기술 등 미래 제조산업을 선도하는 핵심 기술 분야" },
-                { Icon: Layers, title: "첨단소재·부품", desc: "신소재, 고기능성 부품 및 소재 기술을 기반으로 산업 경쟁력을 높이는 핵심 기술 분야" },
-            ].map((item) => (
-                <Card key={item.title} className="text-center p-12 h-full flex flex-col items-center hover:border-blue-200 group">
-                    <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 text-[#003E7E] shadow-inner group-hover:scale-110 transition-transform duration-300">
-                        <item.Icon className="w-10 h-10" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">{item.title}</h3>
-                    <p className="text-slate-600 leading-relaxed text-lg tracking-tight">{item.desc}</p>
-                </Card>
-            ))}
-        </div>
-    );
-};
+// 게시판 목록 공통 검색 인풋+버튼
+const SearchBar: React.FC = () => (
+    <div className="flex gap-3">
+        <input type="text" placeholder="검색어 입력" className="border border-line rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy w-64 shadow-sm" />
+        <Button size="sm">검색</Button>
+    </div>
+);
 
 const FundsSection: React.FC = () => {
     return (
-        <div className="bg-slate-50 rounded-3xl p-6 md:p-12 border border-slate-200 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+        <div className="bg-surface-alt rounded-2xl p-6 md:p-12 border border-line relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-surface-alt2/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 
             <div className="relative z-10">
                 <SectionTitle title="투자 조합 운용 현황" subtitle="Investment Funds" />
 
                 {/* Desktop Table View */}
-                <div className="hidden md:block overflow-hidden bg-white rounded-2xl shadow-xl border border-slate-200">
+                <div className="hidden md:block overflow-hidden bg-white rounded-2xl shadow-card border border-line">
                     <table className="min-w-full text-sm text-left border-collapse">
-                        <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider text-xs">
+                        <thead className="bg-surface-alt text-ink-soft font-bold uppercase tracking-wider text-xs">
                             <tr>
-                                <th className="px-8 py-6 font-bold border-b border-slate-200 w-[35%]">구분</th>
-                                <th className="px-6 py-6 font-bold border-b border-slate-200 text-center w-[15%]">소관부처</th>
-                                <th className="px-6 py-6 font-bold border-b border-slate-200 text-right w-[15%]">결성규모</th>
-                                <th className="px-6 py-6 font-bold border-b border-slate-200 text-center w-[10%]">진행현황</th>
-                                <th className="px-8 py-6 font-bold border-b border-slate-200 text-right w-[25%]">운용기간</th>
+                                <th className="px-8 py-6 font-bold border-b border-line w-[35%]">구분</th>
+                                <th className="px-6 py-6 font-bold border-b border-line text-center w-[15%]">소관부처</th>
+                                <th className="px-6 py-6 font-bold border-b border-line text-right w-[15%]">결성규모</th>
+                                <th className="px-6 py-6 font-bold border-b border-line text-center w-[10%]">진행현황</th>
+                                <th className="px-8 py-6 font-bold border-b border-line text-right w-[25%]">운용기간</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-line">
                             {FUNDS_DATA.map((fund, idx) => (
-                                <tr key={idx} className="group hover:bg-blue-50/30 transition-colors duration-200">
+                                <tr key={idx} className="group hover:bg-surface-alt2/30 transition-colors duration-300">
                                     <td className="px-8 py-6 align-middle">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#003E7E] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-[#003E7E] group-hover:text-white transition-all duration-300 shadow-sm">
+                                            <div className="w-10 h-10 rounded-xl bg-surface-alt2 text-navy flex items-center justify-center shrink-0 group-hover:bg-navy group-hover:text-white transition-all duration-300">
                                                 <PieChart className="w-5 h-5" />
                                             </div>
-                                            <span className="font-bold text-slate-800 text-base tracking-tight group-hover:text-[#003E7E] transition-colors">{fund.name}</span>
+                                            <span className="font-bold text-ink text-base tracking-tight group-hover:text-navy transition-colors">{fund.name}</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-6 text-center align-middle">
-                                        <span className="inline-block px-3 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
-                                            {fund.agency.split('(')[0]}
-                                        </span>
+                                        <Badge variant="neutral">{fund.agency.split('(')[0]}</Badge>
                                     </td>
                                     <td className="px-6 py-6 align-middle text-right">
-                                        <span className="font-extrabold text-[#003E7E] text-lg whitespace-nowrap">{fund.size}</span>
+                                        <span className="display-num text-lg text-navy whitespace-nowrap">{fund.size}</span>
                                     </td>
                                     <td className="px-6 py-6 text-center align-middle">
-                                        <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold border border-emerald-100 shadow-sm whitespace-nowrap">
-                                            <span className="relative flex h-2 w-2">
-                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                            </span>
-                                            {fund.status}
-                                        </span>
+                                        <Badge variant="navy">{fund.status}</Badge>
                                     </td>
-                                    <td className="px-8 py-6 text-slate-500 text-right font-mono text-sm tracking-tight align-middle whitespace-nowrap">
-                                        {fund.period}
+                                    <td className="px-8 py-6 text-ink-soft text-right font-mono text-sm tracking-tight align-middle whitespace-nowrap">
+                                        {formatDate(fund.period)}
                                     </td>
                                 </tr>
                             ))}
@@ -655,47 +626,41 @@ const FundsSection: React.FC = () => {
                 {/* Mobile Card View */}
                 <div className="md:hidden space-y-4">
                     {FUNDS_DATA.map((fund, idx) => (
-                        <div key={idx} className="bg-white p-6 rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100 flex flex-col gap-5 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
+                        <div key={idx} className="bg-white p-6 rounded-2xl shadow-card border border-line flex flex-col gap-5 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-20 h-20 bg-surface-alt2 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
 
                             <div className="flex justify-between items-start gap-4 relative z-10">
                                 <div className="flex items-center gap-3.5">
-                                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-50 to-white text-[#003E7E] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
+                                    <div className="w-11 h-11 rounded-xl bg-surface-alt2 text-navy flex items-center justify-center shrink-0 border border-line">
                                         <PieChart className="w-5 h-5" />
                                     </div>
                                     <div className="flex flex-col">
-                                        <h4 className="font-bold text-slate-900 text-lg leading-tight mb-1 pr-8">{fund.name}</h4>
-                                        <span className="text-xs font-bold text-slate-400">{fund.agency}</span>
+                                        <h4 className="font-bold text-ink text-lg leading-tight mb-1 pr-8">{fund.name}</h4>
+                                        <span className="text-xs font-bold text-ink-faint">{fund.agency}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50">
+                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-line">
                                 <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">결성규모</span>
-                                    <span className="text-xl font-black text-[#003E7E]">{fund.size}</span>
+                                    <span className="text-label uppercase text-ink-faint">결성규모</span>
+                                    <span className="display-num text-lg text-navy">{fund.size}</span>
                                 </div>
                                 <div className="flex flex-col gap-1 items-end">
-                                    <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">상태</span>
-                                    <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-emerald-100">
-                                        <span className="relative flex h-1.5 w-1.5">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                                        </span>
-                                        {fund.status}
-                                    </span>
+                                    <span className="text-label uppercase text-ink-faint">상태</span>
+                                    <Badge variant="navy">{fund.status}</Badge>
                                 </div>
-                                <div className="col-span-2 flex flex-col gap-1 bg-slate-50 p-3 rounded-xl border border-slate-100 mt-1">
-                                    <span className="text-[11px] text-slate-400 font-bold uppercase tracking-wider">운용기간</span>
-                                    <span className="text-sm font-mono text-slate-600 font-medium">{fund.period}</span>
+                                <div className="col-span-2 flex flex-col gap-1 bg-surface-alt p-3 rounded-xl border border-line mt-1">
+                                    <span className="text-label uppercase text-ink-faint">운용기간</span>
+                                    <span className="text-sm font-mono text-ink-soft font-medium">{formatDate(fund.period)}</span>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <p className="text-right text-slate-500 font-bold mt-8 flex justify-end items-center text-sm">
-                    <Briefcase className="w-4 h-4 mr-2 text-[#003E7E]" /> 총 <span className="text-[#003E7E] mx-1">6개</span> 투자조합 운용 중 / 총 <span className="text-[#003E7E] mx-1">113억원</span> 규모
+                <p className="text-right text-ink-soft font-bold mt-8 flex justify-end items-center text-sm">
+                    <Briefcase className="w-4 h-4 mr-2 text-navy" /> 총 <span className="text-navy mx-1">6개</span> 투자조합 운용 중 / <span className="text-navy ml-1">{KEY_STATS.fundTotalLabel}</span>
                 </p>
             </div>
         </div>

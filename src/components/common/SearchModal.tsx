@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, X, FileText, Building, ArrowRight } from 'lucide-react';
 import { Post, Company } from '../../types';
+import Badge from './Badge';
 
 interface SearchModalProps {
     isOpen: boolean;
@@ -98,26 +99,27 @@ const SearchModal: React.FC<SearchModalProps> = ({
             onClick={onClose}
         >
             <div 
-                className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden animate-in zoom-in-95 duration-200"
+                className="bg-white rounded-2xl shadow-popover w-full max-w-2xl max-h-[80vh] overflow-hidden animate-in zoom-in-95 duration-200"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* 검색 입력 */}
-                <div className="p-6 border-b border-slate-100">
+                <div className="p-6 border-b border-line">
                     <div className="flex items-center gap-3">
                         <div className="flex-1 relative">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-ink-faint" />
                             <input
                                 ref={inputRef}
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="검색어를 입력하세요..."
-                                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#003E7E] focus:bg-white focus:border-transparent outline-none transition-all font-medium"
+                                className="w-full pl-12 pr-4 py-3 bg-surface-alt border border-line-md rounded-xl focus:ring-2 focus:ring-navy focus:bg-white focus:border-transparent outline-none transition-all font-medium"
                             />
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 text-slate-400 hover:text-slate-600 transition-colors rounded-lg hover:bg-slate-50"
+                            aria-label="검색 닫기"
+                            className="p-2 text-ink-faint hover:text-ink-soft transition-colors rounded-xl hover:bg-surface-alt"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -127,15 +129,15 @@ const SearchModal: React.FC<SearchModalProps> = ({
                 {/* 검색 결과 */}
                 <div className="overflow-y-auto max-h-[60vh]">
                     {!searchQuery.trim() ? (
-                        <div className="p-12 text-center text-slate-400">
+                        <div className="p-12 text-center text-ink-faint">
                             <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
                             <p className="text-sm">검색어를 입력하세요</p>
                         </div>
                     ) : totalResults === 0 ? (
-                        <div className="p-12 text-center text-slate-400">
+                        <div className="p-12 text-center text-ink-faint">
                             <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
                             <p className="text-sm">검색 결과가 없습니다</p>
-                            <p className="text-xs mt-2 text-slate-300">다른 검색어를 시도해보세요</p>
+                            <p className="text-xs mt-2 text-ink-faint">다른 검색어를 시도해보세요</p>
                         </div>
                     ) : (
                         <div className="p-6 space-y-6">
@@ -143,36 +145,36 @@ const SearchModal: React.FC<SearchModalProps> = ({
                             {searchResults.posts.length > 0 && (
                                 <div>
                                     <div className="flex items-center gap-2 mb-4">
-                                        <FileText className="w-4 h-4 text-[#003E7E]" />
-                                        <h3 className="text-sm font-bold text-slate-700">게시글 ({searchResults.posts.length})</h3>
+                                        <FileText className="w-4 h-4 text-navy" />
+                                        <h3 className="text-sm font-bold text-ink">게시글 ({searchResults.posts.length})</h3>
                                     </div>
                                     <div className="space-y-2">
                                         {searchResults.posts.map((post) => (
                                             <button
                                                 key={post.id}
                                                 onClick={() => handlePostClick(post)}
-                                                className="w-full text-left p-4 bg-slate-50 hover:bg-blue-50 rounded-xl border border-slate-200 hover:border-[#003E7E] transition-all group"
+                                                className="w-full text-left p-4 bg-surface-alt hover:bg-surface-alt2 rounded-xl border border-line hover:border-line-strong transition-all group"
                                             >
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#003E7E]/10 text-[#003E7E]">
-                                                                {post.category === 'notice' ? '공지사항' : 
+                                                            <Badge variant="neutral">
+                                                                {post.category === 'notice' ? '공지사항' :
                                                                  post.category === 'press' ? '언론보도' :
                                                                  post.category === 'resources' ? '자료실' : 'Q&A'}
-                                                            </span>
-                                                            <span className="text-xs text-slate-400">{post.date}</span>
+                                                            </Badge>
+                                                            <span className="text-xs text-ink-faint">{post.date}</span>
                                                         </div>
-                                                        <h4 className="font-bold text-slate-900 group-hover:text-[#003E7E] transition-colors line-clamp-1">
+                                                        <h4 className="font-bold text-ink group-hover:text-navy transition-colors line-clamp-1">
                                                             {post.title}
                                                         </h4>
                                                         {post.content && (
-                                                            <p className="text-sm text-slate-600 mt-1 line-clamp-2">
+                                                            <p className="text-sm text-ink-soft mt-1 line-clamp-2">
                                                                 {post.content}
                                                             </p>
                                                         )}
                                                     </div>
-                                                    <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-[#003E7E] transition-colors shrink-0 mt-1" />
+                                                    <ArrowRight className="w-4 h-4 text-ink-faint group-hover:text-navy transition-colors shrink-0 mt-1" />
                                                 </div>
                                             </button>
                                         ))}
@@ -184,36 +186,36 @@ const SearchModal: React.FC<SearchModalProps> = ({
                             {searchResults.companies.length > 0 && (
                                 <div>
                                     <div className="flex items-center gap-2 mb-4">
-                                        <Building className="w-4 h-4 text-[#003E7E]" />
-                                        <h3 className="text-sm font-bold text-slate-700">기업 ({searchResults.companies.length})</h3>
+                                        <Building className="w-4 h-4 text-navy" />
+                                        <h3 className="text-sm font-bold text-ink">기업 ({searchResults.companies.length})</h3>
                                     </div>
                                     <div className="space-y-2">
                                         {searchResults.companies.map((company) => (
                                             <button
                                                 key={company.id}
                                                 onClick={() => handleCompanyClick(company)}
-                                                className="w-full text-left p-4 bg-slate-50 hover:bg-blue-50 rounded-xl border border-slate-200 hover:border-[#003E7E] transition-all group"
+                                                className="w-full text-left p-4 bg-surface-alt hover:bg-surface-alt2 rounded-xl border border-line hover:border-line-strong transition-all group"
                                             >
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div className="flex-1">
                                                         <div className="flex items-center gap-2 mb-1">
-                                                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">
+                                                            <Badge variant="navy">
                                                                 {company.category === 'subsidiary' ? '자회사' : '투자기업'}
-                                                            </span>
+                                                            </Badge>
                                                             {company.isTips && (
-                                                                <span className="text-xs font-bold px-2 py-0.5 rounded bg-yellow-100 text-yellow-700">
+                                                                <Badge variant="gold">
                                                                     TIPS
-                                                                </span>
+                                                                </Badge>
                                                             )}
                                                         </div>
-                                                        <h4 className="font-bold text-slate-900 group-hover:text-[#003E7E] transition-colors">
+                                                        <h4 className="font-bold text-ink group-hover:text-navy transition-colors">
                                                             {company.name}
                                                         </h4>
-                                                        <p className="text-sm text-slate-600 mt-1 line-clamp-1">
+                                                        <p className="text-sm text-ink-soft mt-1 line-clamp-1">
                                                             {company.business}
                                                         </p>
                                                     </div>
-                                                    <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-[#003E7E] transition-colors shrink-0 mt-1" />
+                                                    <ArrowRight className="w-4 h-4 text-ink-faint group-hover:text-navy transition-colors shrink-0 mt-1" />
                                                 </div>
                                             </button>
                                         ))}

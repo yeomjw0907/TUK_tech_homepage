@@ -131,9 +131,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
 
     if (!editor) {
         return (
-            <div className="border border-slate-300 rounded-xl p-8 text-center text-slate-500 min-h-[400px] flex items-center justify-center bg-slate-50">
+            <div className="border border-line-md rounded-xl p-8 text-center text-ink-soft min-h-[400px] flex items-center justify-center bg-surface-alt">
                 <div>
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003E7E] mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy mx-auto mb-2"></div>
                     <p>에디터를 로드하는 중...</p>
                 </div>
             </div>
@@ -146,8 +146,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
             onClick={onClick}
             className={`p-2 rounded-lg transition-colors ${
                 isActive
-                    ? 'bg-[#003E7E] text-white'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-[#003E7E]'
+                    ? 'bg-navy text-white'
+                    : 'text-ink-soft hover:bg-surface-alt hover:text-navy'
             }`}
             title={title}
         >
@@ -156,11 +156,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
     );
 
     return (
-        <div className="border border-slate-300 rounded-xl overflow-hidden bg-white">
+        <div className="border border-line-md rounded-xl overflow-hidden bg-white">
             {/* 툴바 */}
-            <div className="border-b border-slate-200 bg-slate-50 p-2 flex flex-wrap items-center gap-1">
+            <div className="border-b border-line bg-surface-alt p-2 flex flex-wrap items-center gap-1">
                 {/* 텍스트 스타일 */}
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 mr-2">
+                <div className="flex items-center gap-1 border-r border-line pr-2 mr-2">
                     <MenuButton
                         onClick={() => editor.chain().focus().toggleBold().run()}
                         isActive={editor.isActive('bold')}
@@ -192,7 +192,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
                 </div>
 
                 {/* 제목 */}
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 mr-2">
+                <div className="flex items-center gap-1 border-r border-line pr-2 mr-2">
                     <MenuButton
                         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
                         isActive={editor.isActive('heading', { level: 1 })}
@@ -217,7 +217,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
                 </div>
 
                 {/* 리스트 */}
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 mr-2">
+                <div className="flex items-center gap-1 border-r border-line pr-2 mr-2">
                     <MenuButton
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
                         isActive={editor.isActive('bulletList')}
@@ -235,7 +235,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
                 </div>
 
                 {/* 정렬 */}
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 mr-2">
+                <div className="flex items-center gap-1 border-r border-line pr-2 mr-2">
                     <MenuButton
                         onClick={() => editor.chain().focus().setTextAlign('left').run()}
                         isActive={editor.isActive({ textAlign: 'left' })}
@@ -260,7 +260,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
                 </div>
 
                 {/* 기타 */}
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 mr-2">
+                <div className="flex items-center gap-1 border-r border-line pr-2 mr-2">
                     <MenuButton
                         onClick={() => editor.chain().focus().toggleBlockquote().run()}
                         isActive={editor.isActive('blockquote')}
@@ -278,7 +278,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange, plac
                 </div>
 
                 {/* 링크 & 이미지 */}
-                <div className="flex items-center gap-1 border-r border-slate-200 pr-2 mr-2">
+                <div className="flex items-center gap-1 border-r border-line pr-2 mr-2">
                     <MenuButton
                         onClick={setLink}
                         isActive={editor.isActive('link')}

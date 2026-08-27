@@ -3,7 +3,7 @@
  * 임의값 클래스(text-[#003E7E] 등)는 ESLint로 금지되며, 여기 정의된 토큰만 사용합니다.
  * @type {import('tailwindcss').Config}
  */
-export default {
+module.exports = {
     content: ['./index.html', './index.tsx', './src/**/*.{ts,tsx}'],
     theme: {
         extend: {

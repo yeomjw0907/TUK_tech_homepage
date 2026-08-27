@@ -269,14 +269,14 @@ const AdminPage: React.FC<AdminPageProps> = ({
         return posts.filter(p => p.category === postCategoryFilter);
     };
 
-    const inputClass = "w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#003E7E] focus:border-transparent outline-none transition-all bg-white shadow-sm text-slate-800 placeholder-slate-400";
-    const labelClass = "block text-sm font-bold text-slate-800 mb-1.5";
+    const inputClass = "w-full px-4 py-3 border border-line-md rounded-lg focus:ring-2 focus:ring-navy focus:border-transparent outline-none transition-all bg-white shadow-sm text-ink placeholder-ink-faint";
+    const labelClass = "block text-sm font-bold text-ink mb-1.5";
 
     return (
-        <div className="min-h-screen bg-slate-100 flex">
+        <div className="min-h-screen bg-surface-alt flex">
             {/* Sidebar */}
-            <div className="w-64 bg-[#003E7E] text-white flex flex-col fixed h-full shadow-xl z-20">
-                <div className="p-6 border-b border-blue-900">
+            <div className="w-64 bg-navy text-white flex flex-col fixed h-full shadow-xl z-20">
+                <div className="p-6 border-b border-navy-hover">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                         <Settings className="w-5 h-5" /> 관리자 페이지
                     </h2>
@@ -284,27 +284,27 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 <nav className="flex-grow p-4 space-y-2">
                     <button
                         onClick={() => onLogout()}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-blue-200 hover:bg-white/10 hover:text-white transition-colors mb-4 border border-white/10"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors mb-4 border border-white/10"
                     >
                         <Home className="w-5 h-5" />
                         홈으로 이동
                     </button>
 
-                    <div className="h-px bg-blue-800 my-2 mx-2"></div>
+                    <div className="h-px bg-white/10 my-2 mx-2"></div>
 
                     {TABS.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === tab.id ? 'bg-white/10 font-bold text-white' : 'text-blue-200 hover:bg-white/5 hover:text-white'}`}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === tab.id ? 'bg-white/10 font-bold text-white' : 'text-white/70 hover:bg-white/5 hover:text-white'}`}
                         >
                             <tab.icon className="w-5 h-5" />
                             {tab.label}
                         </button>
                     ))}
                 </nav>
-                <div className="p-4 border-t border-blue-900">
-                    <button onClick={() => onLogout()} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-900 hover:bg-blue-950 rounded-lg text-sm font-bold transition-colors">
+                <div className="p-4 border-t border-navy-hover">
+                    <button onClick={() => onLogout()} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-navy-hover hover:bg-navy-deep rounded-lg text-sm font-bold transition-colors">
                         <LogOut className="w-4 h-4" /> 로그아웃
                     </button>
                 </div>
@@ -312,48 +312,48 @@ const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* Main Content */}
             <div className="flex-grow ml-64 p-8">
-                <h1 className="text-2xl font-bold text-slate-800 mb-8 border-b border-slate-200 pb-4">
+                <h1 className="text-2xl font-bold text-ink mb-8 border-b border-line pb-4">
                     {TABS.find(t => t.id === activeTab)?.label}
                 </h1>
 
                 {activeTab === 'dashboard' && (
                     <div className="grid grid-cols-3 gap-6">
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-line">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-slate-500">등록된 기업</h3>
-                                <Building className="w-6 h-6 text-[#003E7E]" />
+                                <h3 className="font-bold text-ink-soft">등록된 기업</h3>
+                                <Building className="w-6 h-6 text-navy" />
                             </div>
-                            <div className="text-3xl font-black text-slate-900">{companies.length}개</div>
-                            <div className="text-xs text-slate-400 mt-2">자회사 및 투자기업 포함</div>
+                            <div className="text-3xl font-bold text-ink">{companies.length}개</div>
+                            <div className="text-xs text-ink-faint mt-2">자회사 및 투자기업 포함</div>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-line">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-slate-500">총 게시글</h3>
-                                <Bell className="w-6 h-6 text-[#003E7E]" />
+                                <h3 className="font-bold text-ink-soft">총 게시글</h3>
+                                <Bell className="w-6 h-6 text-navy" />
                             </div>
-                            <div className="text-3xl font-black text-slate-900">{posts.length}개</div>
-                            <div className="text-xs text-slate-400 mt-2">공지, 보도, 자료, Q&A 포함</div>
+                            <div className="text-3xl font-bold text-ink">{posts.length}개</div>
+                            <div className="text-xs text-ink-faint mt-2">공지, 보도, 자료, Q&A 포함</div>
                         </div>
-                        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-line">
                             <div className="flex items-center justify-between mb-4">
-                                <h3 className="font-bold text-slate-500">진행중인 팝업</h3>
-                                <Layers className="w-6 h-6 text-[#003E7E]" />
+                                <h3 className="font-bold text-ink-soft">진행중인 팝업</h3>
+                                <Layers className="w-6 h-6 text-navy" />
                             </div>
-                            <div className="text-3xl font-black text-slate-900">{popups.filter(p => p.isVisible).length}건</div>
-                            <div className="text-xs text-slate-400 mt-2">홈페이지 노출 중</div>
+                            <div className="text-3xl font-bold text-ink">{popups.filter(p => p.isVisible).length}건</div>
+                            <div className="text-xs text-ink-faint mt-2">홈페이지 노출 중</div>
                         </div>
                     </div>
                 )}
 
                 {activeTab === 'companies' && (
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                            <h3 className="font-bold text-slate-700">기업 목록</h3>
+                    <div className="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+                        <div className="p-4 border-b border-line flex justify-between items-center bg-surface-alt">
+                            <h3 className="font-bold text-ink">기업 목록</h3>
                             <Button size="sm" onClick={() => openCompanyModal()}><Plus className="w-4 h-4 mr-1" /> 기업 추가</Button>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <thead className="bg-surface-alt text-ink-soft font-bold border-b border-line">
                                     <tr>
                                         <th className="px-6 py-4">기업명</th>
                                         <th className="px-6 py-4">대표자</th>
@@ -362,23 +362,23 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                         <th className="px-6 py-4 text-center">관리</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-line">
                                     {companies.map((company) => (
-                                        <tr key={company.id} className="hover:bg-slate-50">
-                                            <td className="px-6 py-4 font-bold text-slate-800">{company.name}</td>
-                                            <td className="px-6 py-4 text-slate-600">{company.ceo}</td>
+                                        <tr key={company.id} className="hover:bg-surface-alt">
+                                            <td className="px-6 py-4 font-bold text-ink">{company.name}</td>
+                                            <td className="px-6 py-4 text-ink-soft">{company.ceo}</td>
                                             <td className="px-6 py-4">
-                                                <span className={`px-2 py-1 rounded text-xs font-bold ${company.category === 'subsidiary' ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-600'}`}>
+                                                <span className={`px-2 py-1 rounded text-xs font-bold ${company.category === 'subsidiary' ? 'bg-surface-alt2 text-navy' : 'bg-surface-alt text-ink-soft'}`}>
                                                     {company.category === 'subsidiary' ? '자회사' : '투자기업'}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-slate-500">{company.foundedDate}</td>
+                                            <td className="px-6 py-4 text-ink-soft">{company.foundedDate}</td>
                                             <td className="px-6 py-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <button onClick={() => openCompanyModal(company)} className="text-slate-400 hover:text-[#003E7E] transition-colors p-2">
+                                                    <button onClick={() => openCompanyModal(company)} className="text-ink-faint hover:text-navy transition-colors p-2">
                                                         <Edit className="w-4 h-4" />
                                                     </button>
-                                                    <button onClick={() => deleteCompany(company.id)} className="text-slate-400 hover:text-red-600 transition-colors p-2">
+                                                    <button onClick={() => deleteCompany(company.id)} className="text-ink-faint hover:text-red-600 transition-colors p-2">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>
@@ -392,16 +392,16 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 )}
 
                 {activeTab === 'posts' && postEditorMode !== 'edit' && (
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row justify-between items-center bg-slate-50 gap-4">
-                            <h3 className="font-bold text-slate-700 flex items-center">게시글 목록 <span className="ml-2 text-xs font-normal text-slate-500">({getFilteredPosts().length})</span></h3>
+                    <div className="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+                        <div className="p-4 border-b border-line flex flex-col md:flex-row justify-between items-center bg-surface-alt gap-4">
+                            <h3 className="font-bold text-ink flex items-center">게시글 목록 <span className="ml-2 text-xs font-normal text-ink-soft">({getFilteredPosts().length})</span></h3>
                             <div className="flex items-center gap-3">
-                                <div className="flex bg-white rounded-lg border border-slate-200 p-1">
+                                <div className="flex bg-white rounded-lg border border-line p-1">
                                     {POST_CATEGORIES.map(cat => (
                                         <button
                                             key={cat.id}
                                             onClick={() => setPostCategoryFilter(cat.id)}
-                                            className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${postCategoryFilter === cat.id ? 'bg-[#003E7E] text-white shadow-sm' : 'text-slate-500 hover:text-[#003E7E] hover:bg-slate-50'}`}
+                                            className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${postCategoryFilter === cat.id ? 'bg-navy text-white shadow-sm' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
                                         >
                                             {cat.label}
                                         </button>
@@ -412,7 +412,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <thead className="bg-surface-alt text-ink-soft font-bold border-b border-line">
                                     <tr>
                                         <th className="px-6 py-4 w-20">구분</th>
                                         <th className="px-6 py-4">제목</th>
@@ -422,23 +422,23 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                         <th className="px-6 py-4 text-center">관리</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-line">
                                     {getFilteredPosts().map((post) => (
-                                        <tr key={post.id} className="hover:bg-slate-50">
+                                        <tr key={post.id} className="hover:bg-surface-alt">
                                             <td className="px-6 py-4">
-                                                <span className="px-2 py-1 rounded text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                                <span className="px-2 py-1 rounded text-xs font-bold bg-surface-alt text-ink-soft border border-line">
                                                     {POST_CATEGORIES.find(c => c.id === post.category)?.label}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 font-bold text-slate-800 max-w-xs truncate">{post.title}</td>
-                                            <td className="px-6 py-4 text-slate-600">{post.author}</td>
-                                            <td className="px-6 py-4 text-slate-500">{post.date}</td>
+                                            <td className="px-6 py-4 font-bold text-ink max-w-xs truncate">{post.title}</td>
+                                            <td className="px-6 py-4 text-ink-soft">{post.author}</td>
+                                            <td className="px-6 py-4 text-ink-soft">{post.date}</td>
                                             <td className="px-6 py-4 text-center">
                                                 {(post.fileName || post.fileType || (post.files && post.files.length > 0)) && (
                                                     <div className="flex items-center justify-center gap-1">
-                                                        <Paperclip className="w-4 h-4 text-slate-400" />
+                                                        <Paperclip className="w-4 h-4 text-ink-faint" />
                                                         {post.files && post.files.length > 1 && (
-                                                            <span className="text-xs text-slate-500 font-bold">
+                                                            <span className="text-xs text-ink-soft font-bold">
                                                                 {post.files.length}
                                                             </span>
                                                         )}
@@ -447,10 +447,10 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                             </td>
                                             <td className="px-6 py-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <button onClick={() => openPostEditor(post)} className="text-slate-400 hover:text-[#003E7E] transition-colors p-2">
+                                                    <button onClick={() => openPostEditor(post)} className="text-ink-faint hover:text-navy transition-colors p-2">
                                                         <Edit className="w-4 h-4" />
                                                     </button>
-                                                    <button onClick={() => deletePost(post.id)} className="text-slate-400 hover:text-red-600 transition-colors p-2">
+                                                    <button onClick={() => deletePost(post.id)} className="text-ink-faint hover:text-red-600 transition-colors p-2">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>
@@ -465,27 +465,27 @@ const AdminPage: React.FC<AdminPageProps> = ({
 
                 {/* Post Editor Full Page */}
                 {activeTab === 'posts' && postEditorMode === 'edit' && (
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 min-h-[calc(100vh-200px)] flex flex-col">
+                    <div className="bg-white rounded-xl shadow-sm border border-line min-h-[calc(100vh-200px)] flex flex-col">
                         {/* Editor Header */}
-                        <div className="p-6 border-b border-slate-200 bg-slate-50 flex items-center justify-between sticky top-0 z-10">
+                        <div className="p-6 border-b border-line bg-surface-alt flex items-center justify-between sticky top-0 z-10">
                             <div className="flex items-center gap-4">
                                 <button
                                     onClick={closePostEditor}
-                                    className="text-slate-500 hover:text-slate-700 transition-colors p-2 hover:bg-white rounded-lg flex items-center gap-2"
+                                    className="text-ink-soft hover:text-ink transition-colors p-2 hover:bg-white rounded-lg flex items-center gap-2"
                                     title="목록으로 돌아가기"
                                 >
                                     <ArrowLeft className="w-5 h-5" />
                                     <span className="text-sm font-bold">목록으로</span>
                                 </button>
-                                <h3 className="font-bold text-xl text-slate-900">
+                                <h3 className="font-bold text-xl text-ink">
                                     {editingId ? '게시글 수정' : '게시글 작성'}
                                 </h3>
                             </div>
                             <div className="flex items-center gap-3">
-                                <Button variant="ghost" onClick={closePostEditor} className="text-slate-600 hover:text-slate-800">
+                                <Button variant="ghost" onClick={closePostEditor} className="text-ink-soft hover:text-ink">
                                     취소
                                 </Button>
-                                <Button onClick={handleSavePost} className="bg-[#003E7E] hover:bg-[#002d5c]">
+                                <Button onClick={handleSavePost} className="bg-navy hover:bg-navy-hover">
                                     {editingId ? '수정완료' : '작성완료'}
                                 </Button>
                             </div>
@@ -536,9 +536,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 <div>
                                     <label className={labelClass}>내용 *</label>
                                     <Suspense fallback={
-                                        <div className="border border-slate-300 rounded-xl p-8 text-center text-slate-500 min-h-[400px] flex items-center justify-center bg-slate-50">
+                                        <div className="border border-line-md rounded-xl p-8 text-center text-ink-soft min-h-[400px] flex items-center justify-center bg-surface-alt">
                                             <div>
-                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003E7E] mx-auto mb-2"></div>
+                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy mx-auto mb-2"></div>
                                                 <p>에디터를 로드하는 중...</p>
                                             </div>
                                         </div>
@@ -561,10 +561,10 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 </div>
 
                                 {/* File Attachment */}
-                                <div className="border-t border-slate-200 pt-6">
+                                <div className="border-t border-line pt-6">
                                     <label className={labelClass}>첨부파일</label>
                                     <div className="space-y-4">
-                                        <label className="cursor-pointer inline-flex items-center gap-2 bg-slate-100 text-slate-600 px-4 py-3 rounded-lg border border-slate-200 hover:bg-slate-200 transition-colors text-sm font-bold">
+                                        <label className="cursor-pointer inline-flex items-center gap-2 bg-surface-alt text-ink-soft px-4 py-3 rounded-lg border border-line hover:bg-surface-alt2 transition-colors text-sm font-bold">
                                             <Paperclip className="w-4 h-4" />
                                             파일 선택 (여러 개 선택 가능)
                                             <input 
@@ -577,36 +577,36 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                         
                                         {/* 파일 목록 */}
                                         {postFormData.files && postFormData.files.length > 0 && (
-                                            <div className="bg-slate-50 rounded-lg border border-slate-200 p-4 space-y-2">
-                                                <div className="text-xs font-bold text-slate-500 mb-2">
+                                            <div className="bg-surface-alt rounded-lg border border-line p-4 space-y-2">
+                                                <div className="text-xs font-bold text-ink-soft mb-2">
                                                     첨부된 파일 ({postFormData.files.length}개)
                                                 </div>
                                                 {postFormData.files.map((file, index) => (
                                                     <div 
                                                         key={index}
-                                                        className="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200 hover:border-slate-300 transition-colors group"
+                                                        className="flex items-center justify-between bg-white p-3 rounded-lg border border-line hover:border-line-md transition-colors group"
                                                     >
                                                         <div className="flex items-center gap-3 flex-grow min-w-0">
-                                                            <Paperclip className="w-4 h-4 text-slate-400 shrink-0" />
+                                                            <Paperclip className="w-4 h-4 text-ink-faint shrink-0" />
                                                             <div className="flex-grow min-w-0">
-                                                                <div className="text-sm font-medium text-slate-800 truncate">
+                                                                <div className="text-sm font-medium text-ink truncate">
                                                                     {file.name}
                                                                 </div>
                                                                 {file.size && (
-                                                                    <div className="text-xs text-slate-400 mt-0.5">
+                                                                    <div className="text-xs text-ink-faint mt-0.5">
                                                                         {(file.size / 1024).toFixed(1)} KB
                                                                     </div>
                                                                 )}
                                                             </div>
                                                             {file.type && (
-                                                                <span className="px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-bold rounded border border-blue-100 shrink-0">
+                                                                <span className="px-2 py-0.5 bg-surface-alt2 text-navy text-xs font-bold rounded border border-line shrink-0">
                                                                     {file.type}
                                                                 </span>
                                                             )}
                                                         </div>
                                                         <button
                                                             onClick={() => removeFile(index)}
-                                                            className="ml-3 text-slate-400 hover:text-red-600 transition-colors p-1 shrink-0"
+                                                            className="ml-3 text-ink-faint hover:text-red-600 transition-colors p-1 shrink-0"
                                                             title="파일 제거"
                                                         >
                                                             <XCircle className="w-4 h-4" />
@@ -617,7 +617,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                         )}
                                         
                                         {(!postFormData.files || postFormData.files.length === 0) && (
-                                            <div className="text-sm text-slate-400 italic">
+                                            <div className="text-sm text-ink-faint italic">
                                                 첨부된 파일이 없습니다.
                                             </div>
                                         )}
@@ -629,37 +629,37 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 )}
 
                 {activeTab === 'popups' && (
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div className="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
-                            <h3 className="font-bold text-slate-700">팝업 관리</h3>
+                    <div className="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+                        <div className="p-4 border-b border-line flex justify-between items-center bg-surface-alt">
+                            <h3 className="font-bold text-ink">팝업 관리</h3>
                             <Button size="sm" onClick={() => openPopupModal()}><Plus className="w-4 h-4 mr-1" /> 팝업 추가</Button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
                             {popups.map((popup) => (
-                                <div key={popup.id} className={`border rounded-xl overflow-hidden relative group ${popup.isVisible ? 'border-blue-200 shadow-sm' : 'border-slate-200 opacity-70'}`}>
-                                    <div className="h-32 bg-slate-100 flex items-center justify-center overflow-hidden">
+                                <div key={popup.id} className={`border rounded-xl overflow-hidden relative group ${popup.isVisible ? 'border-line-accent shadow-sm' : 'border-line opacity-70'}`}>
+                                    <div className="h-32 bg-surface-alt flex items-center justify-center overflow-hidden">
                                         {popup.image ? (
                                             <img src={popup.image} alt={popup.title} className="w-full h-full object-cover" />
                                         ) : (
-                                            <ImageIcon className="w-8 h-8 text-slate-300" />
+                                            <ImageIcon className="w-8 h-8 text-ink-faint" />
                                         )}
                                     </div>
                                     <div className="p-4">
                                         <div className="flex justify-between items-start mb-2">
-                                            <h4 className="font-bold text-slate-900 truncate pr-2">{popup.title}</h4>
-                                            <button onClick={() => togglePopupVisibility(popup.id)} className={`shrink-0 w-8 h-5 rounded-full relative transition-colors ${popup.isVisible ? 'bg-[#003E7E]' : 'bg-slate-300'}`}>
+                                            <h4 className="font-bold text-ink truncate pr-2">{popup.title}</h4>
+                                            <button onClick={() => togglePopupVisibility(popup.id)} className={`shrink-0 w-8 h-5 rounded-full relative transition-colors ${popup.isVisible ? 'bg-navy' : 'bg-ink-faint'}`}>
                                                 <span className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-transform ${popup.isVisible ? 'left-4' : 'left-1'}`}></span>
                                             </button>
                                         </div>
-                                        <div className="text-xs text-slate-500 space-y-1">
+                                        <div className="text-xs text-ink-soft space-y-1">
                                             <div>{popup.startDate} ~ {popup.endDate}</div>
                                             <div className="truncate">{popup.link || '링크 없음'}</div>
                                         </div>
-                                        <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-slate-100">
-                                            <button onClick={() => openPopupModal(popup)} className="text-slate-400 hover:text-[#003E7E] text-xs font-bold flex items-center">
+                                        <div className="flex justify-end gap-2 mt-4 pt-3 border-t border-line">
+                                            <button onClick={() => openPopupModal(popup)} className="text-ink-faint hover:text-navy text-xs font-bold flex items-center">
                                                 <Edit className="w-3 h-3 mr-1" /> 수정
                                             </button>
-                                            <button onClick={() => deletePopup(popup.id)} className="text-slate-400 hover:text-red-600 text-xs font-bold flex items-center ml-2">
+                                            <button onClick={() => deletePopup(popup.id)} className="text-ink-faint hover:text-red-600 text-xs font-bold flex items-center ml-2">
                                                 <Trash2 className="w-3 h-3 mr-1" /> 삭제
                                             </button>
                                         </div>
@@ -671,13 +671,13 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 )}
 
                 {activeTab === 'inquiries' && (
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div className="p-4 border-b border-slate-200 bg-slate-50">
-                            <h3 className="font-bold text-slate-700">문의 내역</h3>
+                    <div className="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
+                        <div className="p-4 border-b border-line bg-surface-alt">
+                            <h3 className="font-bold text-ink">문의 내역</h3>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
-                                <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
+                                <thead className="bg-surface-alt text-ink-soft font-bold border-b border-line">
                                     <tr>
                                         <th className="px-6 py-4 w-20">상태</th>
                                         <th className="px-6 py-4">문의유형</th>
@@ -688,9 +688,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                         <th className="px-6 py-4 text-center">관리</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100">
+                                <tbody className="divide-y divide-line">
                                     {inquiries.map((inquiry) => (
-                                        <tr key={inquiry.id} className="hover:bg-slate-50">
+                                        <tr key={inquiry.id} className="hover:bg-surface-alt">
                                             <td className="px-6 py-4">
                                                 <button
                                                     onClick={() => toggleInquiryStatus(inquiry.id)}
@@ -699,20 +699,20 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                                     {inquiry.status}
                                                 </button>
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-slate-600">{inquiry.inquiryType || '-'}</td>
-                                            <td className="px-6 py-4 text-slate-800">
+                                            <td className="px-6 py-4 text-sm text-ink-soft">{inquiry.inquiryType || '-'}</td>
+                                            <td className="px-6 py-4 text-ink">
                                                 <div className="font-bold">{inquiry.name}</div>
-                                                <div className="text-xs text-slate-400">{inquiry.contact}</div>
+                                                <div className="text-xs text-ink-faint">{inquiry.contact}</div>
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-slate-600">{inquiry.companyName || '-'}</td>
-                                            <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{inquiry.content}</td>
-                                            <td className="px-6 py-4 text-slate-500">{inquiry.date}</td>
+                                            <td className="px-6 py-4 text-sm text-ink-soft">{inquiry.companyName || '-'}</td>
+                                            <td className="px-6 py-4 text-ink-soft max-w-xs truncate">{inquiry.content}</td>
+                                            <td className="px-6 py-4 text-ink-soft">{inquiry.date}</td>
                                             <td className="px-6 py-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <button onClick={() => setViewingInquiry(inquiry)} className="text-slate-400 hover:text-[#003E7E] transition-colors p-2" title="자세히 보기">
+                                                    <button onClick={() => setViewingInquiry(inquiry)} className="text-ink-faint hover:text-navy transition-colors p-2" title="자세히 보기">
                                                         <Eye className="w-4 h-4" />
                                                     </button>
-                                                    <button onClick={() => deleteInquiry(inquiry.id)} className="text-slate-400 hover:text-red-600 transition-colors p-2" title="삭제">
+                                                    <button onClick={() => deleteInquiry(inquiry.id)} className="text-ink-faint hover:text-red-600 transition-colors p-2" title="삭제">
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 </div>
@@ -730,10 +730,10 @@ const AdminPage: React.FC<AdminPageProps> = ({
             {viewingInquiry && (
                 <Modal isOpen={true} onClose={() => setViewingInquiry(null)} title="문의 내용 상세">
                     <div className="space-y-6">
-                        <div className="flex justify-between items-center pb-4 border-b border-slate-100">
+                        <div className="flex justify-between items-center pb-4 border-b border-line">
                             <div>
-                                <div className="text-sm text-slate-500 mb-1">보낸 사람</div>
-                                <div className="font-bold text-lg text-slate-900">{viewingInquiry.name}</div>
+                                <div className="text-sm text-ink-soft mb-1">보낸 사람</div>
+                                <div className="font-bold text-lg text-ink">{viewingInquiry.name}</div>
                             </div>
                             <div className="text-right">
                                 <button
@@ -742,37 +742,37 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 >
                                     {viewingInquiry.status}
                                 </button>
-                                <div className="text-xs text-slate-400 mt-2">{viewingInquiry.date}</div>
+                                <div className="text-xs text-ink-faint mt-2">{viewingInquiry.date}</div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-slate-50 p-4 rounded-lg">
-                                <div className="text-xs font-bold text-slate-500 mb-1">문의유형</div>
-                                <div className="text-slate-800">{viewingInquiry.inquiryType || '-'}</div>
+                            <div className="bg-surface-alt p-4 rounded-lg">
+                                <div className="text-xs font-bold text-ink-soft mb-1">문의유형</div>
+                                <div className="text-ink">{viewingInquiry.inquiryType || '-'}</div>
                             </div>
-                            <div className="bg-slate-50 p-4 rounded-lg">
-                                <div className="text-xs font-bold text-slate-500 mb-1">기업명</div>
-                                <div className="text-slate-800">{viewingInquiry.companyName || '-'}</div>
+                            <div className="bg-surface-alt p-4 rounded-lg">
+                                <div className="text-xs font-bold text-ink-soft mb-1">기업명</div>
+                                <div className="text-ink">{viewingInquiry.companyName || '-'}</div>
                             </div>
-                            <div className="bg-slate-50 p-4 rounded-lg">
-                                <div className="text-xs font-bold text-slate-500 mb-1 flex items-center"><Phone className="w-3 h-3 mr-1" /> 연락처</div>
-                                <div className="text-slate-800">{viewingInquiry.contact}</div>
+                            <div className="bg-surface-alt p-4 rounded-lg">
+                                <div className="text-xs font-bold text-ink-soft mb-1 flex items-center"><Phone className="w-3 h-3 mr-1" /> 연락처</div>
+                                <div className="text-ink">{viewingInquiry.contact}</div>
                             </div>
-                            <div className="bg-slate-50 p-4 rounded-lg">
-                                <div className="text-xs font-bold text-slate-500 mb-1 flex items-center"><Mail className="w-3 h-3 mr-1" /> 이메일</div>
-                                <div className="text-slate-800 truncate" title={viewingInquiry.email}>{viewingInquiry.email}</div>
+                            <div className="bg-surface-alt p-4 rounded-lg">
+                                <div className="text-xs font-bold text-ink-soft mb-1 flex items-center"><Mail className="w-3 h-3 mr-1" /> 이메일</div>
+                                <div className="text-ink truncate" title={viewingInquiry.email}>{viewingInquiry.email}</div>
                             </div>
                         </div>
 
                         <div>
-                            <div className="text-sm font-bold text-slate-700 mb-2">문의 내용</div>
-                            <div className="bg-white border border-slate-200 p-4 rounded-lg text-slate-600 leading-relaxed whitespace-pre-wrap min-h-[150px]">
+                            <div className="text-sm font-bold text-ink mb-2">문의 내용</div>
+                            <div className="bg-white border border-line p-4 rounded-lg text-ink-soft leading-relaxed whitespace-pre-wrap min-h-[150px]">
                                 {viewingInquiry.content}
                             </div>
                         </div>
 
-                        <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                        <div className="flex justify-end gap-2 pt-4 border-t border-line">
                             <Button variant="ghost" onClick={() => deleteInquiry(viewingInquiry.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">삭제하기</Button>
                             <Button onClick={() => setViewingInquiry(null)}>닫기</Button>
                         </div>
@@ -803,24 +803,24 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         <div>
                             <label className={labelClass}>로고 이미지</label>
                             <div className="flex items-center gap-2 mb-2">
-                                <label className="cursor-pointer bg-slate-100 px-3 py-2 rounded border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-200">
+                                <label className="cursor-pointer bg-surface-alt px-3 py-2 rounded border border-line text-xs font-bold text-ink-soft hover:bg-surface-alt2">
                                     파일선택 <input type="file" className="hidden" onChange={(e) => handleFileChange(e, 'company_logo')} accept="image/*" />
                                 </label>
                                 <input type="text" className={`${inputClass} text-xs py-2`} value={companyFormData.logo || ''} onChange={e => setCompanyFormData({ ...companyFormData, logo: e.target.value })} placeholder="URL 직접 입력" />
                             </div>
-                            <p className="text-[11px] text-slate-500 flex items-center">
+                            <p className="text-xs text-ink-soft flex items-center">
                                 <HelpCircle className="w-3 h-3 mr-1" /> 권장: 500x500px (1:1 비율), PNG/JPG
                             </p>
                         </div>
                         <div>
                             <label className={labelClass}>배경 이미지</label>
                             <div className="flex items-center gap-2 mb-2">
-                                <label className="cursor-pointer bg-slate-100 px-3 py-2 rounded border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-200">
+                                <label className="cursor-pointer bg-surface-alt px-3 py-2 rounded border border-line text-xs font-bold text-ink-soft hover:bg-surface-alt2">
                                     파일선택 <input type="file" className="hidden" onChange={(e) => handleFileChange(e, 'company_bg')} accept="image/*" />
                                 </label>
                                 <input type="text" className={`${inputClass} text-xs py-2`} value={companyFormData.bgImage || ''} onChange={e => setCompanyFormData({ ...companyFormData, bgImage: e.target.value })} placeholder="URL 직접 입력" />
                             </div>
-                            <p className="text-[11px] text-slate-500 flex items-center">
+                            <p className="text-xs text-ink-soft flex items-center">
                                 <HelpCircle className="w-3 h-3 mr-1" /> 권장: 1920x1080px (16:9 비율), 고해상도
                             </p>
                         </div>
@@ -861,9 +861,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         <label className={labelClass}>비고 / 상세소개</label>
                         <textarea rows={3} className={inputClass} value={companyFormData.note} onChange={e => setCompanyFormData({ ...companyFormData, note: e.target.value })} placeholder="기업에 대한 상세 설명을 입력하세요"></textarea>
                     </div>
-                    <div className="flex items-center gap-2 bg-blue-50 p-3 rounded-lg border border-blue-100">
-                        <input type="checkbox" id="isTips" className="w-5 h-5 rounded border-gray-300 text-[#003E7E] focus:ring-[#003E7E]" checked={companyFormData.isTips} onChange={e => setCompanyFormData({ ...companyFormData, isTips: e.target.checked })} />
-                        <label htmlFor="isTips" className="text-sm font-bold text-[#003E7E] cursor-pointer">TIPS 선정 기업</label>
+                    <div className="flex items-center gap-2 bg-surface-alt2 p-3 rounded-lg border border-line">
+                        <input type="checkbox" id="isTips" className="w-5 h-5 rounded border-line-md text-navy focus:ring-navy" checked={companyFormData.isTips} onChange={e => setCompanyFormData({ ...companyFormData, isTips: e.target.checked })} />
+                        <label htmlFor="isTips" className="text-sm font-bold text-navy cursor-pointer">TIPS 선정 기업</label>
                     </div>
                     <Button className="w-full mt-4" onClick={handleSaveCompany}>{editingId ? '수정하기' : '추가하기'}</Button>
                 </div>
@@ -880,7 +880,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                     <div>
                         <label className={labelClass}>이미지 URL</label>
                         <div className="flex items-center gap-2">
-                            <label className="cursor-pointer bg-slate-100 px-3 py-2 rounded border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-200 shrink-0">
+                            <label className="cursor-pointer bg-surface-alt px-3 py-2 rounded border border-line text-xs font-bold text-ink-soft hover:bg-surface-alt2 shrink-0">
                                 파일선택 <input type="file" className="hidden" onChange={(e) => handleFileChange(e, 'popup_img')} accept="image/*" />
                             </label>
                             <input type="text" className={inputClass} value={popupFormData.image || ''} onChange={e => setPopupFormData({ ...popupFormData, image: e.target.value })} placeholder="https://" />
@@ -904,9 +904,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         <label className={labelClass}>내용 (선택)</label>
                         <textarea rows={3} className={inputClass} value={popupFormData.content} onChange={e => setPopupFormData({ ...popupFormData, content: e.target.value })} placeholder="이미지가 없을 경우 표시될 텍스트"></textarea>
                     </div>
-                    <div className="flex items-center gap-2 p-3 bg-slate-50 rounded-lg">
+                    <div className="flex items-center gap-2 p-3 bg-surface-alt rounded-lg">
                         <input type="checkbox" id="popupVisible" className="w-5 h-5" checked={popupFormData.isVisible} onChange={e => setPopupFormData({ ...popupFormData, isVisible: e.target.checked })} />
-                        <label htmlFor="popupVisible" className="font-bold text-slate-700 cursor-pointer">즉시 게시 (활성화)</label>
+                        <label htmlFor="popupVisible" className="font-bold text-ink cursor-pointer">즉시 게시 (활성화)</label>
                     </div>
                     <Button className="w-full mt-4" onClick={handleSavePopup}>{editingId ? '수정완료' : '추가하기'}</Button>
                 </div>

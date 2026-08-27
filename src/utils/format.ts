@@ -18,8 +18,8 @@ export const formatDate = (raw: string | undefined | null): string => {
     const parts = trimmed.replace(/\.$/, '').split(/[-./]/).filter(Boolean);
     if (parts.length < 2) return trimmed;
 
-    let [year, month, day] = parts;
-    if (year.length === 2) year = `20${year}`; // "15.08.01" → 2015
+    const [rawYear, month, day] = parts;
+    const year = rawYear.length === 2 ? `20${rawYear}` : rawYear; // "15.08.01" → 2015
     const mm = month.padStart(2, '0');
     if (!day) return `${year}.${mm}`;
     return `${year}.${mm}.${day.padStart(2, '0')}`;
