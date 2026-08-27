@@ -1,6 +1,26 @@
 import React from 'react';
 import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, ArrowRight, DollarSign, BarChart3, Building, Star, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Mail, Phone } from 'lucide-react';
 import { Card, SectionTitle, Badge } from '../common';
+
+/* 기업명 → /company-logos/ 파일 키 (initialData.ts의 createCompany와 동일 규칙) */
+const logoKeyFor = (name: string) =>
+    name.replace(/\s/g, '-').replace(/[()*]/g, '').replace(/㈜/g, '').replace(/^주/, '');
+
+/* 로고 이미지 — 파일이 없으면 Building 아이콘으로 폴백 */
+const PortfolioLogo: React.FC<{ name: string }> = ({ name }) => {
+    const [failed, setFailed] = React.useState(false);
+    if (failed) {
+        return <Building className="w-10 h-10 text-ink-faint group-hover:text-navy transition-colors duration-300" />;
+    }
+    return (
+        <img
+            src={`/company-logos/${logoKeyFor(name)}1.svg`}
+            alt={name}
+            className="w-full h-full object-contain p-3"
+            onError={() => setFailed(true)}
+        />
+    );
+};
 import { TIPS_COOP, PROGRAM_TURN_UP, COMPANY_NAME_LEGAL, KEY_STATS } from '../../data/constants';
 import { formatDate } from '../../utils/format';
 import { PageId } from '../../types';
@@ -832,8 +852,8 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                                     onClick={() => goToCompanies('all_portfolio')}
                                     className="group bg-white rounded-2xl border border-line shadow-card p-6 hover:border-line-strong hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 text-left"
                                 >
-                                    <div className="aspect-square bg-surface-alt rounded-xl mb-4 flex items-center justify-center border border-line group-hover:bg-navy transition-colors duration-300">
-                                        <Building className="w-10 h-10 text-ink-faint group-hover:text-white transition-colors duration-300" />
+                                    <div className="aspect-square bg-white rounded-xl mb-4 flex items-center justify-center border border-line group-hover:border-line-strong transition-colors duration-300 overflow-hidden">
+                                        <PortfolioLogo name={companyName} />
                                     </div>
                                     <div className="text-center">
                                         <h4 className="font-bold text-ink text-sm mb-1 group-hover:text-navy transition-colors duration-300">
