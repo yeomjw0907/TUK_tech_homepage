@@ -1,35 +1,93 @@
 import React from 'react';
-import { Building2, DollarSign, TrendingUp, Award, CheckCircle2, FileText, Building, Users, BarChart3, Lightbulb, Globe, Shield, ArrowRight, Target, Rocket, Briefcase, CheckCircle } from 'lucide-react';
-import { Card, SectionTitle } from '../common';
+import { Building2, DollarSign, TrendingUp, Award, Building, BarChart3, Lightbulb, ArrowRight, Target, Rocket, Briefcase, Scale } from 'lucide-react';
 
 interface SubsidiaryContentProps {
     subPage: string;
 }
 
 const SubsidiaryContent: React.FC<SubsidiaryContentProps> = ({ subPage }) => {
+    if (subPage === 'intro') {
+        return (
+            <div className="max-w-5xl mx-auto space-y-16">
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
+                    <div className="absolute inset-0 grid-pattern opacity-15" />
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">Subsidiary</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            대학의 우수한 기술을 기반으로 기술사업화를 추진하기 위해
+                            <br className="hidden md:block" />
+                            ㈜한국공학대학교기술지주회사가 설립하거나 편입한 기업입니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="text-xl md:text-2xl font-black text-[#1A2840] mb-8 text-center">자회사 요건</h3>
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                            {
+                                Icon: Lightbulb,
+                                title: "대학 기술 활용",
+                                desc: "대학이 보유한 기술을 현물출자 또는 기술이전을 통해 활용",
+                            },
+                            {
+                                Icon: Scale,
+                                title: "지분 요건",
+                                desc: "기술지주회사가 「산업교육진흥 및 산학연협력촉진에 관한 법률」에서 정한 지분을 보유",
+                            },
+                            {
+                                Icon: TrendingUp,
+                                title: "성장 가능성",
+                                desc: "기술력과 사업성을 바탕으로 지속적인 성장 가능성을 보유한 기업",
+                            },
+                        ].map((item) => (
+                            <div key={item.title} className="bg-white rounded-2xl border border-[rgba(0,62,126,0.08)] p-7 hover:border-[rgba(0,62,126,0.20)] hover:-translate-y-1 transition-all shadow-sm hover:shadow-md">
+                                <div className="w-12 h-12 rounded-xl bg-[#003E7E] flex items-center justify-center text-white mb-5">
+                                    <item.Icon className="w-6 h-6" />
+                                </div>
+                                <h4 className="font-black text-[#1A2840] text-lg mb-3 flex items-start gap-2">
+                                    <span className="text-[#003E7E]">▸</span>
+                                    {item.title}
+                                </h4>
+                                <p className="text-sm text-[#4B6080] leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     if (subPage === 'procedure') {
         return (
             <div className="space-y-20">
-                {/* 헤더 */}
-                <SectionTitle title="자회사 설립/편입 절차" subtitle="Procedure" />
-
-                {/* Stats banner — navy with grid pattern */}
-                <div className="bg-[#003E7E] rounded-2xl p-8 md:p-12 relative overflow-hidden">
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
                     <div className="absolute inset-0 grid-pattern opacity-15" />
                     <div className="relative z-10">
+                        <div className="max-w-3xl mx-auto text-center mb-10">
+                            <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">Procedure</p>
+                            <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                                예비창업자와 기술기반 기업의 특성에 맞는
+                                <br className="hidden md:block" />
+                                자회사 설립·편입 및 성장지원 절차를 제공합니다.
+                            </p>
+                        </div>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                             {[
                                 { Icon: Building2, value: "16+", label: "보유 자회사" },
-                                { Icon: DollarSign, value: "313억", label: "총 투자금액" },
-                                { Icon: TrendingUp, value: "2025", label: "기준 연도" },
-                                { Icon: Award, value: "10+", label: "TIPS 추천" },
+                                { Icon: DollarSign, value: "313억", label: "누적투자금액" },
+                                { Icon: Award, value: "2개사", label: "TIPS 추천" },
+                                { Icon: TrendingUp, value: "3,274%", label: "대표 EXIT", sub: "누적수익률" },
                             ].map((s, i) => (
                                 <div key={i} className="text-center">
                                     <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center mx-auto mb-3 text-white">
                                         <s.Icon className="w-5 h-5" />
                                     </div>
-                                    <div className="display-num text-4xl text-white mb-1 font-black">{s.value}</div>
+                                    <div className="display-num text-3xl md:text-4xl text-white mb-1 font-black">{s.value}</div>
                                     <div className="text-xs text-white/60 font-bold">{s.label}</div>
+                                    {'sub' in s && s.sub && (
+                                        <div className="text-[11px] text-white/45 font-medium mt-0.5">{s.sub}</div>
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -183,61 +241,6 @@ const SubsidiaryContent: React.FC<SubsidiaryContentProps> = ({ subPage }) => {
                         </div>
                     </div>
                 </div>
-
-                {/* 자회사 지원사항 */}
-                <div className="space-y-12">
-                    <div className="text-center max-w-2xl mx-auto">
-                        <h3 className="text-2xl md:text-3xl font-black text-[#1A2840] mb-4">자회사 지원사항</h3>
-                        <p className="text-base md:text-lg text-[#4B6080]">자회사의 성장을 위한 다양한 지원 프로그램을 제공합니다</p>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div className="group bg-white rounded-3xl border border-[rgba(0,62,126,0.08)] shadow-sm hover:border-[rgba(0,62,126,0.20)] hover:shadow-md transition-all duration-300 overflow-hidden">
-                            <div className="bg-[#F5F8FC] border-b border-[rgba(0,62,126,0.08)] p-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 bg-[#003E7E] text-white rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <Building className="w-8 h-8" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xl font-black text-[#1A2840] mb-1">창업보육센터</h4>
-                                        <p className="text-xs md:text-sm text-[#4B6080] font-medium">Business Incubating (BI) 프로그램</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-8">
-                                <p className="text-[#4B6080] leading-relaxed">
-                                    창업보육센터를 통한 입주 지원 및 인큐베이팅 서비스를 제공하여 초기 창업 기업의 안정적인 성장을 지원합니다.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="group bg-white rounded-3xl border border-[rgba(0,62,126,0.08)] shadow-sm hover:border-[rgba(0,62,126,0.20)] hover:shadow-md transition-all duration-300 overflow-hidden">
-                            <div className="bg-[#F5F8FC] border-b border-[rgba(0,62,126,0.08)] p-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 bg-[#003E7E] text-white rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <Award className="w-8 h-8" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xl font-black text-[#1A2840] mb-1">TU-RN Up & TIPS</h4>
-                                        <p className="text-xs md:text-sm text-[#4B6080] font-medium">성장 지원 프로그램</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-8">
-                                <ul className="space-y-3 text-[#4B6080]">
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle2 className="w-5 h-5 text-[#003E7E] shrink-0 mt-0.5" />
-                                        <span><strong className="text-[#003E7E]">TU-RN Up 프로그램</strong>: Company Building 및 Scale Up 지원</span>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle2 className="w-5 h-5 text-[#003E7E] shrink-0 mt-0.5" />
-                                        <span><strong className="text-[#003E7E]">TIPS 프로그램</strong>: 기술아이템 보유 창업팀 집중 육성</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         );
     }
@@ -298,57 +301,39 @@ const SubsidiaryContent: React.FC<SubsidiaryContentProps> = ({ subPage }) => {
     if (subPage === 'support') {
         return (
             <div className="space-y-12">
-                <SectionTitle title="자회사 성장지원" subtitle="Support" />
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
+                    <div className="absolute inset-0 grid-pattern opacity-15" />
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">Support</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            자회사의 성장 단계에 맞춘 투자, 보육, 기술사업화 및 사업화 지원 프로그램을 제공합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6">
                     {[
                         {
-                            title: "공간 지원",
-                            desc: "시흥비즈니스센터 및 교내 창업보육센터 입주 우대",
-                            Icon: Building2,
-                            iconBg: "bg-[#003E7E]",
-                            iconColor: "text-white"
+                            Icon: Building,
+                            title: "창업보육센터",
+                            desc: "입주공간 제공과 맞춤형 보육 프로그램을 통해 기업의 안정적인 성장을 지원합니다.",
                         },
                         {
-                            title: "R&D 연계",
-                            desc: "대학 교수진과의 공동 연구 및 기술 지도 매칭",
-                            Icon: Lightbulb,
-                            iconBg: "bg-[#003E7E]",
-                            iconColor: "text-white"
+                            Icon: Rocket,
+                            title: "TU RN-UP 프로그램",
+                            desc: "기술사업화와 기업 성장을 위한 Company Building 및 Scale-up 프로그램을 제공합니다.",
                         },
                         {
-                            title: "정책 자금",
-                            desc: "정부 R&D 과제 및 정책 자금 수주 지원",
-                            Icon: FileText,
-                            iconBg: "bg-[#003E7E]",
-                            iconColor: "text-white"
+                            Icon: Award,
+                            title: "TIPS 프로그램 연계",
+                            desc: "TIPS 추천으로 연구개발(R&D) 연계를 통해 기술창업기업의 성장을 지원합니다.",
                         },
-                        {
-                            title: "네트워킹",
-                            desc: "가족회사 및 동문 기업과의 비즈니스 네트워킹",
-                            Icon: Users,
-                            iconBg: "bg-[#003E7E]",
-                            iconColor: "text-white"
-                        },
-                        {
-                            title: "홍보 마케팅",
-                            desc: "전시회 참가 및 언론 홍보 지원",
-                            Icon: Globe,
-                            iconBg: "bg-[#003E7E]",
-                            iconColor: "text-white"
-                        },
-                        {
-                            title: "법률/특허",
-                            desc: "전문가 자문단(법무, 세무, 특허) 매칭 지원",
-                            Icon: Shield,
-                            iconBg: "bg-[#003E7E]",
-                            iconColor: "text-white"
-                        }
-                    ].map((item, i) => (
-                        <div key={i} className="bg-white border border-[rgba(0,62,126,0.08)] rounded-2xl p-6 hover:border-[rgba(0,62,126,0.20)] hover:-translate-y-1 transition-all shadow-sm hover:shadow-md">
-                            <div className={`w-14 h-14 ${item.iconBg} ${item.iconColor} rounded-2xl flex items-center justify-center mb-5`}>
-                                <item.Icon className="w-7 h-7" />
+                    ].map((item) => (
+                        <div key={item.title} className="bg-white rounded-2xl border border-[rgba(0,62,126,0.08)] p-7 hover:border-[rgba(0,62,126,0.20)] hover:-translate-y-1 transition-all shadow-sm hover:shadow-md">
+                            <div className="w-12 h-12 rounded-xl bg-[#003E7E] flex items-center justify-center text-white mb-5">
+                                <item.Icon className="w-6 h-6" />
                             </div>
-                            <h3 className="text-lg md:text-xl font-black text-[#1A2840] mb-3">{item.title}</h3>
+                            <h4 className="font-black text-[#1A2840] text-lg mb-3">{item.title}</h4>
                             <p className="text-sm text-[#4B6080] leading-relaxed">{item.desc}</p>
                         </div>
                     ))}

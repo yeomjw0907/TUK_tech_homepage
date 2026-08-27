@@ -73,9 +73,9 @@ const SearchModal: React.FC<SearchModalProps> = ({
         
         const typeMap: Record<string, string> = {
             'notice': '공지사항',
-            'press': '보도소식',
+            'press': '언론보도',
             'resources': '자료실',
-            'faq': 'FAQ'
+            'faq': 'Q&A'
         };
         onPostClick(post, typeMap[post.category] || '공지사항');
         onClose();
@@ -158,8 +158,8 @@ const SearchModal: React.FC<SearchModalProps> = ({
                                                         <div className="flex items-center gap-2 mb-1">
                                                             <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#003E7E]/10 text-[#003E7E]">
                                                                 {post.category === 'notice' ? '공지사항' : 
-                                                                 post.category === 'press' ? '보도소식' :
-                                                                 post.category === 'resources' ? '자료실' : 'FAQ'}
+                                                                 post.category === 'press' ? '언론보도' :
+                                                                 post.category === 'resources' ? '자료실' : 'Q&A'}
                                                             </span>
                                                             <span className="text-xs text-slate-400">{post.date}</span>
                                                         </div>

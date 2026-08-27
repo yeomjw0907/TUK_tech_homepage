@@ -1,19 +1,21 @@
 import React from 'react';
-import { CheckCircle, Settings, SearchCheck, Handshake, Building2, TrendingUp, Users, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, ArrowRight, DollarSign, BarChart3, Building, Star, ExternalLink, Zap, Globe, Microscope, Network, Cpu, Leaf, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Mail, Phone, MapPin } from 'lucide-react';
+import { CheckCircle, Settings, SearchCheck, Handshake, Building2, TrendingUp, Users, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, ArrowRight, DollarSign, BarChart3, Building, Star, ExternalLink, Zap, Globe, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Mail, Phone, MapPin } from 'lucide-react';
 import { Card, SectionTitle } from '../common';
 import { TIPS_COOP } from '../../data/constants';
+import { PageId } from '../../types';
 
 interface InvestmentContentProps {
     subPage: string;
+    onNavigate?: (page: PageId, subPage?: string) => void;
 }
 
-const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
+const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNavigate }) => {
     if (subPage === 'fields') {
         const fields = [
-            { num: "01", Icon: Cpu, title: "AI / SW", desc: "인공지능, 빅데이터, 클라우드, SaaS 등 디지털 혁신 기술" },
-            { num: "02", Icon: Microscope, title: "바이오 / 헬스케어", desc: "신약 개발, 의료기기, 디지털 헬스케어 솔루션" },
-            { num: "03", Icon: Leaf, title: "친환경 / 에너지", desc: "신재생 에너지, 탄소중립 기술, 친환경 소재" },
-            { num: "04", Icon: Factory, title: "스마트 제조", desc: "스마트 팩토리, 산업용 IoT, 로봇 자동화" }
+            { num: "01", Icon: Cpu, title: "AI·ICT", desc: "인공지능(AI), 빅데이터, 클라우드, IoT, SW 등 디지털 혁신을 선도하는 첨단 ICT 기술 분야" },
+            { num: "02", Icon: Microscope, title: "바이오·헬스케어", desc: "디지털 헬스케어, 의료기기, 바이오 소재 및 바이오테크 분야의 혁신 기술" },
+            { num: "03", Icon: Factory, title: "스마트제조·반도체", desc: "스마트 제조, 반도체 공정·장비, 첨단 제조기술 등 미래 제조산업을 선도하는 핵심 기술 분야" },
+            { num: "04", Icon: Layers, title: "첨단소재·부품", desc: "신소재, 고기능성 부품 및 소재 기술을 기반으로 산업 경쟁력을 높이는 핵심 기술 분야" }
         ];
 
         const criteria = [
@@ -24,14 +26,15 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
 
         return (
             <div>
-                {/* Top Banner */}
-                <div className="bg-[#003E7E] rounded-2xl p-10 md:p-14 mb-10 relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(255,255,255,0.15) 31px,rgba(255,255,255,0.15) 32px),repeating-linear-gradient(90deg,transparent,transparent 31px,rgba(255,255,255,0.15) 31px,rgba(255,255,255,0.15) 32px)' }} />
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/3 translate-x-1/3" />
-                    <div className="relative z-10 max-w-2xl">
-                        <span className="inline-block mb-4 px-3 py-1 rounded-full text-[0.65rem] font-bold tracking-widest uppercase border border-white/20 text-white/75 bg-white/10">Investment Focus</span>
-                        <h2 className="text-3xl md:text-4xl font-black text-white mb-4">주요 투자분야</h2>
-                        <p className="text-white/60 text-base">미래 성장 가능성이 높은 기술 기반 스타트업에 집중 투자합니다.</p>
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 mb-10 relative overflow-hidden">
+                    <div className="absolute inset-0 grid-pattern opacity-15" />
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">Investment</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            한국공학대학교의 연구역량과 기술 경쟁력을 기반으로
+                            <br />
+                            미래 성장 가능성이 높은 딥테크 분야를 중심으로 투자합니다.
+                        </p>
                     </div>
                 </div>
 
@@ -125,7 +128,10 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                             TIPS 프로그램
                         </h2>
                         <p className="text-base md:text-lg text-white/80 max-w-3xl mx-auto leading-relaxed font-medium">
-                            TIPS(Tech Incubator Program for Startup)는 세계시장을 선도할 기술아이템을 보유한 창업팀을 민간 주도로 선발하여 미래유망 창업기업을 집중 육성하는 프로그램입니다.
+                            한국공학대학교기술지주㈜는 TIPS 운영사로서 유망 기술창업기업을 발굴하고 투자, 보육, 연구개발(R&D) 연계를 통해 기업의 성장을 지원합니다.
+                        </p>
+                        <p className="mt-6 text-xs md:text-sm text-white/55 max-w-3xl mx-auto leading-relaxed">
+                            ※ TIPS (Tech Incubator Program for Startup) : 민간 투자와 정부의 연구개발(R&D)을 연계하여 기술창업기업의 성장을 지원하는 프로그램
                         </p>
                     </div>
                 </div>
@@ -134,21 +140,22 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                 <div className="bg-[#F5F8FC] rounded-3xl p-8 md:p-12 border border-[rgba(0,62,126,0.08)]">
                     <div className="text-center mb-8">
                         <h3 className="text-2xl md:text-3xl font-black text-[#1A2840] mb-4">딥테크 기술 중심</h3>
-                        <p className="text-base md:text-lg text-[#4B6080] max-w-3xl mx-auto">
-                            스마트 제조, 바이오 헬스케어 및 반도체 분야 등의 딥테크 기술 중심으로 한국공학대학교에서 보유한 산학협력 인프라를 활용합니다
+                        <p className="text-base md:text-lg text-[#4B6080] max-w-3xl mx-auto leading-relaxed">
+                            TIPS 프로그램을 통해 스마트 제조, 바이오·헬스케어, 반도체 등 딥테크 분야의 기술창업기업을 발굴하고, 한국공학대학교의 산학협력 인프라를 기반으로 기술사업화와 성장을 지원합니다.
                         </p>
                     </div>
                     <div className="grid md:grid-cols-3 gap-6">
                         {[
-                            { Icon: Factory, title: "스마트 제조" },
-                            { Icon: Microscope, title: "바이오 헬스케어" },
-                            { Icon: Cpu, title: "반도체" }
-                        ].map((item, idx) => (
-                            <div key={idx} className="bg-white rounded-2xl p-6 border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] shadow-sm transition-all duration-300 text-center group">
+                            { Icon: Factory, title: "스마트 제조", desc: "AI·로봇·스마트팩토리 기반 제조 혁신 기술" },
+                            { Icon: Microscope, title: "바이오·헬스케어", desc: "의료기기, 디지털 헬스케어 및 바이오 혁신 기술" },
+                            { Icon: Cpu, title: "반도체", desc: "시스템반도체, 공정·장비 및 첨단 반도체 기술" }
+                        ].map((item) => (
+                            <div key={item.title} className="bg-white rounded-2xl p-6 border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] shadow-sm transition-all duration-300 text-center group">
                                 <div className="w-16 h-16 bg-[#003E7E] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0055CC] transition-colors duration-300">
                                     <item.Icon className="w-8 h-8 text-white" />
                                 </div>
-                                <h4 className="text-lg font-black text-[#1A2840]">{item.title}</h4>
+                                <h4 className="text-lg font-black text-[#1A2840] mb-2">{item.title}</h4>
+                                <p className="text-sm text-[#4B6080] leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -623,6 +630,7 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
     }
 
     if (subPage === 'portfolio') {
+        const goToCompanies = (sub?: string) => onNavigate?.('portfolio', sub || 'all_portfolio');
         const portfolioCompanies = [
             '(주)링크솔루션',
             '(주)인터루얼',
@@ -650,68 +658,162 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
         ];
 
         return (
-            <div className="space-y-20">
-                {/* 헤더 */}
-                <SectionTitle title="투자 포트폴리오" subtitle="Portfolio" />
+            <div className="space-y-16">
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
+                    <div className="absolute inset-0 grid-pattern opacity-15" />
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">Portfolio</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            기술력과 성장 가능성을 갖춘 유망기업에 투자하고 Value-up과 후속투자를 통해
+                            <br className="hidden md:block" />
+                            지속적인 성장을 지원하고 있습니다.
+                        </p>
+                    </div>
+                </div>
 
-                {/* 포트폴리오 현황 */}
-                <div className="bg-white border-2 border-[rgba(0,62,126,0.12)] rounded-2xl p-8 md:p-12 relative overflow-hidden shadow-md shadow-[rgba(0,62,126,0.08)]">
-                    <div className="relative z-10">
-                        <div className="text-center mb-8">
-                            <h3 className="text-xl md:text-2xl font-black mb-2 text-[#1A2840]">투자 포트폴리오 현황</h3>
-                            <p className="text-sm md:text-base text-[#4B6080]">2025년 기준</p>
-                        </div>
-                        <div className="grid md:grid-cols-3 gap-6">
-                            {[
-                                {
-                                    Icon: Building,
-                                    label: "현재 투자사 수",
-                                    value: "23",
-                                    unit: "개사",
-                                    desc: "투자 중인 기업",
-                                    display: "23개사"
-                                },
-                                {
-                                    Icon: DollarSign,
-                                    label: "총투자금액",
-                                    value: "4,170,103,201",
-                                    unit: "원",
-                                    desc: "누적 투자 규모",
-                                    display: "41.70억원"
-                                },
-                                {
-                                    Icon: BarChart3,
-                                    label: "기업가치",
-                                    value: "106,684,614,865",
-                                    unit: "원",
-                                    desc: "총 기업가치",
-                                    display: "1,066.85억원"
-                                }
-                            ].map((item, idx) => (
-                                <div key={idx} className="bg-[#F5F8FC] rounded-2xl p-6 border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] transition-all duration-300">
-                                    <div className="flex items-center justify-center w-14 h-14 bg-[#EBF2FF] rounded-xl mb-4">
-                                        <item.Icon className="w-7 h-7 text-[#003E7E]" />
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="text-sm text-[#4B6080] font-bold mb-2">{item.label}</div>
-                                        <div className="display-num text-[#003E7E] text-xl md:text-2xl font-black mb-1 break-words">
-                                            {item.display}
-                                        </div>
-                                        <div className="text-xs text-[#8A9BB5] mt-1">{item.desc}</div>
-                                    </div>
+                <div className="bg-white border border-[rgba(0,62,126,0.08)] rounded-3xl p-8 md:p-12">
+                    <div className="text-center mb-10">
+                        <h3 className="text-xl md:text-2xl font-black mb-2 text-[#1A2840]">투자 포트폴리오 현황</h3>
+                        <p className="text-sm md:text-base text-[#4B6080]">2026년 기준</p>
+                    </div>
+                    <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
+                        {[
+                            {
+                                Icon: Building,
+                                label: "포트폴리오",
+                                display: "27개사",
+                                desc: "기업리스트 보기",
+                                onClick: () => goToCompanies('all_portfolio'),
+                            },
+                            {
+                                Icon: DollarSign,
+                                label: "누적투자금",
+                                display: "41.70억원",
+                                desc: "누적 투자 규모",
+                            },
+                            {
+                                Icon: BarChart3,
+                                label: "기업가치",
+                                display: "1,066.85억원",
+                                desc: "총 기업가치",
+                            },
+                            {
+                                Icon: Award,
+                                label: "TIPS 선정",
+                                display: "12개사",
+                                desc: "선정기업 보기",
+                                onClick: () => goToCompanies('tips_reco'),
+                            },
+                        ].map((item) => (
+                            <button
+                                key={item.label}
+                                type="button"
+                                onClick={item.onClick}
+                                disabled={!item.onClick}
+                                className={`bg-[#F5F8FC] rounded-2xl p-6 border border-[rgba(0,62,126,0.08)] text-left transition-all duration-300 ${
+                                    item.onClick
+                                        ? 'cursor-pointer hover:border-[rgba(0,62,126,0.20)] hover:-translate-y-0.5'
+                                        : 'cursor-default'
+                                }`}
+                            >
+                                <div className="flex items-center justify-center w-14 h-14 bg-[#EBF2FF] rounded-xl mb-4">
+                                    <item.Icon className="w-7 h-7 text-[#003E7E]" />
                                 </div>
-                            ))}
+                                <div className="text-sm text-[#4B6080] font-bold mb-2">{item.label}</div>
+                                <div className="display-num text-[#003E7E] text-xl md:text-2xl font-black mb-1">{item.display}</div>
+                                <div className="text-xs text-[#8A9BB5] mt-1 flex items-center gap-1">
+                                    {item.desc}
+                                    {item.onClick && <ChevronRight className="w-3.5 h-3.5" />}
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="space-y-6">
+                    <div>
+                        <h3 className="text-2xl md:text-3xl font-black text-[#1A2840] mb-2">대표 EXIT 사례</h3>
+                        <p className="text-sm md:text-base text-[#4B6080]">㈜링크솔루션</p>
+                    </div>
+
+                    <div className="bg-white rounded-3xl p-8 md:p-12 border border-[rgba(0,62,126,0.08)]">
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="w-16 h-16 bg-[#003E7E] text-white rounded-2xl flex items-center justify-center">
+                                <Award className="w-8 h-8" />
+                            </div>
+                            <div>
+                                <h4 className="text-xl md:text-2xl font-black text-[#1A2840] mb-1">㈜링크솔루션</h4>
+                                <p className="text-xs md:text-sm text-[#4B6080] font-medium">누적 수익률 3,274%</p>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-6 mb-8">
+                            <div className="bg-[#F5F8FC] rounded-xl p-6 border border-[rgba(0,62,126,0.08)]">
+                                <div className="text-sm font-bold text-[#003E7E] mb-2">투자 정보</div>
+                                <ul className="space-y-2 text-[#4B6080]">
+                                    <li className="flex items-center gap-2">
+                                        <CheckCircle className="w-4 h-4 text-[#003E7E]" />
+                                        <span><strong className="text-[#1A2840]">2015년 8월</strong>, 7천만원 투자하여 자회사 편입</span>
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                        <CheckCircle className="w-4 h-4 text-[#003E7E]" />
+                                        <span><strong className="text-[#1A2840]">2025년 6월</strong> IPO 성공</span>
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                        <CheckCircle className="w-4 h-4 text-[#003E7E]" />
+                                        <span>총 <strong className="text-[#1A2840]">4차례 회수</strong>, 누적 수익률 <strong className="text-[#003E7E]">3,274%</strong> 달성</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="bg-[#F5F8FC] rounded-xl p-6 border border-[rgba(0,62,126,0.08)]">
+                                <div className="text-sm font-bold text-[#003E7E] mb-2">사업 내용</div>
+                                <p className="text-[#4B6080] font-medium">3D 프린터 장비</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-xl border border-[rgba(0,62,126,0.08)] overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead className="bg-[#F5F8FC] border-b border-[rgba(0,62,126,0.08)]">
+                                        <tr>
+                                            <th className="px-4 py-3 text-left font-black text-[#1A2840]">자회사명</th>
+                                            <th className="px-4 py-3 text-center font-black text-[#1A2840]">편입일자</th>
+                                            <th className="px-4 py-3 text-left font-black text-[#1A2840]">사업내용</th>
+                                            <th className="px-4 py-3 text-right font-black text-[#1A2840]">투자금 (천원)</th>
+                                            <th className="px-4 py-3 text-right font-black text-[#1A2840]">회수원금 (천원)</th>
+                                            <th className="px-4 py-3 text-center font-black text-[#1A2840]">회수일자</th>
+                                            <th className="px-4 py-3 text-right font-black text-[#1A2840]">총 회수금 (천원)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td className="px-4 py-4 font-bold text-[#1A2840]">㈜링크솔루션</td>
+                                            <td className="px-4 py-4 text-center text-[#4B6080]">15.08.01</td>
+                                            <td className="px-4 py-4 text-[#4B6080]">3D 프린터 장비</td>
+                                            <td className="px-4 py-4 text-right font-bold text-[#1A2840]">220,000</td>
+                                            <td className="px-4 py-4 text-right font-bold text-[#003E7E]">216,000</td>
+                                            <td className="px-4 py-4 text-center text-[#4B6080]">20.08-25.09</td>
+                                            <td className="px-4 py-4 text-right font-black text-[#003E7E] text-lg">3,979,266</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* 투자 기업 목록 */}
                 <div className="space-y-8">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h3 className="text-2xl md:text-3xl font-black text-[#1A2840] mb-2">투자 기업 목록</h3>
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                        <button
+                            type="button"
+                            onClick={() => goToCompanies('all_portfolio')}
+                            className="text-left group"
+                        >
+                            <h3 className="text-2xl md:text-3xl font-black text-[#1A2840] mb-2 inline-flex items-center gap-2 group-hover:text-[#003E7E] transition-colors">
+                                기업소개 <ArrowRight className="w-5 h-5" />
+                            </h3>
                             <p className="text-sm md:text-base text-[#4B6080]">총 {portfolioCompanies.length}개 기업</p>
-                        </div>
+                        </button>
                         <div className="flex items-center gap-2 text-sm text-[#4B6080]">
                             <Star className="w-4 h-4 text-[#C8A84A]" />
                             <span>*는 TIPS 선정기업</span>
@@ -719,14 +821,16 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {portfolioCompanies.map((company, idx) => {
+                        {portfolioCompanies.map((company) => {
                             const isTips = company.includes('*');
                             const companyName = company.replace('*', '');
 
                             return (
-                                <div
-                                    key={idx}
-                                    className="group bg-white rounded-2xl border border-[rgba(0,62,126,0.08)] shadow-sm p-6 hover:border-[rgba(0,62,126,0.20)] hover:shadow-md transition-all duration-300 cursor-pointer"
+                                <button
+                                    key={company}
+                                    type="button"
+                                    onClick={() => goToCompanies('all_portfolio')}
+                                    className="group bg-white rounded-2xl border border-[rgba(0,62,126,0.08)] shadow-sm p-6 hover:border-[rgba(0,62,126,0.20)] hover:shadow-md transition-all duration-300 text-left"
                                 >
                                     <div className="aspect-square bg-[#F5F8FC] rounded-xl mb-4 flex items-center justify-center border border-[rgba(0,62,126,0.08)] group-hover:bg-[#EBF2FF] transition-colors">
                                         <Building className="w-10 h-10 text-[#8A9BB5] group-hover:text-[#003E7E] transition-colors" />
@@ -741,86 +845,9 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                                             </span>
                                         )}
                                     </div>
-                                </div>
+                                </button>
                             );
                         })}
-                    </div>
-                </div>
-
-                {/* 대표 투자 회수 사례 */}
-                <div className="space-y-8">
-                    <div>
-                        <h3 className="text-2xl md:text-3xl font-black text-[#1A2840] mb-2">대표 투자 회수 사례</h3>
-                        <p className="text-sm md:text-base text-[#4B6080]">성공적인 투자 회수 사례를 소개합니다</p>
-                    </div>
-
-                    <div className="bg-[rgba(0,200,100,0.04)] rounded-3xl p-8 md:p-12 border border-[rgba(0,200,100,0.15)] relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-48 h-48 bg-[rgba(0,200,100,0.05)] rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-                        <div className="relative z-10">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-emerald-600 text-white rounded-2xl flex items-center justify-center">
-                                    <Award className="w-8 h-8" />
-                                </div>
-                                <div>
-                                    <h4 className="text-xl md:text-2xl font-black text-[#1A2840] mb-1">㈜링크솔루션 투자 성공</h4>
-                                    <p className="text-xs md:text-sm text-[#4B6080] font-medium">IPO 성공 사례</p>
-                                </div>
-                            </div>
-
-                            <div className="grid md:grid-cols-2 gap-6 mb-8">
-                                <div className="bg-white rounded-xl p-6 border border-[rgba(0,200,100,0.15)]">
-                                    <div className="text-sm font-bold text-green-400 mb-2">투자 정보</div>
-                                    <ul className="space-y-2 text-[#4B6080]">
-                                        <li className="flex items-center gap-2">
-                                            <CheckCircle className="w-4 h-4 text-green-500" />
-                                            <span><strong className="text-[#1A2840]">2015년 8월</strong>, 7천만원 투자하여 자회사 편입</span>
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <CheckCircle className="w-4 h-4 text-green-500" />
-                                            <span><strong className="text-[#1A2840]">2025년 6월</strong> IPO 성공</span>
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <CheckCircle className="w-4 h-4 text-green-500" />
-                                            <span>총 <strong className="text-[#1A2840]">4차례 회수</strong>, 누적 수익률 <strong className="text-green-400">3,274%</strong> 달성</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div className="bg-white rounded-xl p-6 border border-[rgba(0,200,100,0.15)]">
-                                    <div className="text-sm font-bold text-green-400 mb-2">사업 내용</div>
-                                    <p className="text-[#4B6080] font-medium">3D 프린터 장비</p>
-                                </div>
-                            </div>
-
-                            {/* 회수 현황 테이블 */}
-                            <div className="bg-white rounded-xl border border-[rgba(0,200,100,0.15)] overflow-hidden">
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-sm">
-                                        <thead className="bg-[rgba(0,200,100,0.05)] border-b border-[rgba(0,200,100,0.15)]">
-                                            <tr>
-                                                <th className="px-4 py-3 text-left font-black text-[#1A2840]">자회사명</th>
-                                                <th className="px-4 py-3 text-center font-black text-[#1A2840]">편입일자</th>
-                                                <th className="px-4 py-3 text-left font-black text-[#1A2840]">사업내용</th>
-                                                <th className="px-4 py-3 text-right font-black text-[#1A2840]">투자금 (천원)</th>
-                                                <th className="px-4 py-3 text-right font-black text-[#1A2840]">회수원금 (천원)</th>
-                                                <th className="px-4 py-3 text-center font-black text-[#1A2840]">회수일자</th>
-                                                <th className="px-4 py-3 text-right font-black text-[#1A2840]">총 회수금 (천원)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr className="border-b border-[rgba(0,62,126,0.08)] hover:bg-[rgba(0,200,100,0.03)] transition-colors">
-                                                <td className="px-4 py-4 font-bold text-[#1A2840]">㈜링크솔루션</td>
-                                                <td className="px-4 py-4 text-center text-[#4B6080]">15.08.01</td>
-                                                <td className="px-4 py-4 text-[#4B6080]">3D 프린터 장비</td>
-                                                <td className="px-4 py-4 text-right font-bold text-[#1A2840]">220,000</td>
-                                                <td className="px-4 py-4 text-right font-bold text-green-400">216,000</td>
-                                                <td className="px-4 py-4 text-center text-[#4B6080]">20.08-25.09</td>
-                                                <td className="px-4 py-4 text-right font-black text-green-400 text-lg">3,979,266</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -829,29 +856,37 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
 
     if (subPage === 'apply') {
         return (
-            <div className="max-w-4xl mx-auto">
-                <SectionTitle title="투자 신청" subtitle="Apply" />
+            <div className="max-w-4xl mx-auto space-y-10">
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
+                    <div className="absolute inset-0 grid-pattern opacity-15" />
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">IR</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            IR 검토를 희망하는 기업은 IR 자료(사업계획서)를 제출해 주세요.
+                            <br className="hidden md:block" />
+                            접수된 자료는 기업투자본부의 검토 절차를 거쳐 개별 안내 드립니다.
+                        </p>
+                    </div>
+                </div>
 
-                <div className="bg-white rounded-3xl border border-[rgba(0,62,126,0.08)] shadow-sm p-8 md:p-12">
+                <div className="bg-white rounded-3xl border border-[rgba(0,62,126,0.08)] p-8 md:p-12">
                     <div className="space-y-8">
                         <div className="bg-[#EBF2FF] rounded-2xl p-6 border border-[rgba(0,62,126,0.15)]">
                             <h3 className="font-bold text-[#003E7E] mb-4 flex items-center gap-2">
                                 <FileText className="w-5 h-5" />
-                                투자 신청 전 확인사항
+                                IR 접수 전 확인사항
                             </h3>
                             <ul className="space-y-2 text-[#4B6080]">
-                                <li className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
-                                    <span>기술 기반 스타트업 또는 예비 창업자</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
-                                    <span>혁신적인 기술 아이템 또는 원천 기술 보유</span>
-                                </li>
-                                <li className="flex items-start">
-                                    <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
-                                    <span>시장 성장 가능성 및 사업화 계획 보유</span>
-                                </li>
+                                {[
+                                    "기술기반 창업기업 또는 예비창업자",
+                                    "차별화된 기술 또는 사업화 가능한 핵심기술 보유",
+                                    "시장성과 성장 가능성을 갖춘 사업모델(BM) 보유",
+                                ].map((item) => (
+                                    <li key={item} className="flex items-start">
+                                        <CheckCircle className="w-5 h-5 text-[#003E7E] mr-2 mt-0.5 shrink-0" />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
@@ -859,9 +894,9 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                             <div className="bg-[#F5F8FC] rounded-2xl p-6 border border-[rgba(0,62,126,0.08)]">
                                 <h4 className="font-bold text-[#1A2840] mb-3 flex items-center gap-2">
                                     <Mail className="w-5 h-5 text-[#003E7E]" />
-                                    이메일 상담
+                                    이메일 접수
                                 </h4>
-                                <p className="text-[#4B6080] text-sm mb-4">사업계획서를 첨부하여 이메일로 투자 상담을 신청하세요.</p>
+                                <p className="text-[#4B6080] text-sm mb-4">IR 자료(사업계획서)를 첨부하여 이메일로 제출해 주세요. 접수된 자료는 검토 후 순차적으로 회신 드립니다.</p>
                                 <a href="mailto:tuholdings@tukorea.ac.kr" className="text-[#0055CC] font-bold hover:underline">
                                     tuholdings@tukorea.ac.kr
                                 </a>
@@ -869,19 +904,13 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage }) => {
                             <div className="bg-[#F5F8FC] rounded-2xl p-6 border border-[rgba(0,62,126,0.08)]">
                                 <h4 className="font-bold text-[#1A2840] mb-3 flex items-center gap-2">
                                     <Phone className="w-5 h-5 text-[#003E7E]" />
-                                    전화 상담
+                                    전화 문의
                                 </h4>
-                                <p className="text-[#4B6080] text-sm mb-4">투자사업팀으로 직접 연락하시면 빠른 상담이 가능합니다.</p>
+                                <p className="text-[#4B6080] text-sm mb-4">IR 접수 및 투자 검토 관련 문의는 투자사업팀으로 연락해 주세요.</p>
                                 <a href="tel:031-8041-0965" className="text-[#0055CC] font-bold hover:underline">
                                     031-8041-0965
                                 </a>
                             </div>
-                        </div>
-
-                        <div className="text-center pt-4">
-                            <p className="text-[#4B6080] text-sm">
-                                또는 <a href="#contact" className="text-[#0055CC] font-bold hover:underline">문의하기</a> 페이지를 통해 온라인으로 상담을 신청하실 수 있습니다.
-                            </p>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ArrowDown, ChevronRight, TrendingUp, Building2, Award, Target, Cpu, Microscope, Leaf, Factory, Newspaper } from 'lucide-react';
+import { ArrowRight, ArrowDown, ChevronRight, TrendingUp, Building2, Award, Target, Cpu, Microscope, Factory, Layers, Newspaper } from 'lucide-react';
 import { PageId, Post, Company } from '../../types';
 import { Button } from '../common';
 
@@ -18,10 +18,10 @@ const stats = [
 ];
 
 const fields = [
-    { Icon: Cpu,        num: "01", title: "AI / SW",         desc: "인공지능, 빅데이터, 클라우드,\nSaaS 등 디지털 혁신 기술" },
-    { Icon: Microscope, num: "02", title: "바이오 / 헬스케어", desc: "신약 개발, 의료기기,\n디지털 헬스케어 솔루션" },
-    { Icon: Leaf,       num: "03", title: "친환경 / 에너지",   desc: "신재생 에너지, 탄소중립 기술,\n친환경 소재" },
-    { Icon: Factory,    num: "04", title: "스마트 제조",        desc: "스마트 팩토리,\n산업용 IoT, 로봇 자동화" },
+    { Icon: Cpu,        num: "01", title: "AI·ICT",           desc: "인공지능(AI), 빅데이터, 클라우드,\nIoT, SW 등 첨단 ICT 기술" },
+    { Icon: Microscope, num: "02", title: "바이오·헬스케어",   desc: "디지털 헬스케어, 의료기기,\n바이오 소재 및 바이오테크" },
+    { Icon: Factory,    num: "03", title: "스마트제조·반도체", desc: "스마트 제조, 반도체 공정·장비,\n첨단 제조기술" },
+    { Icon: Layers,     num: "04", title: "첨단소재·부품",     desc: "신소재, 고기능성 부품 및\n소재 기술" },
 ];
 
 const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostClick, notices }) => {
@@ -29,7 +29,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
         <div>
 
             {/* ── 1. HERO ──────────────────────────────────────────────────── */}
-            <section className="relative bg-slate-900 text-white min-h-screen flex flex-col justify-center overflow-hidden">
+            <section className="relative bg-slate-900 text-white h-[calc(100svh-16rem)] min-h-[28rem] flex flex-col justify-center overflow-hidden">
                 <style>{`
                     @keyframes fadeInUp {
                         from { opacity: 0; transform: translateY(20px); }
@@ -43,7 +43,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 flex flex-col justify-center items-center flex-grow text-center">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12 flex flex-col justify-center items-center flex-grow text-center">
                     <div className="mb-6 flex items-center animate-fade-in-up opacity-0" style={{ animationDelay: '0.1s' }}>
                         <span className="bg-white/5 backdrop-blur-md text-blue-100 text-xs font-bold px-4 py-2 rounded-full border border-white/10 shadow-lg tracking-wider uppercase">
                             대학 기술사업화의 선도적 파트너
@@ -73,8 +73,8 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                     </div>
                 </div>
 
-                <div className="absolute bottom-12 left-1/2 -translate-x-1/2 text-white/20 animate-bounce">
-                    <ArrowDown className="w-8 h-8" />
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/20">
+                    <ArrowDown className="w-6 h-6" />
                 </div>
             </section>
 
@@ -83,18 +83,18 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/[0.06]">
                         {stats.map((s, i) => (
-                            <div key={i} className="group flex flex-col items-center text-center py-14 px-6 hover:bg-white/[0.03] transition-colors">
+                            <div key={i} className="group flex flex-col items-center text-center py-10 md:py-12 px-6 hover:bg-white/[0.03] transition-colors">
                                 {/* Icon */}
                                 <div className="w-9 h-9 rounded-lg bg-white/08 flex items-center justify-center mb-5 text-[#60AEFF]">
                                     <s.Icon className="w-4 h-4" />
                                 </div>
                                 {/* Number */}
-                                <div className="leading-none mb-2">
+                                <div className="leading-none mb-3">
                                     <span className="display-num text-5xl md:text-6xl text-white">{s.value}</span>
                                     <span className="display-num text-xl md:text-2xl text-[#60AEFF] ml-0.5">{s.unit}</span>
                                 </div>
                                 {/* Label */}
-                                <p className="text-[0.7rem] text-white/35 font-bold tracking-widest uppercase">{s.label}</p>
+                                <p className="text-sm md:text-base text-white/70 font-bold tracking-wide">{s.label}</p>
                                 {/* Hover accent */}
                                 <div className="mt-4 h-px w-0 bg-gradient-to-r from-[#003E7E] to-[#60AEFF] group-hover:w-10 transition-all duration-300" />
                             </div>
@@ -172,6 +172,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                     </div>
 
                     {/* Grid: large left + two stacked right */}
+                    {notices.length > 0 ? (
                     <div className="grid md:grid-cols-5 gap-5 items-start">
 
                         {/* Large card — 3/5 width */}
@@ -234,6 +235,11 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                             ))}
                         </div>
                     </div>
+                    ) : (
+                        <div className="bg-white rounded-2xl border border-dashed border-[rgba(0,62,126,0.15)] py-16 text-center text-[#8A9BB5]">
+                            등록된 공지사항이 없습니다.
+                        </div>
+                    )}
                 </div>
             </section>
 

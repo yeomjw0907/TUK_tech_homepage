@@ -94,15 +94,15 @@ const AdminPage: React.FC<AdminPageProps> = ({
         { id: 'companies', label: '자회사/기업 관리', icon: Building },
         { id: 'posts', label: '게시글(회사소식) 관리', icon: Bell },
         { id: 'popups', label: '팝업 관리', icon: Layers },
-        { id: 'inquiries', label: '문의하기 관리', icon: Inbox },
+        { id: 'inquiries', label: '지원하기 관리', icon: Inbox },
     ];
 
     const POST_CATEGORIES = [
         { id: 'all', label: '전체' },
         { id: 'notice', label: '공지사항' },
-        { id: 'press', label: '보도소식' },
+        { id: 'press', label: '언론보도' },
         { id: 'resources', label: '자료실' },
-        { id: 'faq', label: 'FAQ' },
+        { id: 'faq', label: 'Q&A' },
     ];
 
     // --- Handlers ---
@@ -332,7 +332,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 <Bell className="w-6 h-6 text-[#003E7E]" />
                             </div>
                             <div className="text-3xl font-black text-slate-900">{posts.length}개</div>
-                            <div className="text-xs text-slate-400 mt-2">공지, 보도, 자료, FAQ 포함</div>
+                            <div className="text-xs text-slate-400 mt-2">공지, 보도, 자료, Q&A 포함</div>
                         </div>
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                             <div className="flex items-center justify-between mb-4">
@@ -680,7 +680,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 <thead className="bg-slate-50 text-slate-500 font-bold border-b border-slate-200">
                                     <tr>
                                         <th className="px-6 py-4 w-20">상태</th>
+                                        <th className="px-6 py-4">문의유형</th>
                                         <th className="px-6 py-4">이름 (연락처)</th>
+                                        <th className="px-6 py-4">기업명</th>
                                         <th className="px-6 py-4">내용</th>
                                         <th className="px-6 py-4">작성일</th>
                                         <th className="px-6 py-4 text-center">관리</th>
@@ -697,10 +699,12 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                                     {inquiry.status}
                                                 </button>
                                             </td>
+                                            <td className="px-6 py-4 text-sm text-slate-600">{inquiry.inquiryType || '-'}</td>
                                             <td className="px-6 py-4 text-slate-800">
                                                 <div className="font-bold">{inquiry.name}</div>
                                                 <div className="text-xs text-slate-400">{inquiry.contact}</div>
                                             </td>
+                                            <td className="px-6 py-4 text-sm text-slate-600">{inquiry.companyName || '-'}</td>
                                             <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{inquiry.content}</td>
                                             <td className="px-6 py-4 text-slate-500">{inquiry.date}</td>
                                             <td className="px-6 py-4 text-center">
@@ -743,6 +747,14 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-slate-50 p-4 rounded-lg">
+                                <div className="text-xs font-bold text-slate-500 mb-1">문의유형</div>
+                                <div className="text-slate-800">{viewingInquiry.inquiryType || '-'}</div>
+                            </div>
+                            <div className="bg-slate-50 p-4 rounded-lg">
+                                <div className="text-xs font-bold text-slate-500 mb-1">기업명</div>
+                                <div className="text-slate-800">{viewingInquiry.companyName || '-'}</div>
+                            </div>
                             <div className="bg-slate-50 p-4 rounded-lg">
                                 <div className="text-xs font-bold text-slate-500 mb-1 flex items-center"><Phone className="w-3 h-3 mr-1" /> 연락처</div>
                                 <div className="text-slate-800">{viewingInquiry.contact}</div>

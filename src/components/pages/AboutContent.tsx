@@ -52,15 +52,13 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                 {/* Top hero card */}
                 <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
                     <div className="absolute inset-0 grid-pattern opacity-15" />
-                    <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 orb" />
-                    <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-8">
-                        <img src="/logo_white.svg" alt="한국공학대학교 기술지주회사" className="h-16 w-auto shrink-0" />
-                        <div>
-                            <h2 className="text-2xl md:text-3xl font-black text-white mb-3">한국공학대학교 기술지주회사</h2>
-                            <p className="text-white/65 text-base leading-relaxed max-w-2xl">
-                                대학이 보유한 우수한 연구성과를 발굴하고, 직접 사업화를 통해 기술창업 활성화와 국가 산업 발전에 기여합니다.
-                            </p>
-                        </div>
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">About</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            대학의 우수한 연구성과와 혁신적인 사업 아이디어를 발굴하여 기술기반 창업과 투자로 연결하고,
+                            <br />
+                            기업의 지속 가능한 성장을 지원합니다.
+                        </p>
                     </div>
                 </div>
 
@@ -141,30 +139,46 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                             {
                                 icon: Building2,
                                 title: "유망 벤처기업 발굴 및 육성",
-                                desc: "기술사업화 투자를 위한 유망 벤처기업의 발굴 및 육성",
+                                desc: "대학의 우수한 연구성과와 사업 아이디어를 발굴하여 교원·학생 창업과 기술기반 벤처기업의 자회사 설립·편입을 지원하고, 기술사업화와 기업 성장을 촉진합니다.",
+                                items: [
+                                    "교원·학생 예비창업자 발굴",
+                                    "대학기술 기반 자회사 설립",
+                                    "외부 벤처기업 자회사 편입",
+                                    "기술이전 및 사업모델 고도화",
+                                    "후속투자 및 성장 연계",
+                                ],
                             },
                             {
                                 icon: Briefcase,
                                 title: "투자조합 결성 및 운용",
-                                desc: "개인투자조합 및 벤처투자조합 결성과 운용",
+                                desc: "대학의 기술사업화와 유망 창업기업의 성장을 지원하기 위해 개인투자조합과 벤처투자조합을 결성·운용하고, 초기투자부터 후속투자까지 연계합니다.",
+                                items: [
+                                    "개인투자조합 및 벤처투자조합 운용",
+                                    "기술기반 창업기업 투자",
+                                    "투자기업 성장관리",
+                                    "TIPS 및 후속투자 연계",
+                                ],
                             },
                             {
                                 icon: Users,
                                 title: "창업보육센터 운영",
-                                desc: "인큐베이팅 & 액셀러레이팅 창업보육센터 운영",
+                                desc: "제조 및 기술기반 창업기업의 안정적인 성장을 위해 입주공간과 사업화 지원, 멘토링, 네트워킹 등 단계별 창업보육 프로그램을 제공합니다.",
+                                items: [
+                                    "창업기업 입주공간 제공",
+                                    "사업화 및 경영·기술 멘토링",
+                                    "시제품 제작 및 IP 지원 연계",
+                                    "투자 및 네트워킹 지원",
+                                    "졸업기업 성장관리",
+                                ],
                             },
                             {
                                 icon: Award,
-                                title: "TU-RN Up & TIPS 프로그램",
-                                desc: "TU-RN Up과 TIPS 프로그램 운영을 통한 체계적인 성장 지원",
-                                extra: (
-                                    <div className="mt-4 pt-4 border-t border-[rgba(0,62,126,0.08)]">
-                                        <p className="text-xs text-[#8A9BB5] leading-relaxed">
-                                            <strong className="text-[#003E7E]">TU-RN Up 프로그램</strong>: 자회사 설립이나 기술사업화를 통한 신사업 발굴을 목표로하는 벤처기업들을 위해 필요한 비즈니스 모델 수립과 Scale Up에 필요한 성장 지원활동에 대한 당사 독자적인 컴퍼니 빌딩 및 프로그램
-                                        </p>
-                                    </div>
-                                )
-                            }
+                                title: "TU-RN UP & TIPS 프로그램",
+                                desc: "대학의 기술과 산학협력 인프라를 활용하여 예비창업자와 벤처기업의 사업모델 수립, 자회사 설립·편입, 투자유치 및 Scale-up을 지원합니다.",
+                                items: [
+                                    "TU-RN UP 프로그램은 대학의 연구성과 또는 기업의 사업수요를 기반으로 기술이전, 공동 R&D, 사업모델 고도화와 자회사 설립·편입을 지원하는 독자적인 컴퍼니 빌딩 프로그램입니다. 이후 TIPS 추천, 후속투자, 전문 멘토링 및 네트워킹을 연계하여 기업의 지속적인 성장을 지원합니다.",
+                                ],
+                            },
                         ].map((item, i) => (
                             <div key={i} className="group bg-white rounded-2xl border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden">
                                 <div className="bg-[#F5F8FC] border-b border-[rgba(0,62,126,0.08)] p-6">
@@ -177,7 +191,14 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                                 </div>
                                 <div className="p-6">
                                     <p className="text-sm text-[#4B6080] leading-relaxed">{item.desc}</p>
-                                    {item.extra}
+                                    <ul className="mt-4 space-y-2">
+                                        {item.items.map((point) => (
+                                            <li key={point} className="flex items-start gap-2 text-sm text-[#4B6080] leading-relaxed">
+                                                <span className="mt-0.5 text-[#003E7E] font-black shrink-0">▸</span>
+                                                <span>{point}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
                         ))}
@@ -242,11 +263,10 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                     <div className="relative z-10">
                         <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">VISION</p>
                         <h3 className="text-2xl md:text-3xl font-black text-white mb-6 leading-tight">
-                            "기술이 가치를 만나는 곳,<br />함께 성장하는 미래"
+                            “대학의 기술이 산업의 가치가 되다”
                         </h3>
                         <p className="text-base md:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed">
-                            대학의 혁신적인 연구 성과를 사업화하여 기술 창업 생태계를 활성화하고,<br className="hidden md:block" />
-                            대학-기업-사회가 상생하는 선순환 구조를 만들어 갑니다.
+                            대학이 보유한 우수한 기술을 창업과 투자로 연결하고, 혁신기업의 성장을 통해 연구와 산업이 함께 발전하는 기술사업화의 선순환 생태계를 만들어갑니다.
                         </p>
                     </div>
                 </div>
@@ -254,9 +274,9 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                 {/* 3 vision cards — white bg with border */}
                 <div className="grid md:grid-cols-3 gap-8">
                     {[
-                        { title: "기술 발굴", desc: "대학 연구실의 우수 기술을 적극 발굴하고 사업화 가능성을 검증합니다.", Icon: Star },
-                        { title: "가치 창출", desc: "기술 기반 창업을 통해 새로운 시장과 일자리를 창출합니다.", Icon: Zap },
-                        { title: "상생 성장", desc: "투자 수익을 연구개발에 재투자하여 지속적인 혁신을 추구합니다.", Icon: Globe }
+                        { title: "대학기술 발굴", desc: "대학의 우수한 연구성과와 혁신기술을 발굴하여 사업화 가능성을 검토합니다.", Icon: Star },
+                        { title: "기술사업화", desc: "기술이전, 자회사 설립 및 투자 연계를 통해 연구성과를 산업의 가치로 실현합니다.", Icon: Zap },
+                        { title: "성장지원", desc: "투자, 보육, TIPS 연계를 통해 기업의 지속 가능한 성장을 지원합니다.", Icon: Globe }
                     ].map((item, i) => (
                         <div key={i} className="bg-white border border-[rgba(0,62,126,0.08)] rounded-2xl p-8 text-center hover:border-[rgba(0,62,126,0.20)] hover:-translate-y-1 transition-all shadow-sm hover:shadow-md">
                             <div className="w-16 h-16 bg-[#EBF2FF] rounded-2xl flex items-center justify-center mx-auto mb-4 text-[#003E7E]">
@@ -271,25 +291,22 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
                 {/* Mission — white boxes */}
                 <div className="bg-[#F5F8FC] border border-[rgba(0,62,126,0.08)] rounded-3xl p-12">
                     <p className="text-[#003E7E] font-bold uppercase tracking-widest text-sm mb-4 text-center">MISSION</p>
-                    <div className="grid md:grid-cols-2 gap-8">
-                        <div className="bg-white rounded-2xl p-8 border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] transition-colors">
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 rounded-xl bg-[#003E7E] flex items-center justify-center text-white shrink-0">
-                                    <Target className="w-5 h-5" />
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {[
+                            { title: "기술사업화", desc: "대학의 연구성과를 발굴하고 기술이전, 자회사 설립 및 사업화를 지원합니다.", Icon: Target },
+                            { title: "투자 및 자회사 육성", desc: "기술기반 창업기업에 투자하고 자회사의 지속 가능한 성장을 지원합니다.", Icon: Briefcase },
+                            { title: "성장 플랫폼", desc: "TU-RN UP, 창업보육센터, TIPS 연계를 통해 기업의 Scale-up을 지원합니다.", Icon: Rocket },
+                        ].map((item) => (
+                            <div key={item.title} className="bg-white rounded-2xl p-8 border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] transition-colors">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <div className="w-10 h-10 rounded-xl bg-[#003E7E] flex items-center justify-center text-white shrink-0">
+                                        <item.Icon className="w-5 h-5" />
+                                    </div>
+                                    <h4 className="font-black text-base md:text-lg text-[#1A2840]">{item.title}</h4>
                                 </div>
-                                <h4 className="font-black text-base md:text-lg text-[#1A2840]">기술사업화 전문기관</h4>
+                                <p className="text-sm text-[#4B6080]">{item.desc}</p>
                             </div>
-                            <p className="text-sm text-[#4B6080]">대학 보유 기술의 사업화를 위한 전문적인 투자, 보육, 컨설팅 서비스를 제공합니다.</p>
-                        </div>
-                        <div className="bg-white rounded-2xl p-8 border border-[rgba(0,62,126,0.08)] hover:border-[rgba(0,62,126,0.20)] transition-colors">
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="w-10 h-10 rounded-xl bg-[#003E7E] flex items-center justify-center text-white shrink-0">
-                                    <Users className="w-5 h-5" />
-                                </div>
-                                <h4 className="font-black text-base md:text-lg text-[#1A2840]">창업 생태계 허브</h4>
-                            </div>
-                            <p className="text-sm text-[#4B6080]">예비 창업자, 스타트업, 투자자를 연결하는 네트워크 플랫폼 역할을 수행합니다.</p>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -297,42 +314,65 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
     }
 
     if (subPage === 'org') {
-        return (
-            <div className="max-w-4xl mx-auto">
-                <SectionTitle title="조직도" subtitle="Organization" />
+        const depts = [
+            { num: "01", name: "경영지원본부", tasks: ["경영기획", "재무·회계", "인사·총무", "대외협력"], Icon: Briefcase },
+            { num: "02", name: "기업투자본부", tasks: ["투자심사", "자회사 설립·편입", "투자조합 운용", "포트폴리오 관리", "Value-up 지원", "후속투자 지원", "TIPS 운영"], Icon: TrendingUp },
+            { num: "03", name: "창업보육센터", tasks: ["입주기업 보육·관리", "창업 멘토링", "창업교육·네트워킹", "사업화 지원"], Icon: Users },
+            { num: "04", name: "기술사업화본부", tasks: ["기술발굴", "기술평가", "기술이전", "지식재산(IP) 관리"], Icon: Lightbulb },
+        ];
 
-                <div className="bg-white rounded-3xl border border-[rgba(0,62,126,0.08)] shadow-sm p-8 md:p-12">
+        return (
+            <div className="max-w-5xl mx-auto space-y-10">
+                <div className="bg-[#003E7E] rounded-3xl p-10 md:p-14 relative overflow-hidden">
+                    <div className="absolute inset-0 grid-pattern opacity-15" />
+                    <div className="relative z-10 max-w-3xl mx-auto text-center">
+                        <p className="text-white/70 font-bold uppercase tracking-widest text-sm mb-4">Organization</p>
+                        <p className="text-white/80 text-base md:text-lg leading-relaxed">
+                            기술사업화부터 투자, 창업보육까지 전주기 지원체계를 기반으로
+                            <br />
+                            대학의 연구성과를 산업적 가치로 연결합니다.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-3xl border border-[rgba(0,62,126,0.08)] px-4 py-10 md:px-8 md:py-12">
                     <div className="flex flex-col items-center">
-                        {/* 대표이사 */}
-                        <div className="bg-[#003E7E] text-white px-8 py-4 rounded-xl font-black text-lg mb-2 flex items-center gap-3 shadow-md shadow-[rgba(0,62,126,0.20)]">
-                            <UserCircle2 className="w-6 h-6 text-white/80" />
+                        <div className="inline-flex items-center gap-2.5 bg-[#003E7E] text-white rounded-xl px-8 py-3.5 font-black text-base md:text-lg">
+                            <UserCircle2 className="w-5 h-5 text-white/90" />
                             대표이사
                         </div>
-                        <div className="w-0.5 h-8 bg-[rgba(0,62,126,0.15)]" />
 
-                        {/* 부서들 */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                            {[
-                                { name: "경영지원팀", tasks: ["경영기획", "재무회계", "인사총무"], Icon: Briefcase },
-                                { name: "투자사업팀", tasks: ["투자심사", "펀드운용", "사후관리"], Icon: TrendingUp },
-                                { name: "창업보육팀", tasks: ["입주기업관리", "멘토링", "네트워킹"], Icon: Users }
-                            ].map((dept, i) => (
-                                <div key={i} className="text-center">
-                                    <div className="w-0.5 h-8 bg-[rgba(0,62,126,0.15)] mx-auto" />
-                                    <div className="bg-[#EBF2FF] border border-[rgba(0,62,126,0.15)] text-[#003E7E] px-6 py-3 rounded-xl font-black mb-4 flex items-center justify-center gap-2">
-                                        <dept.Icon className="w-4 h-4" />
-                                        {dept.name}
+                        <div className="w-px h-8 bg-[#B7C9DE]" />
+
+                        <div className="relative w-full">
+                            <div className="hidden lg:block absolute top-0 left-[12.5%] right-[12.5%] h-px bg-[#B7C9DE]" />
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+                                {depts.map((dept) => (
+                                    <div key={dept.name} className="flex flex-col items-center">
+                                        <div className="w-px h-8 bg-[#B7C9DE]" />
+                                        <div className="w-full bg-white rounded-2xl border border-[#E4EAF2] shadow-[0_1px_2px_rgba(16,42,80,0.06)]">
+                                            <div className="flex items-center gap-3 px-4 py-4 border-b border-[#EEF2F7]">
+                                                <div className="w-10 h-10 rounded-lg bg-[#003E7E] text-white flex items-center justify-center shrink-0">
+                                                    <dept.Icon className="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <div className="display-num text-[11px] text-[#7AA7D4] leading-none mb-1">{dept.num}</div>
+                                                    <h4 className="font-black text-[#1A2840] text-[15px] leading-tight">{dept.name}</h4>
+                                                </div>
+                                            </div>
+                                            <ul className="px-4 py-3 space-y-2.5">
+                                                {dept.tasks.map((task) => (
+                                                    <li key={task} className="flex items-center gap-2.5 text-[13px] text-[#4B6080] leading-snug">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-[#2F6FB5] shrink-0" />
+                                                        {task}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <ul className="space-y-2">
-                                        {dept.tasks.map((task, j) => (
-                                            <li key={j} className="bg-[#F5F8FC] text-[#4B6080] px-4 py-2 rounded-lg text-sm font-medium border border-[rgba(0,62,126,0.08)] flex items-center justify-center gap-2">
-                                                <CheckCircle className="w-3.5 h-3.5 text-[#0099D6]" />
-                                                {task}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

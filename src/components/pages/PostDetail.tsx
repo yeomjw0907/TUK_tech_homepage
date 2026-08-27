@@ -83,13 +83,17 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
                                 ))
                             ) : (
                                 // 기존 단일 파일 호환성
-                                <div className="flex items-center p-3 bg-white border border-slate-200 rounded-lg hover:border-[#003E7E] cursor-pointer transition-colors group">
+                                <a
+                                    href={post.fileUrl || (post.fileName ? `/files/${post.fileName}` : undefined)}
+                                    download={post.fileName}
+                                    className="flex items-center p-3 bg-white border border-slate-200 rounded-lg hover:border-[#003E7E] cursor-pointer transition-colors group"
+                                >
                                     <FileIcon className="w-5 h-5 text-slate-400 group-hover:text-[#003E7E] mr-3" />
                                     <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 flex-grow truncate">
                                         {post.fileName || `${post.title} 관련 첨부파일.${post.fileType?.toLowerCase() || 'pdf'}`}
                                     </span>
                                     <Download className="w-4 h-4 text-slate-300 group-hover:text-[#003E7E]" />
-                                </div>
+                                </a>
                             )}
                         </div>
                     </div>

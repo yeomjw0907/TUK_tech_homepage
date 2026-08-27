@@ -11,7 +11,7 @@ const QuickMenu: React.FC<QuickMenuProps> = ({ onNavigate }) => {
         { icon: Bell, label: "공지사항", action: () => onNavigate('news', 'notice') },
         { icon: Download, label: "자료실", action: () => onNavigate('news', 'resources') },
         { icon: ExternalLink, label: "창업보육센터", action: () => window.open('https://bi.tukorea.ac.kr', '_blank') },
-        { icon: MessageCircle, label: "문의하기", action: () => onNavigate('contact') },
+        { icon: MessageCircle, label: "지원하기", action: () => onNavigate('contact') },
     ];
 
     return (

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import {
     ChevronDown, Download, Clock, User, Building,
-    Filter, ArrowUpDown, PieChart, Briefcase, FileText
+    ArrowUpDown, PieChart, Briefcase, FileText,
+    Cpu, Microscope, Factory, Layers
 } from 'lucide-react';
 
 // Types
@@ -49,7 +50,6 @@ const App: React.FC = () => {
 
     // Filters
     const [portfolioSort, setPortfolioSort] = useState('name_asc');
-    const [portfolioCategoryFilter, setPortfolioCategoryFilter] = useState('all');
 
     // URL에서 상태 복원
     useEffect(() => {
@@ -69,9 +69,9 @@ const App: React.FC = () => {
             if (post) {
                 const typeMap: Record<string, string> = {
                     'notice': '공지사항',
-                    'press': '보도소식',
+                    'press': '언론보도',
                     'resources': '자료실',
-                    'faq': 'FAQ'
+                    'faq': 'Q&A'
                 };
                 setSelectedPost(post);
                 setPostType(typeMap[post.category] || '공지사항');
@@ -87,7 +87,7 @@ const App: React.FC = () => {
             if (company) {
                 setSelectedCompany(company);
                 setActivePage('portfolio');
-                setActiveSubPage(company.category === 'subsidiary' ? 'subsidiaries' : 'all_portfolio');
+                setActiveSubPage(company.category === 'subsidiary' ? 'subsidiaries' : 'investees');
             }
         } else {
             // 일반 페이지
@@ -120,7 +120,6 @@ const App: React.FC = () => {
         setSelectedPost(null);
 
         setPortfolioSort('name_asc');
-        setPortfolioCategoryFilter('all');
 
         // URL 업데이트
         if (page === 'home') {
@@ -140,7 +139,6 @@ const App: React.FC = () => {
         setActiveSubPage(subPage);
 
         setPortfolioSort('name_asc');
-        setPortfolioCategoryFilter('all');
 
         // URL 업데이트
         if (activePage === 'home') {
@@ -174,7 +172,7 @@ const App: React.FC = () => {
         }, 300);
     };
 
-    const handleInquirySubmit = (data: { name: string; contact: string; email: string; content: string }) => {
+    const handleInquirySubmit = (data: { inquiryType: string; name: string; contact: string; email: string; companyName: string; content: string }) => {
         const newInquiry: Inquiry = {
             id: Date.now(),
             ...data,
@@ -244,7 +242,7 @@ const App: React.FC = () => {
                             if (selectedCompany.category === 'subsidiary') {
                                 navigate('/portfolio/subsidiaries');
                             } else {
-                                navigate('/portfolio/all_portfolio');
+                                navigate('/portfolio/investees');
                             }
                         }} 
                     />
@@ -268,7 +266,7 @@ const App: React.FC = () => {
             <div className="animate-in fade-in zoom-in-95 duration-300">
                 <SubPageHeader
                     title={subMenuItem?.label || menuItem?.label}
-                    parent={menuItem?.label}
+                    parent={menuItem?.subItems && menuItem.subItems.length > 0 ? menuItem.label : undefined}
                     menuItems={menuItem?.subItems}
                     activeSub={activeSubPage}
                     onSubNav={handleSubNavigate}
@@ -285,13 +283,11 @@ const App: React.FC = () => {
         if (activePage === 'portfolio') {
             let baseCompanies: Company[] = [];
             if (activeSubPage === 'subsidiaries') baseCompanies = companies.filter(c => c.category === 'subsidiary');
+            else if (activeSubPage === 'investees') baseCompanies = companies.filter(c => c.category === 'portfolio');
             else if (activeSubPage === 'tips_reco') baseCompanies = companies.filter(c => c.isTips);
             else baseCompanies = companies;
 
-            let filteredCompanies = baseCompanies;
-            if ((activeSubPage === 'all_portfolio' || activeSubPage === 'tips_reco') && portfolioCategoryFilter !== 'all') {
-                filteredCompanies = filteredCompanies.filter(c => c.category === portfolioCategoryFilter);
-            }
+            const filteredCompanies = [...baseCompanies];
 
             filteredCompanies.sort((a, b) => {
                 if (portfolioSort === 'name_asc') return a.name.localeCompare(b.name, 'ko');
@@ -307,21 +303,6 @@ const App: React.FC = () => {
                         <div className="text-slate-500 font-medium">총 <strong className="text-[#003E7E] text-lg">{filteredCompanies.length}</strong>개의 기업이 있습니다.</div>
 
                         <div className="flex gap-3 flex-wrap justify-end">
-                            {activeSubPage !== 'subsidiaries' && (
-                                <div className="relative">
-                                    <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-                                    <select
-                                        className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#003E7E] bg-white appearance-none cursor-pointer hover:border-[#003E7E] transition-colors"
-                                        value={portfolioCategoryFilter}
-                                        onChange={(e) => setPortfolioCategoryFilter(e.target.value)}
-                                    >
-                                        <option value="all">전체 기업</option>
-                                        <option value="subsidiary">자회사</option>
-                                        <option value="portfolio">투자기업</option>
-                                    </select>
-                                </div>
-                            )}
-
                             <div className="relative">
                                 <ArrowUpDown className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                 <select
@@ -407,6 +388,9 @@ const App: React.FC = () => {
                                 <div className="text-slate-400 text-sm w-32 text-center mt-2 md:mt-0 font-medium">{notice.date}</div>
                             </div>
                         ))}
+                        {noticePosts.length === 0 && (
+                            <div className="text-center py-20 text-slate-400">등록된 공지사항이 없습니다.</div>
+                        )}
                     </div>
                 </div>
             );
@@ -426,7 +410,7 @@ const App: React.FC = () => {
                     </div>
                     <div className="grid gap-6">
                         {pressPosts.map((post) => (
-                            <div key={post.id} onClick={() => handlePostClick(post, '보도소식')} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
+                            <div key={post.id} onClick={() => handlePostClick(post, '언론보도')} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer group">
                                 <div className="flex items-center justify-between mb-4">
                                     <span className="px-3 py-1 bg-blue-50 text-[#003E7E] text-xs font-bold rounded-full">PRESS</span>
                                     <span className="text-slate-400 text-sm">{post.date}</span>
@@ -454,8 +438,21 @@ const App: React.FC = () => {
                         </div>
                     </div>
                     <div className="bg-white rounded-2xl shadow-sm border border-slate-100">
-                        {resourcePosts.map((resource, idx) => (
-                            <div key={resource.id} onClick={() => handlePostClick(resource, '자료실')} className={`p-6 flex items-center gap-6 hover:bg-slate-50 transition-colors cursor-pointer ${idx !== resourcePosts.length - 1 ? 'border-b border-slate-100' : ''}`}>
+                        {resourcePosts.map((resource, idx) => {
+                            const downloadUrl = resource.fileUrl || (resource.fileName ? `/files/${resource.fileName}` : undefined);
+                            return (
+                            <a
+                                key={resource.id}
+                                href={downloadUrl}
+                                download={resource.fileName}
+                                onClick={(e) => {
+                                    if (!downloadUrl) {
+                                        e.preventDefault();
+                                        handlePostClick(resource, '자료실');
+                                    }
+                                }}
+                                className={`flex p-6 items-center gap-6 hover:bg-slate-50 transition-colors cursor-pointer ${idx !== resourcePosts.length - 1 ? 'border-b border-slate-100' : ''}`}
+                            >
                                 <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-sm font-black text-slate-500 flex-shrink-0 border border-slate-200 uppercase">
                                     {resource.fileType || 'FILE'}
                                 </div>
@@ -467,8 +464,12 @@ const App: React.FC = () => {
                                     </div>
                                 </div>
                                 <Download className="w-5 h-5 text-slate-300 hover:text-[#003E7E]" />
-                            </div>
-                        ))}
+                            </a>
+                            );
+                        })}
+                        {resourcePosts.length === 0 && (
+                            <div className="text-center py-20 text-slate-400">등록된 자료가 없습니다.</div>
+                        )}
                     </div>
                 </div>
             );
@@ -480,7 +481,7 @@ const App: React.FC = () => {
             return (
                 <div className="space-y-10 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-slate-900 mb-4">자주 묻는 질문</h2>
+                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Q&A</h2>
                         <p className="text-slate-600">궁금하신 점을 빠르게 확인해보세요.</p>
                     </div>
                     <div className="space-y-4">
@@ -499,7 +500,7 @@ const App: React.FC = () => {
                                 </div>
                             </details>
                         ))}
-                        {faqPosts.length === 0 && <div className="text-center py-20 text-slate-400">등록된 FAQ가 없습니다.</div>}
+                        {faqPosts.length === 0 && <div className="text-center py-20 text-slate-400">등록된 Q&A가 없습니다.</div>}
                     </div>
                 </div>
             );
@@ -516,17 +517,17 @@ const App: React.FC = () => {
 
         // Investment
         if (activePage === 'investment' && ['process', 'growth', 'tips', 'fields', 'portfolio', 'apply'].includes(activeSubPage!)) {
-            return <InvestmentContent subPage={activeSubPage!} />;
+            return <InvestmentContent subPage={activeSubPage!} onNavigate={handleNavigate} />;
         }
 
         // Subsidiary
-        if (activePage === 'subsidiary' && ['procedure', 'exit', 'support'].includes(activeSubPage!)) {
+        if (activePage === 'subsidiary' && ['intro', 'procedure', 'exit', 'support'].includes(activeSubPage!)) {
             return <SubsidiaryContent subPage={activeSubPage!} />;
         }
 
         // Contact
         if (activePage === 'contact') {
-            return <ContactForm onSubmit={handleInquirySubmit} subPage={activeSubPage || 'general'} />;
+            return <ContactForm onSubmit={handleInquirySubmit} />;
         }
 
         // Default Empty State
@@ -575,15 +576,16 @@ const App: React.FC = () => {
 // Helper Components for Investment Fields Page
 const InvestmentFieldsSection: React.FC<{ onNavigate: (page: PageId, subPage?: string) => void }> = ({ onNavigate }) => {
     return (
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8">
             {[
-                { icon: () => <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>, title: "IT/SW", desc: "인공지능, 빅데이터, 클라우드, 사물인터넷 등 4차 산업혁명 핵심 기술 분야" },
-                { icon: () => <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.086.517l-.426.213-.426-.213a6 6 0 00-3.086-.517l-2.387.477a2 2 0 00-1.022.547" /></svg>, title: "바이오/헬스케어", desc: "디지털 헬스케어, 의료기기, 바이오 소재 등 국민 건강 증진을 위한 혁신 기술" },
-                { icon: () => <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>, title: "제조/소재/부품", desc: "첨단 제조 공정, 신소재, 고기능성 부품 등 산업 경쟁력 강화를 위한 기반 기술" }
-            ].map((item, idx) => (
-                <Card key={idx} className="text-center p-12 h-full flex flex-col items-center hover:border-blue-200 group">
+                { Icon: Cpu, title: "AI·ICT", desc: "인공지능(AI), 빅데이터, 클라우드, IoT, SW 등 디지털 혁신을 선도하는 첨단 ICT 기술 분야" },
+                { Icon: Microscope, title: "바이오·헬스케어", desc: "디지털 헬스케어, 의료기기, 바이오 소재 및 바이오테크 분야의 혁신 기술" },
+                { Icon: Factory, title: "스마트제조·반도체", desc: "스마트 제조, 반도체 공정·장비, 첨단 제조기술 등 미래 제조산업을 선도하는 핵심 기술 분야" },
+                { Icon: Layers, title: "첨단소재·부품", desc: "신소재, 고기능성 부품 및 소재 기술을 기반으로 산업 경쟁력을 높이는 핵심 기술 분야" },
+            ].map((item) => (
+                <Card key={item.title} className="text-center p-12 h-full flex flex-col items-center hover:border-blue-200 group">
                     <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 text-[#003E7E] shadow-inner group-hover:scale-110 transition-transform duration-300">
-                        <item.icon />
+                        <item.Icon className="w-10 h-10" />
                     </div>
                     <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">{item.title}</h3>
                     <p className="text-slate-600 leading-relaxed text-lg tracking-tight">{item.desc}</p>

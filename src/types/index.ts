@@ -43,14 +43,19 @@ export interface Post {
   isNew?: boolean;
   fileType?: string;
   fileName?: string; // 기존 호환성을 위해 유지
+  fileUrl?: string;
   files?: PostFile[]; // 여러 파일 지원
 }
 
+export type InquiryType = '일반 문의' | 'IR 접수' | 'TIPS 문의' | '기술사업화 문의';
+
 export interface Inquiry {
   id: number;
+  inquiryType?: InquiryType | string;
   name: string;
   contact: string;
   email: string;
+  companyName?: string;
   content: string;
   date: string;
   status: '대기' | '완료';
