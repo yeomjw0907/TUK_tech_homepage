@@ -1,28 +1,7 @@
 import React from 'react';
-import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, ArrowRight, DollarSign, BarChart3, Building, Star, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Mail, Phone } from 'lucide-react';
+import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, ArrowRight, DollarSign, BarChart3, Building, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Mail, Phone } from 'lucide-react';
 import { Card, SectionTitle, Badge } from '../common';
-
-/* 기업명 → /company-logos/ 파일 키 (initialData.ts의 createCompany와 동일 규칙) */
-const logoKeyFor = (name: string) =>
-    name.replace(/\s/g, '-').replace(/[()*]/g, '').replace(/㈜/g, '').replace(/^주/, '');
-
-/* 로고 이미지 — 파일이 없으면 Building 아이콘으로 폴백 */
-const PortfolioLogo: React.FC<{ name: string }> = ({ name }) => {
-    const [failed, setFailed] = React.useState(false);
-    if (failed) {
-        return <Building className="w-10 h-10 text-ink-faint group-hover:text-navy transition-colors duration-300" />;
-    }
-    return (
-        <img
-            src={`/company-logos/${logoKeyFor(name)}1.svg`}
-            alt={name}
-            className="w-full h-full object-contain p-3"
-            onError={() => setFailed(true)}
-        />
-    );
-};
 import { TIPS_COOP, PROGRAM_TURN_UP, COMPANY_NAME_LEGAL, KEY_STATS } from '../../data/constants';
-import { formatDate } from '../../utils/format';
 import { PageId } from '../../types';
 
 interface InvestmentContentProps {
@@ -767,7 +746,7 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-6 mb-8">
+                        <div className="grid md:grid-cols-2 gap-6">
                             <div className="bg-surface-alt rounded-xl p-6 border border-line">
                                 <div className="text-caption font-bold text-navy mb-2">투자 정보</div>
                                 <ul className="space-y-2 text-ink-soft">
@@ -790,82 +769,6 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                                 <p className="text-ink-soft">3D 프린터 장비</p>
                             </div>
                         </div>
-
-                        <div className="bg-white rounded-xl border border-line overflow-hidden">
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead className="bg-surface-alt border-b border-line">
-                                        <tr>
-                                            <th className="px-4 py-3 text-left font-bold text-ink">자회사명</th>
-                                            <th className="px-4 py-3 text-center font-bold text-ink">편입일자</th>
-                                            <th className="px-4 py-3 text-left font-bold text-ink">사업내용</th>
-                                            <th className="px-4 py-3 text-right font-bold text-ink">투자금 (천원)</th>
-                                            <th className="px-4 py-3 text-right font-bold text-ink">회수원금 (천원)</th>
-                                            <th className="px-4 py-3 text-center font-bold text-ink">회수일자</th>
-                                            <th className="px-4 py-3 text-right font-bold text-ink">총 회수금 (천원)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td className="px-4 py-4 font-bold text-ink">㈜링크솔루션</td>
-                                            <td className="px-4 py-4 text-center text-ink-soft">{formatDate('15.08.01')}</td>
-                                            <td className="px-4 py-4 text-ink-soft">3D 프린터 장비</td>
-                                            <td className="px-4 py-4 text-right font-bold text-ink">220,000</td>
-                                            <td className="px-4 py-4 text-right font-bold text-navy">216,000</td>
-                                            <td className="px-4 py-4 text-center text-ink-soft">{formatDate('20.08~25.09')}</td>
-                                            <td className="px-4 py-4 text-right font-bold text-navy text-lg">3,979,266</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="space-y-8">
-                    <div className="flex items-center justify-between gap-4 flex-wrap">
-                        <button
-                            type="button"
-                            onClick={() => goToCompanies('all_portfolio')}
-                            className="text-left group"
-                        >
-                            <h3 className="text-h3 text-ink mb-2 inline-flex items-center gap-2 group-hover:text-navy transition-colors duration-300">
-                                기업소개 <ArrowRight className="w-5 h-5" />
-                            </h3>
-                            <p className="text-caption text-ink-soft">총 {portfolioCompanies.length}개사</p>
-                        </button>
-                        <div className="flex items-center gap-2 text-sm text-ink-soft">
-                            <Star className="w-4 h-4 text-gold" />
-                            <span>*는 TIPS 선정기업</span>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {portfolioCompanies.map((company) => {
-                            const isTips = company.includes('*');
-                            const companyName = company.replace('*', '');
-
-                            return (
-                                <button
-                                    key={company}
-                                    type="button"
-                                    onClick={() => goToCompanies('all_portfolio')}
-                                    className="group bg-white rounded-2xl border border-line shadow-card p-6 hover:border-line-strong hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300 text-left"
-                                >
-                                    <div className="aspect-square bg-white rounded-xl mb-4 flex items-center justify-center border border-line group-hover:border-line-strong transition-colors duration-300 overflow-hidden">
-                                        <PortfolioLogo name={companyName} />
-                                    </div>
-                                    <div className="text-center">
-                                        <h4 className="font-bold text-ink text-sm mb-1 group-hover:text-navy transition-colors duration-300">
-                                            {companyName}
-                                        </h4>
-                                        {isTips && (
-                                            <Badge variant="gold">TIPS</Badge>
-                                        )}
-                                    </div>
-                                </button>
-                            );
-                        })}
                     </div>
                 </div>
             </div>

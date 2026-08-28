@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import {
     ChevronDown, Download, Clock, User, Building,
-    ArrowUpDown, PieChart, Briefcase, FileText
+    ArrowUpDown, FileText
 } from 'lucide-react';
 
 // Types
@@ -582,86 +582,11 @@ const FundsSection: React.FC = () => {
             <div className="relative z-10">
                 <SectionTitle title="투자 조합 운용 현황" subtitle="Investment Funds" />
 
-                {/* Desktop Table View */}
-                <div className="hidden md:block overflow-hidden bg-white rounded-2xl shadow-card border border-line">
-                    <table className="min-w-full text-sm text-left border-collapse">
-                        <thead className="bg-surface-alt text-ink-soft font-bold uppercase tracking-wider text-xs">
-                            <tr>
-                                <th className="px-8 py-6 font-bold border-b border-line w-[35%]">구분</th>
-                                <th className="px-6 py-6 font-bold border-b border-line text-center w-[15%]">소관부처</th>
-                                <th className="px-6 py-6 font-bold border-b border-line text-right w-[15%]">결성규모</th>
-                                <th className="px-6 py-6 font-bold border-b border-line text-center w-[10%]">진행현황</th>
-                                <th className="px-8 py-6 font-bold border-b border-line text-right w-[25%]">운용기간</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-line">
-                            {FUNDS_DATA.map((fund, idx) => (
-                                <tr key={idx} className="group hover:bg-surface-alt2/30 transition-colors duration-300">
-                                    <td className="px-8 py-6 align-middle">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-surface-alt2 text-navy flex items-center justify-center shrink-0 group-hover:bg-navy group-hover:text-white transition-all duration-300">
-                                                <PieChart className="w-5 h-5" />
-                                            </div>
-                                            <span className="font-bold text-ink text-base tracking-tight group-hover:text-navy transition-colors">{fund.name}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-6 text-center align-middle">
-                                        <Badge variant="neutral">{fund.agency.split('(')[0]}</Badge>
-                                    </td>
-                                    <td className="px-6 py-6 align-middle text-right">
-                                        <span className="display-num text-lg text-navy whitespace-nowrap">{fund.size}</span>
-                                    </td>
-                                    <td className="px-6 py-6 text-center align-middle">
-                                        <Badge variant="navy">{fund.status}</Badge>
-                                    </td>
-                                    <td className="px-8 py-6 text-ink-soft text-right font-mono text-sm tracking-tight align-middle whitespace-nowrap">
-                                        {formatDate(fund.period)}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                <div className="bg-white rounded-2xl shadow-card border border-line px-8 py-10 text-center">
+                    <p className="text-body-lg text-ink tracking-tight">
+                        총 <span className="text-navy font-bold">{FUNDS_DATA.length}개</span> 투자조합 운용 중 AUM <span className="text-navy font-bold">{KEY_STATS.fundTotal.replace('+', '')}원</span> 규모
+                    </p>
                 </div>
-
-                {/* Mobile Card View */}
-                <div className="md:hidden space-y-4">
-                    {FUNDS_DATA.map((fund, idx) => (
-                        <div key={idx} className="bg-white p-6 rounded-2xl shadow-card border border-line flex flex-col gap-5 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-surface-alt2 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
-
-                            <div className="flex justify-between items-start gap-4 relative z-10">
-                                <div className="flex items-center gap-3.5">
-                                    <div className="w-11 h-11 rounded-xl bg-surface-alt2 text-navy flex items-center justify-center shrink-0 border border-line">
-                                        <PieChart className="w-5 h-5" />
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <h4 className="font-bold text-ink text-lg leading-tight mb-1 pr-8">{fund.name}</h4>
-                                        <span className="text-xs font-bold text-ink-faint">{fund.agency}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-line">
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-label uppercase text-ink-faint">결성규모</span>
-                                    <span className="display-num text-lg text-navy">{fund.size}</span>
-                                </div>
-                                <div className="flex flex-col gap-1 items-end">
-                                    <span className="text-label uppercase text-ink-faint">상태</span>
-                                    <Badge variant="navy">{fund.status}</Badge>
-                                </div>
-                                <div className="col-span-2 flex flex-col gap-1 bg-surface-alt p-3 rounded-xl border border-line mt-1">
-                                    <span className="text-label uppercase text-ink-faint">운용기간</span>
-                                    <span className="text-sm font-mono text-ink-soft font-medium">{formatDate(fund.period)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <p className="text-right text-ink-soft font-bold mt-8 flex justify-end items-center text-sm">
-                    <Briefcase className="w-4 h-4 mr-2 text-navy" /> 총 <span className="text-navy mx-1">6개</span> 투자조합 운용 중 / <span className="text-navy ml-1">{KEY_STATS.fundTotalLabel}</span>
-                </p>
             </div>
         </div>
     );

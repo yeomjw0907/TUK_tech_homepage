@@ -134,9 +134,9 @@ export const HISTORY_DATA = [
         ]
     },
     {
-        year: '2014',
+        year: '2013',
         events: [
-            { month: '1', title: '한국공학대학교기술지주회사 설립' },
+            { month: '12', title: '한국공학대학교기술지주회사 설립' },
         ]
     }
 ];
