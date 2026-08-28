@@ -192,7 +192,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                                         {notices[0].title}
                                     </h3>
                                     <p className="text-caption text-ink-soft line-clamp-2 mb-5">
-                                        {notices[0].content?.slice(0, 100)}...
+                                        {(notices[0].content?.replace(/<[^>]+>/g, '') || '').slice(0, 100)}...
                                     </p>
                                     <div className="inline-flex items-center gap-1.5 text-sm font-bold text-navy group-hover:gap-2.5 transition-all duration-300">
                                         자세히 보기 <ArrowRight className="w-4 h-4" />

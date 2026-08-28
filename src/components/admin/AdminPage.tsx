@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { Company, Post, Inquiry, Popup } from '../../types';
 import { Button, Modal } from '../common';
+import { todayDisplay } from '../../utils/format';
+import AdminLogin, { ADMIN_AUTH_KEY } from './AdminLogin';
 
 const RichTextEditor = lazy(() => import('../common/RichTextEditor'));
 
@@ -52,6 +54,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
     popups, setPopups,
     onLogout
 }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        () => typeof window !== 'undefined' && sessionStorage.getItem(ADMIN_AUTH_KEY) === '1'
+    );
     const [activeTab, setActiveTab] = useState('dashboard');
 
     // Modals state
@@ -193,7 +198,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
             const newPost = {
                 ...saveData,
                 id: newId,
-                date: new Date().toISOString().split('T')[0].replace(/-/g, '.'),
+                date: todayDisplay(),
                 isNew: true,
                 views: 0
             } as Post;
@@ -269,6 +274,16 @@ const AdminPage: React.FC<AdminPageProps> = ({
         return posts.filter(p => p.category === postCategoryFilter);
     };
 
+    const handleLogout = () => {
+        sessionStorage.removeItem(ADMIN_AUTH_KEY);
+        setIsAuthenticated(false);
+        onLogout();
+    };
+
+    if (!isAuthenticated) {
+        return <AdminLogin onSuccess={() => setIsAuthenticated(true)} />;
+    }
+
     const inputClass = "w-full px-4 py-3 border border-line-md rounded-lg focus:ring-2 focus:ring-navy focus:border-transparent outline-none transition-all bg-white shadow-sm text-ink placeholder-ink-faint";
     const labelClass = "block text-sm font-bold text-ink mb-1.5";
 
@@ -283,7 +298,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 </div>
                 <nav className="flex-grow p-4 space-y-2">
                     <button
-                        onClick={() => onLogout()}
+                        onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors mb-4 border border-white/10"
                     >
                         <Home className="w-5 h-5" />
@@ -304,7 +319,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                     ))}
                 </nav>
                 <div className="p-4 border-t border-navy-hover">
-                    <button onClick={() => onLogout()} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-navy-hover hover:bg-navy-deep rounded-lg text-sm font-bold transition-colors">
+                    <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-navy-hover hover:bg-navy-deep rounded-lg text-sm font-bold transition-colors">
                         <LogOut className="w-4 h-4" /> 로그아웃
                     </button>
                 </div>

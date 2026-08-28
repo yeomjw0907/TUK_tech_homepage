@@ -14,6 +14,7 @@ import { INITIAL_COMPANIES, INITIAL_POSTS, INITIAL_INQUIRIES, INITIAL_POPUPS } f
 
 // Utils
 import { formatDate } from './utils/format';
+import { loadState, saveState } from './utils/storage';
 
 // Components
 import { Button, Badge, SectionTitle, SkeletonLoader, HomeSkeleton } from './components/common';
@@ -45,10 +46,10 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     // Data State
-    const [companies, setCompanies] = useState<Company[]>(INITIAL_COMPANIES);
-    const [posts, setPosts] = useState<Post[]>(INITIAL_POSTS);
-    const [inquiries, setInquiries] = useState<Inquiry[]>(INITIAL_INQUIRIES);
-    const [popups, setPopups] = useState<Popup[]>(INITIAL_POPUPS);
+    const [companies, setCompanies] = useState<Company[]>(() => loadState('companies', INITIAL_COMPANIES));
+    const [posts, setPosts] = useState<Post[]>(() => loadState('posts', INITIAL_POSTS));
+    const [inquiries, setInquiries] = useState<Inquiry[]>(() => loadState('inquiries', INITIAL_INQUIRIES));
+    const [popups, setPopups] = useState<Popup[]>(() => loadState('popups', INITIAL_POPUPS));
 
     // Filters
     const [portfolioSort, setPortfolioSort] = useState('name_asc');
@@ -104,6 +105,11 @@ const App: React.FC = () => {
             }
         }
     }, [location.pathname, posts, companies]);
+
+    useEffect(() => { saveState('companies', companies); }, [companies]);
+    useEffect(() => { saveState('posts', posts); }, [posts]);
+    useEffect(() => { saveState('inquiries', inquiries); }, [inquiries]);
+    useEffect(() => { saveState('popups', popups); }, [popups]);
 
     const handleNavigate = (page: PageId, subPage?: string) => {
         setIsLoading(true);
@@ -541,18 +547,20 @@ const App: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-white font-sans text-ink selection:bg-navy selection:text-white flex flex-col antialiased">
-            <Header 
-                activePage={activePage} 
-                activeSubPage={activeSubPage} 
-                onNavigate={handleNavigate} 
-                hasHero={hasHero}
-                posts={posts}
-                companies={companies}
-                onPostClick={handlePostClick}
-                onCompanyClick={handleCompanyClick}
-            />
+            {activePage !== 'admin' && (
+                <Header 
+                    activePage={activePage} 
+                    activeSubPage={activeSubPage} 
+                    onNavigate={handleNavigate} 
+                    hasHero={hasHero}
+                    posts={posts}
+                    companies={companies}
+                    onPostClick={handlePostClick}
+                    onCompanyClick={handleCompanyClick}
+                />
+            )}
 
-            <main className={`flex-grow ${hasHero && activePage !== 'admin' ? '' : 'pt-20'}`}>
+            <main className={`flex-grow ${activePage === 'admin' ? '' : hasHero ? '' : 'pt-20'}`}>
                 {renderContent()}
             </main>
 

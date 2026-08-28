@@ -26,4 +26,10 @@ export const formatDate = (raw: string | undefined | null): string => {
 };
 
 /** 오늘 날짜를 표준 표기로 반환 (문의 접수 등 저장용은 ISO 유지, 표시용은 이 함수 사용) */
-export const todayDisplay = (): string => formatDate(new Date().toISOString().split('T')[0]);
+export const todayDisplay = (): string => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}.${m}.${day}`;
+};

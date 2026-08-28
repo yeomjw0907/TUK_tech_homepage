@@ -76,6 +76,26 @@ export const INITIAL_COMPANIES: Company[] = [
 
 export const INITIAL_POSTS: Post[] = [
     {
+        id: 1,
+        category: 'notice',
+        title: '한국공학대학교 기술지주회사 홈페이지 리뉴얼 안내',
+        date: '2026.08.27',
+        isNew: true,
+        views: 86,
+        author: '관리자',
+        content: '<p>한국공학대학교 기술지주회사 홈페이지가 새롭게 리뉴얼되었습니다.</p><p>투자, 자회사, 회사소식 등 주요 정보를 보다 쉽게 확인하실 수 있습니다.</p>'
+    },
+    {
+        id: 2,
+        category: 'notice',
+        title: '2026년 입주기업 상시 모집 안내',
+        date: '2026.08.20',
+        isNew: true,
+        views: 142,
+        author: '관리자',
+        content: '<p>시흥비즈니스센터 입주기업을 상시 모집합니다.</p><p>자세한 내용은 지원하기 메뉴를 통해 문의해 주시기 바랍니다.</p>'
+    },
+    {
         id: 4,
         category: 'press',
         title: '한국공학대 기술지주회사, 시흥창업펀드 70억 조성',
