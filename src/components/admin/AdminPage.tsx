@@ -1,13 +1,16 @@
-import React, { useState, lazy, Suspense, Component, ReactNode } from 'react';
+import React, { useState, useEffect, lazy, Suspense, Component, ReactNode } from 'react';
 import {
     Building, Bell, Layers, Inbox, LayoutDashboard,
     Settings, Home, LogOut, Plus, Trash2, Edit, Eye,
     Paperclip, HelpCircle, XCircle, Image as ImageIcon,
-    Phone, Mail, ArrowLeft
+    Phone, Mail, ArrowLeft, AlertTriangle, UploadCloud, RefreshCw
 } from 'lucide-react';
-import { Company, Post, Inquiry, Popup } from '../../types';
+import { Company, Post, Inquiry, Popup, PostFile } from '../../types';
 import { Button, Modal } from '../common';
 import { todayDisplay } from '../../utils/format';
+import { loadState } from '../../utils/storage';
+import { INITIAL_POSTS, INITIAL_COMPANIES } from '../../data/initialData';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import AdminLogin, { ADMIN_AUTH_KEY } from './AdminLogin';
 
 const RichTextEditor = lazy(() => import('../common/RichTextEditor'));
@@ -35,35 +38,89 @@ class ErrorBoundary extends Component<{ children: ReactNode; fallback: ReactNode
     }
 }
 
+export interface AdminActions {
+    mode: 'supabase' | 'local';
+    refresh: () => Promise<void>;
+    savePost: (data: Partial<Post>, id?: number) => Promise<void>;
+    deletePost: (id: number) => Promise<void>;
+    saveCompany: (data: Partial<Company>, id?: string) => Promise<void>;
+    deleteCompany: (id: string) => Promise<void>;
+    savePopup: (data: Partial<Popup>, id?: number) => Promise<void>;
+    deletePopup: (id: number) => Promise<void>;
+    updateInquiryStatus: (id: number, status: Inquiry['status']) => Promise<void>;
+    deleteInquiry: (id: number) => Promise<void>;
+    uploadFile: (file: File, folder: string) => Promise<PostFile & { url: string }>;
+    importPosts: (items: Post[]) => Promise<void>;
+    importCompanies: (items: Company[]) => Promise<void>;
+}
+
 interface AdminPageProps {
     companies: Company[];
-    setCompanies: React.Dispatch<React.SetStateAction<Company[]>>;
     posts: Post[];
-    setPosts: React.Dispatch<React.SetStateAction<Post[]>>;
     inquiries: Inquiry[];
-    setInquiries: React.Dispatch<React.SetStateAction<Inquiry[]>>;
     popups: Popup[];
-    setPopups: React.Dispatch<React.SetStateAction<Popup[]>>;
+    actions: AdminActions;
     onLogout: () => void;
 }
 
+/** 이 브라우저의 localStorage(예전 저장 방식)에만 남아 있고 서버에는 없는 데이터를 찾는다. */
+const findUnsyncedLocalData = (posts: Post[], companies: Company[]) => {
+    const seedPostIds = new Set(INITIAL_POSTS.map(p => p.id));
+    const seedCompanyIds = new Set(INITIAL_COMPANIES.map(c => c.id));
+    const serverPostIds = new Set(posts.map(p => p.id));
+    const serverCompanyIds = new Set(companies.map(c => c.id));
+    const serverPostTitles = new Set(posts.map(p => `${p.category}|${p.title}`));
+    const serverCompanyNames = new Set(companies.map(c => c.name));
+
+    const localPosts = loadState<Post[]>('posts', []).filter(p =>
+        !seedPostIds.has(p.id) && !serverPostIds.has(p.id) && !serverPostTitles.has(`${p.category}|${p.title}`)
+    );
+    const localCompanies = loadState<Company[]>('companies', []).filter(c =>
+        !seedCompanyIds.has(c.id) && !serverCompanyIds.has(c.id) && !serverCompanyNames.has(c.name)
+    );
+    return { localPosts, localCompanies };
+};
+
 const AdminPage: React.FC<AdminPageProps> = ({
-    companies, setCompanies,
-    posts, setPosts,
-    inquiries, setInquiries,
-    popups, setPopups,
-    onLogout
+    companies, posts, inquiries, popups, actions, onLogout
 }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(
         () => typeof window !== 'undefined' && sessionStorage.getItem(ADMIN_AUTH_KEY) === '1'
     );
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [busy, setBusy] = useState(false);
+    const [uploading, setUploading] = useState(false);
+
+    // Supabase 세션 확인 — 세션이 만료되었으면 로그인 화면으로 돌려보낸다.
+    useEffect(() => {
+        if (!isSupabaseConfigured || !supabase) return;
+        let cancelled = false;
+        supabase.auth.getSession().then(({ data }) => {
+            if (cancelled) return;
+            const loggedIn = Boolean(data.session);
+            setIsAuthenticated(loggedIn);
+            if (loggedIn) sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+            else sessionStorage.removeItem(ADMIN_AUTH_KEY);
+        });
+        const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (cancelled) return;
+            if (!session) {
+                sessionStorage.removeItem(ADMIN_AUTH_KEY);
+                setIsAuthenticated(false);
+            }
+        });
+        return () => { cancelled = true; sub.subscription.unsubscribe(); };
+    }, []);
+
+    // 로그인 직후 관리자만 볼 수 있는 데이터(문의 내역)를 다시 불러온다.
+    useEffect(() => {
+        if (isAuthenticated) actions.refresh().catch(() => undefined);
+    }, [isAuthenticated]);
 
     // Modals state
     const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
-    const [isPostModalOpen, setIsPostModalOpen] = useState(false);
     const [isPopupModalOpen, setIsPopupModalOpen] = useState(false);
-    
+
     // Post editor mode: 'list' | 'edit' | null
     const [postEditorMode, setPostEditorMode] = useState<'list' | 'edit' | null>(null);
 
@@ -94,6 +151,13 @@ const AdminPage: React.FC<AdminPageProps> = ({
         isVisible: true
     });
 
+    // 서버 미반영 로컬 데이터 (예전 저장 방식에서 남은 것)
+    const [unsynced, setUnsynced] = useState<{ localPosts: Post[]; localCompanies: Company[] }>({ localPosts: [], localCompanies: [] });
+    useEffect(() => {
+        if (actions.mode !== 'supabase') return;
+        setUnsynced(findUnsyncedLocalData(posts, companies));
+    }, [posts, companies, actions.mode]);
+
     const TABS = [
         { id: 'dashboard', label: '대시보드', icon: LayoutDashboard },
         { id: 'companies', label: '자회사/기업 관리', icon: Building },
@@ -110,25 +174,56 @@ const AdminPage: React.FC<AdminPageProps> = ({
         { id: 'faq', label: 'Q&A' },
     ];
 
-    // --- Handlers ---
-    const deleteCompany = (id: string) => setCompanies(companies.filter(c => c.id !== id));
-    const deletePost = (id: number) => setPosts(posts.filter(n => n.id !== id));
-    const deleteInquiry = (id: number) => {
-        setInquiries(inquiries.filter(i => i.id !== id));
-        if (viewingInquiry?.id === id) setViewingInquiry(null);
-    };
-    const deletePopup = (id: number) => setPopups(popups.filter(p => p.id !== id));
-
-    const toggleInquiryStatus = (id: number) => {
-        const updatedInquiries = inquiries.map(i => i.id === id ? { ...i, status: i.status === '대기' ? '완료' : '대기' } as Inquiry : i);
-        setInquiries(updatedInquiries);
-        if (viewingInquiry && viewingInquiry.id === id) {
-            setViewingInquiry(updatedInquiries.find(i => i.id === id) || null);
+    /** 서버 작업 공통 래퍼 — 실패 시 알림 */
+    const run = async (label: string, fn: () => Promise<void>): Promise<boolean> => {
+        setBusy(true);
+        try {
+            await fn();
+            return true;
+        } catch (err) {
+            console.error(err);
+            alert(`${label}에 실패했습니다.\n${err instanceof Error ? err.message : String(err)}`);
+            return false;
+        } finally {
+            setBusy(false);
         }
     };
 
+    // --- Handlers ---
+    const deleteCompany = (id: string) => {
+        if (!confirm('이 기업을 삭제하시겠습니까?')) return;
+        run('기업 삭제', () => actions.deleteCompany(id));
+    };
+    const deletePost = (id: number) => {
+        if (!confirm('이 게시글을 삭제하시겠습니까?')) return;
+        run('게시글 삭제', () => actions.deletePost(id));
+    };
+    const deleteInquiry = (id: number) => {
+        if (!confirm('이 문의를 삭제하시겠습니까?')) return;
+        run('문의 삭제', async () => {
+            await actions.deleteInquiry(id);
+            if (viewingInquiry?.id === id) setViewingInquiry(null);
+        });
+    };
+    const deletePopup = (id: number) => {
+        if (!confirm('이 팝업을 삭제하시겠습니까?')) return;
+        run('팝업 삭제', () => actions.deletePopup(id));
+    };
+
+    const toggleInquiryStatus = (id: number) => {
+        const target = inquiries.find(i => i.id === id);
+        if (!target) return;
+        const next: Inquiry['status'] = target.status === '대기' ? '완료' : '대기';
+        run('문의 상태 변경', async () => {
+            await actions.updateInquiryStatus(id, next);
+            if (viewingInquiry && viewingInquiry.id === id) setViewingInquiry({ ...viewingInquiry, status: next });
+        });
+    };
+
     const togglePopupVisibility = (id: number) => {
-        setPopups(popups.map(p => p.id === id ? { ...p, isVisible: !p.isVisible } : p));
+        const target = popups.find(p => p.id === id);
+        if (!target) return;
+        run('팝업 상태 변경', () => actions.savePopup({ isVisible: !target.isVisible }, id));
     };
 
     // Company Handlers
@@ -148,17 +243,29 @@ const AdminPage: React.FC<AdminPageProps> = ({
         setIsCompanyModalOpen(true);
     };
 
-    const handleSaveCompany = () => {
-        if (!companyFormData.name) return alert("기업명을 입력해주세요");
+    const makeCompanyId = (name: string) => {
+        const base = name.replace(/\s/g, '-').replace(/[()*㈜]/g, '').replace(/[^\w가-힣-]/g, '');
+        const taken = new Set(companies.map(c => c.id));
+        let id = base || `company-${Date.now()}`;
+        let n = 2;
+        while (taken.has(id)) id = `${base}-${n++}`;
+        return id;
+    };
 
-        if (editingId) {
-            setCompanies(companies.map(c => c.id === editingId ? { ...c, ...companyFormData } as Company : c));
-        } else {
-            const newId = Date.now().toString();
-            const newCompany = { ...companyFormData, id: newId } as Company;
-            setCompanies([newCompany, ...companies]);
-        }
-        setIsCompanyModalOpen(false);
+    const handleSaveCompany = async () => {
+        if (!companyFormData.name?.trim()) return alert('기업명을 입력해주세요');
+        const ok = await run('기업 저장', async () => {
+            if (editingId) {
+                await actions.saveCompany(companyFormData, String(editingId));
+            } else {
+                await actions.saveCompany({
+                    ...companyFormData,
+                    id: makeCompanyId(companyFormData.name!.trim()),
+                    name: companyFormData.name!.trim(),
+                });
+            }
+        });
+        if (ok) setIsCompanyModalOpen(false);
     };
 
     // Post Handlers
@@ -166,7 +273,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
         if (post) {
             setEditingId(post.id);
             // 기존 fileName을 files 배열로 변환 (호환성)
-            const files = post.files || (post.fileName ? [{ name: post.fileName, type: post.fileType }] : []);
+            const files = post.files && post.files.length > 0
+                ? post.files
+                : (post.fileName ? [{ name: post.fileName, type: post.fileType, url: post.fileUrl }] : []);
             setPostFormData({ ...post, files });
         } else {
             setEditingId(null);
@@ -181,30 +290,35 @@ const AdminPage: React.FC<AdminPageProps> = ({
         setPostFormData({ title: '', author: '관리자', content: '', category: 'notice', files: [] });
     };
 
-    const handleSavePost = () => {
-        if (!postFormData.title) return alert("제목을 입력해주세요");
+    const handleSavePost = async () => {
+        if (!postFormData.title?.trim()) return alert('제목을 입력해주세요');
+        if (uploading) return alert('첨부파일 업로드가 끝난 뒤 저장해주세요.');
 
-        // files 배열을 기반으로 저장 (기존 fileName은 호환성을 위해 첫 번째 파일명으로 설정)
-        const saveData = {
+        const files = postFormData.files || [];
+        const first = files[0];
+        // files 배열을 기반으로 저장 (기존 fileName/fileUrl은 호환성을 위해 첫 번째 파일로 설정)
+        const saveData: Partial<Post> = {
             ...postFormData,
-            fileName: postFormData.files && postFormData.files.length > 0 ? postFormData.files[0].name : undefined,
-            fileType: postFormData.files && postFormData.files.length > 0 ? postFormData.files[0].type : undefined,
+            title: postFormData.title.trim(),
+            files,
+            fileName: first?.name,
+            fileType: first?.type,
+            fileUrl: first?.url,
         };
 
-        if (editingId) {
-            setPosts(posts.map(p => p.id === editingId ? { ...p, ...saveData } as Post : p));
-        } else {
-            const newId = Date.now();
-            const newPost = {
-                ...saveData,
-                id: newId,
-                date: todayDisplay(),
-                isNew: true,
-                views: 0
-            } as Post;
-            setPosts([newPost, ...posts]);
-        }
-        closePostEditor();
+        const ok = await run('게시글 저장', async () => {
+            if (editingId) {
+                await actions.savePost(saveData, Number(editingId));
+            } else {
+                await actions.savePost({
+                    ...saveData,
+                    date: todayDisplay(),
+                    isNew: true,
+                    views: 0,
+                });
+            }
+        });
+        if (ok) closePostEditor();
     };
 
     // Popup Handlers
@@ -222,46 +336,50 @@ const AdminPage: React.FC<AdminPageProps> = ({
             });
         }
         setIsPopupModalOpen(true);
-    }
+    };
 
-    const handleSavePopup = () => {
-        if (!popupFormData.title) return alert("제목을 입력해주세요");
-
-        if (editingId) {
-            setPopups(popups.map(p => p.id === editingId ? { ...p, ...popupFormData } as Popup : p));
-        } else {
-            const newId = Date.now();
-            setPopups([...popups, { ...popupFormData, id: newId } as Popup]);
+    const handleSavePopup = async () => {
+        if (!popupFormData.title?.trim()) return alert('제목을 입력해주세요');
+        if (popupFormData.startDate && popupFormData.endDate && popupFormData.startDate > popupFormData.endDate) {
+            return alert('종료일은 시작일보다 빠를 수 없습니다.');
         }
-        setIsPopupModalOpen(false);
-    }
+        const ok = await run('팝업 저장', async () => {
+            if (editingId) await actions.savePopup(popupFormData, Number(editingId));
+            else await actions.savePopup(popupFormData);
+        });
+        if (ok) setIsPopupModalOpen(false);
+    };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'post' | 'company_logo' | 'company_bg' | 'popup_img') => {
-        if (e.target.files) {
-            if (type === 'post') {
-                const newFiles = Array.from(e.target.files).map(file => ({
-                    name: file.name,
-                    type: file.type || file.name.split('.').pop()?.toUpperCase(),
-                    size: file.size
-                }));
-                const currentFiles = postFormData.files || [];
-                setPostFormData({ ...postFormData, files: [...currentFiles, ...newFiles] });
-            }
-            if (type === 'company_logo' && e.target.files[0]) {
-                const file = e.target.files[0];
-                setCompanyFormData({ ...companyFormData, logo: URL.createObjectURL(file) });
-            }
-            if (type === 'company_bg' && e.target.files[0]) {
-                const file = e.target.files[0];
-                setCompanyFormData({ ...companyFormData, bgImage: URL.createObjectURL(file) });
-            }
-            if (type === 'popup_img' && e.target.files[0]) {
-                const file = e.target.files[0];
-                setPopupFormData({ ...popupFormData, image: URL.createObjectURL(file) });
-            }
-        }
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, type: 'post' | 'company_logo' | 'company_bg' | 'popup_img') => {
+        const fileList = e.target.files ? Array.from(e.target.files) : [];
         // 파일 입력 초기화 (같은 파일 다시 선택 가능하도록)
         e.target.value = '';
+        if (fileList.length === 0) return;
+
+        setUploading(true);
+        try {
+            if (type === 'post') {
+                const uploaded: PostFile[] = [];
+                for (const file of fileList) {
+                    uploaded.push(await actions.uploadFile(file, 'posts'));
+                }
+                setPostFormData(prev => ({ ...prev, files: [...(prev.files || []), ...uploaded] }));
+            } else if (type === 'company_logo') {
+                const { url } = await actions.uploadFile(fileList[0], 'companies/logo');
+                setCompanyFormData(prev => ({ ...prev, logo: url }));
+            } else if (type === 'company_bg') {
+                const { url } = await actions.uploadFile(fileList[0], 'companies/bg');
+                setCompanyFormData(prev => ({ ...prev, bgImage: url }));
+            } else if (type === 'popup_img') {
+                const { url } = await actions.uploadFile(fileList[0], 'popups');
+                setPopupFormData(prev => ({ ...prev, image: url }));
+            }
+        } catch (err) {
+            console.error(err);
+            alert(`파일 업로드에 실패했습니다.\n${err instanceof Error ? err.message : String(err)}`);
+        } finally {
+            setUploading(false);
+        }
     };
 
     const removeFile = (index: number) => {
@@ -274,8 +392,22 @@ const AdminPage: React.FC<AdminPageProps> = ({
         return posts.filter(p => p.category === postCategoryFilter);
     };
 
-    const handleLogout = () => {
+    const handleImportLocal = async () => {
+        const { localPosts, localCompanies } = unsynced;
+        if (localPosts.length === 0 && localCompanies.length === 0) return;
+        if (!confirm(`이 브라우저에만 저장되어 있던 게시글 ${localPosts.length}건, 기업 ${localCompanies.length}건을 서버로 옮길까요?`)) return;
+        const ok = await run('로컬 데이터 가져오기', async () => {
+            if (localPosts.length > 0) await actions.importPosts(localPosts);
+            if (localCompanies.length > 0) await actions.importCompanies(localCompanies);
+        });
+        if (ok) alert('서버로 옮겼습니다. 이제 모든 방문자에게 표시됩니다.');
+    };
+
+    const handleLogout = async () => {
         sessionStorage.removeItem(ADMIN_AUTH_KEY);
+        if (isSupabaseConfigured && supabase) {
+            await supabase.auth.signOut().catch(() => undefined);
+        }
         setIsAuthenticated(false);
         onLogout();
     };
@@ -327,9 +459,50 @@ const AdminPage: React.FC<AdminPageProps> = ({
 
             {/* Main Content */}
             <div className="flex-grow ml-64 p-8">
-                <h1 className="text-2xl font-bold text-ink mb-8 border-b border-line pb-4">
-                    {TABS.find(t => t.id === activeTab)?.label}
-                </h1>
+                <div className="flex items-center justify-between mb-8 border-b border-line pb-4">
+                    <h1 className="text-2xl font-bold text-ink">
+                        {TABS.find(t => t.id === activeTab)?.label}
+                    </h1>
+                    <div className="flex items-center gap-3 text-xs text-ink-soft">
+                        {busy && <span className="font-bold text-navy">저장 중...</span>}
+                        <button
+                            onClick={() => run('새로고침', actions.refresh)}
+                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-line bg-white hover:bg-surface-alt transition-colors"
+                            title="서버에서 다시 불러오기"
+                        >
+                            <RefreshCw className={`w-3.5 h-3.5 ${busy ? 'animate-spin' : ''}`} /> 새로고침
+                        </button>
+                    </div>
+                </div>
+
+                {actions.mode === 'local' && (
+                    <div className="mb-6 flex items-start gap-3 bg-gold/10 border border-gold/40 text-ink rounded-xl p-4 text-sm">
+                        <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
+                        <div>
+                            <div className="font-bold">서버(Supabase)가 연결되지 않았습니다.</div>
+                            <div className="mt-1">지금 저장하는 내용은 이 브라우저에만 남고 다른 방문자에게는 표시되지 않습니다. 환경변수 VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY를 설정해주세요.</div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'dashboard' && (unsynced.localPosts.length > 0 || unsynced.localCompanies.length > 0) && (
+                    <div className="mb-6 flex flex-col md:flex-row md:items-center gap-4 bg-surface-alt border border-line-accent text-ink rounded-xl p-5">
+                        <UploadCloud className="w-6 h-6 shrink-0" />
+                        <div className="flex-grow text-sm">
+                            <div className="font-bold">서버에 반영되지 않은 데이터가 이 브라우저에 남아 있습니다.</div>
+                            <div className="mt-1">
+                                게시글 {unsynced.localPosts.length}건, 기업 {unsynced.localCompanies.length}건 — 예전 방식(브라우저 저장)으로 작성되어 다른 방문자에게 보이지 않던 항목입니다.
+                            </div>
+                            {unsynced.localPosts.length > 0 && (
+                                <ul className="mt-2 list-disc list-inside text-xs text-ink-soft space-y-0.5">
+                                    {unsynced.localPosts.slice(0, 5).map(p => <li key={p.id}>[{POST_CATEGORIES.find(c => c.id === p.category)?.label}] {p.title}</li>)}
+                                    {unsynced.localPosts.length > 5 && <li>외 {unsynced.localPosts.length - 5}건</li>}
+                                </ul>
+                            )}
+                        </div>
+                        <Button size="sm" onClick={handleImportLocal} disabled={busy}>서버로 옮기기</Button>
+                    </div>
+                )}
 
                 {activeTab === 'dashboard' && (
                     <div className="grid grid-cols-3 gap-6">
@@ -378,9 +551,12 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-line">
+                                    {companies.length === 0 && (
+                                        <tr><td colSpan={5} className="px-6 py-12 text-center text-ink-faint">등록된 기업이 없습니다.</td></tr>
+                                    )}
                                     {companies.map((company) => (
                                         <tr key={company.id} className="hover:bg-surface-alt">
-                                            <td className="px-6 py-4 font-bold text-ink">{company.name}</td>
+                                            <td className="px-6 py-4 font-bold text-ink">{company.name}{company.isTips && <span className="ml-2 text-label px-1.5 py-0.5 rounded bg-gold/15 text-ink align-middle">TIPS</span>}</td>
                                             <td className="px-6 py-4 text-ink-soft">{company.ceo}</td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-2 py-1 rounded text-xs font-bold ${company.category === 'subsidiary' ? 'bg-surface-alt2 text-navy' : 'bg-surface-alt text-ink-soft'}`}>
@@ -500,8 +676,8 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 <Button variant="ghost" onClick={closePostEditor} className="text-ink-soft hover:text-ink">
                                     취소
                                 </Button>
-                                <Button onClick={handleSavePost} className="bg-navy hover:bg-navy-hover">
-                                    {editingId ? '수정완료' : '작성완료'}
+                                <Button onClick={handleSavePost} disabled={busy || uploading} className="bg-navy hover:bg-navy-hover">
+                                    {busy ? '저장 중...' : editingId ? '수정완료' : '작성완료'}
                                 </Button>
                             </div>
                         </div>
@@ -631,7 +807,13 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                             </div>
                                         )}
                                         
-                                        {(!postFormData.files || postFormData.files.length === 0) && (
+                                        {uploading && (
+                                            <div className="text-sm text-navy font-bold flex items-center gap-2">
+                                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-navy"></div>
+                                                파일 업로드 중...
+                                            </div>
+                                        )}
+                                        {!uploading && (!postFormData.files || postFormData.files.length === 0) && (
                                             <div className="text-sm text-ink-faint italic">
                                                 첨부된 파일이 없습니다.
                                             </div>
@@ -704,6 +886,9 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-line">
+                                    {inquiries.length === 0 && (
+                                        <tr><td colSpan={7} className="px-6 py-12 text-center text-ink-faint">접수된 문의가 없습니다.</td></tr>
+                                    )}
                                     {inquiries.map((inquiry) => (
                                         <tr key={inquiry.id} className="hover:bg-surface-alt">
                                             <td className="px-6 py-4">
@@ -824,7 +1009,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 <input type="text" className={`${inputClass} text-xs py-2`} value={companyFormData.logo || ''} onChange={e => setCompanyFormData({ ...companyFormData, logo: e.target.value })} placeholder="URL 직접 입력" />
                             </div>
                             <p className="text-xs text-ink-soft flex items-center">
-                                <HelpCircle className="w-3 h-3 mr-1" /> 권장: 500x500px (1:1 비율), PNG/JPG
+                                <HelpCircle className="w-3 h-3 mr-1" /> 권장: 500x500px (1:1 비율), PNG/JPG/SVG. 파일 선택 시 서버에 업로드됩니다.
                             </p>
                         </div>
                         <div>
@@ -880,7 +1065,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         <input type="checkbox" id="isTips" className="w-5 h-5 rounded border-line-md text-navy focus:ring-navy" checked={companyFormData.isTips} onChange={e => setCompanyFormData({ ...companyFormData, isTips: e.target.checked })} />
                         <label htmlFor="isTips" className="text-sm font-bold text-navy cursor-pointer">TIPS 선정 기업</label>
                     </div>
-                    <Button className="w-full mt-4" onClick={handleSaveCompany}>{editingId ? '수정하기' : '추가하기'}</Button>
+                    <Button className="w-full mt-4" onClick={handleSaveCompany} disabled={busy || uploading}>{busy ? '저장 중...' : editingId ? '수정하기' : '추가하기'}</Button>
                 </div>
             </Modal>
 
@@ -923,7 +1108,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         <input type="checkbox" id="popupVisible" className="w-5 h-5" checked={popupFormData.isVisible} onChange={e => setPopupFormData({ ...popupFormData, isVisible: e.target.checked })} />
                         <label htmlFor="popupVisible" className="font-bold text-ink cursor-pointer">즉시 게시 (활성화)</label>
                     </div>
-                    <Button className="w-full mt-4" onClick={handleSavePopup}>{editingId ? '수정완료' : '추가하기'}</Button>
+                    <Button className="w-full mt-4" onClick={handleSavePopup} disabled={busy || uploading}>{busy ? '저장 중...' : editingId ? '수정완료' : '추가하기'}</Button>
                 </div>
             </Modal>
         </div>

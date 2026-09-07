@@ -67,8 +67,13 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
                             {/* 여러 파일 표시 */}
                             {post.files && post.files.length > 0 ? (
                                 post.files.map((file, index) => (
-                                    <div 
+                                    <a
                                         key={index}
+                                        href={file.url || undefined}
+                                        download={file.url ? file.name : undefined}
+                                        target={file.url ? '_blank' : undefined}
+                                        rel="noreferrer"
+                                        onClick={(e) => { if (!file.url) { e.preventDefault(); alert('이 첨부파일은 서버에 업로드되지 않아 다운로드할 수 없습니다.'); } }}
                                         className="flex items-center p-3 bg-white border border-line rounded-xl hover:border-line-strong cursor-pointer transition-colors group"
                                     >
                                         <FileIcon className="w-5 h-5 text-ink-faint group-hover:text-navy mr-3 shrink-0" />
@@ -81,7 +86,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
                                             </Badge>
                                         )}
                                         <Download className="w-4 h-4 text-ink-faint group-hover:text-navy shrink-0" />
-                                    </div>
+                                    </a>
                                 ))
                             ) : (
                                 // 기존 단일 파일 호환성

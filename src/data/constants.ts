@@ -105,7 +105,7 @@ export const TIPS_COOP = [
 export const INQUIRY_TYPES = ['일반 문의', 'IR 접수', 'TIPS 문의', '기술사업화 문의'] as const;
 
 // Company History Data
-export const HISTORY_DATA = [
+export const HISTORY_DATA: { year: string; events: { month: string; title: string; desc?: string }[] }[] = [
     {
         year: '2025',
         events: [

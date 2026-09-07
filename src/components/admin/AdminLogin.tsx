@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Lock } from 'lucide-react';
 import { Button } from '../common';
 import { COMPANY_NAME } from '../../data/constants';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 
 export const ADMIN_AUTH_KEY = 'tuk_admin_auth';
-const ADMIN_EMAIL = 'admin@gmail.com';
-const ADMIN_PASSWORD = 'Admin123!';
+
+/** Supabase 미설정(로컬 미리보기) 환경에서만 사용하는 임시 계정 */
+const LOCAL_ADMIN_EMAIL = 'admin@gmail.com';
+const LOCAL_ADMIN_PASSWORD = 'Admin123!';
 
 interface AdminLoginProps {
     onSuccess: () => void;
@@ -15,16 +18,39 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (email.trim() === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-            sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
-            setError('');
-            onSuccess();
+        setError('');
+
+        if (!isSupabaseConfigured || !supabase) {
+            if (email.trim() === LOCAL_ADMIN_EMAIL && password === LOCAL_ADMIN_PASSWORD) {
+                sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+                onSuccess();
+                return;
+            }
+            setError('이메일 또는 비밀번호가 올바르지 않습니다.');
             return;
         }
-        setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+
+        setSubmitting(true);
+        try {
+            const { error: authError } = await supabase.auth.signInWithPassword({
+                email: email.trim(),
+                password,
+            });
+            if (authError) {
+                setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+                return;
+            }
+            sessionStorage.setItem(ADMIN_AUTH_KEY, '1');
+            onSuccess();
+        } catch {
+            setError('로그인 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const inputClass = 'w-full px-4 py-3 border border-line-md rounded-xl focus:ring-2 focus:ring-navy focus:border-transparent outline-none transition-all bg-white shadow-sm text-ink placeholder-ink-faint';
@@ -49,8 +75,8 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
                             autoComplete="username"
                             className={inputClass}
                             value={email}
-                            onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                            placeholder="이메일을 입력하세요"
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="admin@example.com"
                             required
                         />
                     </div>
@@ -62,19 +88,22 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onSuccess }) => {
                             autoComplete="current-password"
                             className={inputClass}
                             value={password}
-                            onChange={(e) => { setPassword(e.target.value); setError(''); }}
-                            placeholder="비밀번호를 입력하세요"
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
                             required
                         />
                     </div>
-
                     {error && (
-                        <p className="text-sm text-danger bg-danger/5 border border-danger/20 rounded-xl px-4 py-3" role="alert">
-                            {error}
+                        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">{error}</p>
+                    )}
+                    <Button type="submit" className="w-full" disabled={submitting}>
+                        {submitting ? '로그인 중...' : '로그인'}
+                    </Button>
+                    {!isSupabaseConfigured && (
+                        <p className="text-xs text-ink-faint text-center">
+                            서버가 연결되지 않아 로컬 미리보기 모드로 동작합니다.
                         </p>
                     )}
-
-                    <Button type="submit" className="w-full">로그인</Button>
                 </form>
             </div>
         </div>

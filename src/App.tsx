@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import {
     ChevronDown, Download, Clock, User, Building,
@@ -10,11 +10,11 @@ import { PageId, Company, Post, Inquiry, Popup } from './types';
 
 // Data
 import { MENU_STRUCTURE, FUNDS_DATA, KEY_STATS } from './data/constants';
-import { INITIAL_COMPANIES, INITIAL_POSTS, INITIAL_INQUIRIES, INITIAL_POPUPS } from './data/initialData';
 
 // Utils
 import { formatDate } from './utils/format';
-import { loadState, saveState } from './utils/storage';
+import { backend } from './lib/api';
+import { AdminActions } from './components/admin/AdminPage';
 
 // Components
 import { Button, Badge, SectionTitle, SkeletonLoader, HomeSkeleton } from './components/common';
@@ -45,17 +45,39 @@ const App: React.FC = () => {
     const [postType, setPostType] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
 
-    // Data State
-    const [companies, setCompanies] = useState<Company[]>(() => loadState('companies', INITIAL_COMPANIES));
-    const [posts, setPosts] = useState<Post[]>(() => loadState('posts', INITIAL_POSTS));
-    const [inquiries, setInquiries] = useState<Inquiry[]>(() => loadState('inquiries', INITIAL_INQUIRIES));
-    const [popups, setPopups] = useState<Popup[]>(() => loadState('popups', INITIAL_POPUPS));
+    // Data State — 서버(Supabase)에서 불러온다. 설정이 없으면 localStorage 모드로 동작.
+    const [companies, setCompanies] = useState<Company[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+    const [popups, setPopups] = useState<Popup[]>([]);
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [dataError, setDataError] = useState<string | null>(null);
+
+    const reloadData = useCallback(async () => {
+        try {
+            const data = await backend.fetchAll();
+            setCompanies(data.companies);
+            setPosts(data.posts);
+            setInquiries(data.inquiries);
+            setPopups(data.popups);
+            setDataError(null);
+        } catch (err) {
+            console.error('데이터 로드 실패:', err);
+            setDataError(err instanceof Error ? err.message : String(err));
+        } finally {
+            setDataLoaded(true);
+        }
+    }, []);
+
+    useEffect(() => { reloadData(); }, [reloadData]);
 
     // Filters
     const [portfolioSort, setPortfolioSort] = useState('name_asc');
+    const [searchQuery, setSearchQuery] = useState('');
 
     // URL에서 상태 복원
     useEffect(() => {
+        if (!dataLoaded) return;
         const path = location.pathname;
         const pathParts = path.split('/').filter(Boolean);
         
@@ -104,12 +126,7 @@ const App: React.FC = () => {
                 setSelectedCompany(null);
             }
         }
-    }, [location.pathname, posts, companies]);
-
-    useEffect(() => { saveState('companies', companies); }, [companies]);
-    useEffect(() => { saveState('posts', posts); }, [posts]);
-    useEffect(() => { saveState('inquiries', inquiries); }, [inquiries]);
-    useEffect(() => { saveState('popups', popups); }, [popups]);
+    }, [location.pathname, posts, companies, dataLoaded]);
 
     const handleNavigate = (page: PageId, subPage?: string) => {
         setIsLoading(true);
@@ -128,6 +145,7 @@ const App: React.FC = () => {
         setSelectedPost(null);
 
         setPortfolioSort('name_asc');
+        setSearchQuery('');
 
         // URL 업데이트
         if (page === 'home') {
@@ -147,6 +165,7 @@ const App: React.FC = () => {
         setActiveSubPage(subPage);
 
         setPortfolioSort('name_asc');
+        setSearchQuery('');
 
         // URL 업데이트
         if (activePage === 'home') {
@@ -171,8 +190,12 @@ const App: React.FC = () => {
 
     const handlePostClick = (post: Post, type: string) => {
         setIsLoading(true);
+        // 조회수 증가 (실패해도 화면에는 영향 없음)
+        backend.incrementViews(post.id).catch(() => undefined);
+        const viewed = { ...post, views: (post.views || 0) + 1 };
+        setPosts(prev => prev.map(p => p.id === post.id ? viewed : p));
         setTimeout(() => {
-            setSelectedPost(post);
+            setSelectedPost(viewed);
             setPostType(type);
             navigate(`/post/${post.id}`);
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -180,14 +203,51 @@ const App: React.FC = () => {
         }, 300);
     };
 
-    const handleInquirySubmit = (data: { inquiryType: string; name: string; contact: string; email: string; companyName: string; content: string }) => {
-        const newInquiry: Inquiry = {
-            id: Date.now(),
+    const handleInquirySubmit = async (data: { inquiryType: string; name: string; contact: string; email: string; companyName: string; content: string }) => {
+        await backend.createInquiry({
             ...data,
             date: new Date().toISOString().split('T')[0],
             status: '대기'
-        };
-        setInquiries([newInquiry, ...inquiries]);
+        });
+    };
+
+    // 관리자 페이지에서 사용하는 저장/삭제 동작 — 서버 반영 후 목록을 다시 불러온다.
+    const adminActions: AdminActions = {
+        mode: backend.mode,
+        refresh: reloadData,
+        savePost: async (data, id) => {
+            if (id !== undefined) await backend.updatePost(id, data);
+            else await backend.createPost(data as Omit<Post, 'id'>);
+            await reloadData();
+        },
+        deletePost: async (id) => { await backend.deletePost(id); await reloadData(); },
+        saveCompany: async (data, id) => {
+            if (id !== undefined) await backend.updateCompany(id, data);
+            else await backend.createCompany(data as Company);
+            await reloadData();
+        },
+        deleteCompany: async (id) => { await backend.deleteCompany(id); await reloadData(); },
+        savePopup: async (data, id) => {
+            if (id !== undefined) await backend.updatePopup(id, data);
+            else await backend.createPopup(data as Omit<Popup, 'id'>);
+            await reloadData();
+        },
+        deletePopup: async (id) => { await backend.deletePopup(id); await reloadData(); },
+        updateInquiryStatus: async (id, status) => { await backend.updateInquiryStatus(id, status); await reloadData(); },
+        deleteInquiry: async (id) => { await backend.deleteInquiry(id); await reloadData(); },
+        uploadFile: (file, folder) => backend.uploadFile(file, folder),
+        importPosts: async (items) => {
+            for (const item of items) {
+                const { id: _ignored, ...rest } = item;
+                void _ignored;
+                await backend.createPost(rest);
+            }
+            await reloadData();
+        },
+        importCompanies: async (items) => {
+            for (const item of items) await backend.createCompany(item);
+            await reloadData();
+        },
     };
 
     const handlePopupClose = (id: number, doNotShowToday: boolean) => {
@@ -200,13 +260,26 @@ const App: React.FC = () => {
     const hasHero = (activePage === 'home' || (activePage !== 'contact' && activePage !== 'admin' && !selectedPost && !selectedCompany));
 
     const renderContent = () => {
+        if (!dataLoaded && activePage !== 'admin') {
+            return activePage === 'home' ? <HomeSkeleton /> : <div className="pt-24"><SkeletonLoader /></div>;
+        }
+        if (dataError && activePage !== 'admin') {
+            return (
+                <div className="max-w-3xl mx-auto px-4 py-32 text-center">
+                    <h3 className="text-h2 text-ink mb-4">데이터를 불러오지 못했습니다</h3>
+                    <p className="text-ink-soft mb-8">{dataError}</p>
+                    <Button onClick={() => { setDataLoaded(false); reloadData(); }}>다시 시도</Button>
+                </div>
+            );
+        }
         if (activePage === 'admin') {
             return (
                 <AdminPage
-                    companies={companies} setCompanies={setCompanies}
-                    posts={posts} setPosts={setPosts}
-                    inquiries={inquiries} setInquiries={setInquiries}
-                    popups={popups} setPopups={setPopups}
+                    companies={companies}
+                    posts={posts}
+                    inquiries={inquiries}
+                    popups={popups}
+                    actions={adminActions}
                     onLogout={() => handleNavigate('home')}
                 />
             );
@@ -283,6 +356,15 @@ const App: React.FC = () => {
                     {isLoading ? <SkeletonLoader /> : renderSubPageContent()}
                 </div>
             </div>
+        );
+    };
+
+    const filterBySearch = (list: Post[]) => {
+        const q = searchQuery.trim().toLowerCase();
+        if (!q) return list;
+        return list.filter(p =>
+            p.title.toLowerCase().includes(q) ||
+            (p.content || '').replace(/<[^>]+>/g, '').toLowerCase().includes(q)
         );
     };
 
@@ -373,12 +455,12 @@ const App: React.FC = () => {
 
         // News - Notice
         if (activePage === 'news' && activeSubPage === 'notice') {
-            const noticePosts = posts.filter(p => p.category === 'notice');
+            const noticePosts = filterBySearch(posts.filter(p => p.category === 'notice'));
             return (
                 <div className="space-y-10 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="flex justify-between items-center pb-6 border-b border-line">
                         <span className="text-ink-soft font-medium">총 <span className="text-navy font-bold text-lg">{noticePosts.length}</span>건</span>
-                        <SearchBar />
+                        <SearchBar value={searchQuery} onChange={setSearchQuery} />
                     </div>
                     <div className="bg-white rounded-2xl shadow-card border border-line divide-y divide-line overflow-hidden">
                         {noticePosts.map((notice) => (
@@ -403,12 +485,12 @@ const App: React.FC = () => {
 
         // News - Press
         if (activePage === 'news' && activeSubPage === 'press') {
-            const pressPosts = posts.filter(p => p.category === 'press');
+            const pressPosts = filterBySearch(posts.filter(p => p.category === 'press'));
             return (
                 <div className="space-y-10 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="flex justify-between items-center pb-6 border-b border-line">
                         <span className="text-ink-soft font-medium">총 <span className="text-navy font-bold text-lg">{pressPosts.length}</span>건</span>
-                        <SearchBar />
+                        <SearchBar value={searchQuery} onChange={setSearchQuery} />
                     </div>
                     <div className="grid gap-6">
                         {pressPosts.map((post) => (
@@ -429,23 +511,27 @@ const App: React.FC = () => {
 
         // News - Resources
         if (activePage === 'news' && activeSubPage === 'resources') {
-            const resourcePosts = posts.filter(p => p.category === 'resources');
+            const resourcePosts = filterBySearch(posts.filter(p => p.category === 'resources'));
             return (
                 <div className="space-y-10 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="flex justify-between items-center pb-6 border-b border-line">
                         <span className="text-ink-soft font-medium">총 <span className="text-navy font-bold text-lg">{resourcePosts.length}</span>건</span>
-                        <SearchBar />
+                        <SearchBar value={searchQuery} onChange={setSearchQuery} />
                     </div>
                     <div className="bg-white rounded-2xl shadow-card border border-line">
                         {resourcePosts.map((resource, idx) => {
-                            const downloadUrl = resource.fileUrl || (resource.fileName ? `/files/${resource.fileName}` : undefined);
+                            const firstFile = resource.files && resource.files.length > 0 ? resource.files[0] : undefined;
+                            const hasMultipleFiles = Boolean(resource.files && resource.files.length > 1);
+                            const downloadUrl = firstFile?.url || resource.fileUrl || (resource.fileName ? `/files/${resource.fileName}` : undefined);
                             return (
                             <a
                                 key={resource.id}
                                 href={downloadUrl}
-                                download={resource.fileName}
+                                download={firstFile?.name || resource.fileName}
+                                target={downloadUrl && !hasMultipleFiles ? '_blank' : undefined}
+                                rel="noreferrer"
                                 onClick={(e) => {
-                                    if (!downloadUrl) {
+                                    if (!downloadUrl || hasMultipleFiles) {
                                         e.preventDefault();
                                         handlePostClick(resource, '자료실');
                                     }
@@ -575,12 +661,26 @@ const App: React.FC = () => {
 };
 
 // 게시판 목록 공통 검색 인풋+버튼
-const SearchBar: React.FC = () => (
-    <div className="flex gap-3">
-        <input type="text" placeholder="검색어 입력" className="border border-line rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy w-64 shadow-sm" />
-        <Button size="sm">검색</Button>
-    </div>
-);
+const SearchBar: React.FC<{ value: string; onChange: (v: string) => void }> = ({ value, onChange }) => {
+    const [draft, setDraft] = useState(value);
+    useEffect(() => { setDraft(value); }, [value]);
+    return (
+        <form
+            className="flex gap-3"
+            onSubmit={(e) => { e.preventDefault(); onChange(draft); }}
+        >
+            <input
+                type="text"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                placeholder="검색어 입력"
+                aria-label="게시글 검색"
+                className="border border-line rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy w-64 shadow-sm"
+            />
+            <Button size="sm" type="submit">검색</Button>
+        </form>
+    );
+};
 
 const FundsSection: React.FC = () => {
     return (

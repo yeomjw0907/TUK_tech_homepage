@@ -30,6 +30,7 @@ export interface PostFile {
   name: string;
   type?: string;
   size?: number;
+  url?: string; // 서버(Storage)에 업로드된 파일 주소
 }
 
 export interface Post {
