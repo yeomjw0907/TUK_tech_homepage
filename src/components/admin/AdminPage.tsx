@@ -133,6 +133,27 @@ const AdminPage: React.FC<AdminPageProps> = ({
     // Filter state for posts
     const [postCategoryFilter, setPostCategoryFilter] = useState('all');
 
+    // Filter / sort state for companies
+    const [companyFilter, setCompanyFilter] = useState<'all' | 'subsidiary' | 'portfolio' | 'tips'>('all');
+    const [companySort, setCompanySort] = useState<'name_asc' | 'name_desc' | 'date_newest' | 'date_oldest'>('name_asc');
+    const SHORT_DESC_MAX = 50;
+
+    const getFilteredCompanies = () => {
+        const base = companies.filter(c => {
+            if (companyFilter === 'subsidiary') return c.category === 'subsidiary';
+            if (companyFilter === 'portfolio') return c.category === 'portfolio';
+            if (companyFilter === 'tips') return c.isTips;
+            return true;
+        });
+        const time = (d: string) => (d ? new Date(d).getTime() || 0 : 0);
+        return [...base].sort((a, b) => {
+            if (companySort === 'name_asc') return a.name.localeCompare(b.name, 'ko');
+            if (companySort === 'name_desc') return b.name.localeCompare(a.name, 'ko');
+            if (companySort === 'date_newest') return time(b.foundedDate) - time(a.foundedDate);
+            return time(a.foundedDate) - time(b.foundedDate);
+        });
+    };
+
     // Form states
     const [companyFormData, setCompanyFormData] = useState<Partial<Company>>({
         name: '', ceo: '', category: 'portfolio', business: '', foundedDate: '',
@@ -535,9 +556,37 @@ const AdminPage: React.FC<AdminPageProps> = ({
 
                 {activeTab === 'companies' && (
                     <div className="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
-                        <div className="p-4 border-b border-line flex justify-between items-center bg-surface-alt">
-                            <h3 className="font-bold text-ink">기업 목록</h3>
-                            <Button size="sm" onClick={() => openCompanyModal()}><Plus className="w-4 h-4 mr-1" /> 기업 추가</Button>
+                        <div className="p-4 border-b border-line flex flex-col md:flex-row justify-between items-center bg-surface-alt gap-4">
+                            <h3 className="font-bold text-ink flex items-center">기업 목록 <span className="ml-2 text-xs font-normal text-ink-soft">({getFilteredCompanies().length})</span></h3>
+                            <div className="flex items-center gap-3 flex-wrap justify-center">
+                                <div className="flex bg-white rounded-lg border border-line p-1">
+                                    {([
+                                        { id: 'all', label: '전체' },
+                                        { id: 'subsidiary', label: '자회사' },
+                                        { id: 'portfolio', label: '투자기업' },
+                                        { id: 'tips', label: 'TIPS 선정기업' },
+                                    ] as const).map(f => (
+                                        <button
+                                            key={f.id}
+                                            onClick={() => setCompanyFilter(f.id)}
+                                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-colors ${companyFilter === f.id ? 'bg-navy text-white' : 'text-ink-soft hover:bg-surface-alt'}`}
+                                        >
+                                            {f.label}
+                                        </button>
+                                    ))}
+                                </div>
+                                <select
+                                    className="px-3 py-2 border border-line rounded-lg text-xs font-bold bg-white text-ink-soft focus:outline-none focus:ring-2 focus:ring-navy cursor-pointer"
+                                    value={companySort}
+                                    onChange={e => setCompanySort(e.target.value as typeof companySort)}
+                                >
+                                    <option value="name_asc">기업명 가나다순</option>
+                                    <option value="name_desc">기업명 가나다역순</option>
+                                    <option value="date_newest">설립일 최신순</option>
+                                    <option value="date_oldest">설립일 오래된순</option>
+                                </select>
+                                <Button size="sm" onClick={() => openCompanyModal()}><Plus className="w-4 h-4 mr-1" /> 기업 추가</Button>
+                            </div>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
@@ -551,10 +600,10 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-line">
-                                    {companies.length === 0 && (
-                                        <tr><td colSpan={5} className="px-6 py-12 text-center text-ink-faint">등록된 기업이 없습니다.</td></tr>
+                                    {getFilteredCompanies().length === 0 && (
+                                        <tr><td colSpan={5} className="px-6 py-12 text-center text-ink-faint">{companies.length === 0 ? '등록된 기업이 없습니다.' : '조건에 맞는 기업이 없습니다.'}</td></tr>
                                     )}
-                                    {companies.map((company) => (
+                                    {getFilteredCompanies().map((company) => (
                                         <tr key={company.id} className="hover:bg-surface-alt">
                                             <td className="px-6 py-4 font-bold text-ink">{company.name}{company.isTips && <span className="ml-2 text-label px-1.5 py-0.5 rounded bg-gold/15 text-ink align-middle">TIPS</span>}</td>
                                             <td className="px-6 py-4 text-ink-soft">{company.ceo}</td>
@@ -995,8 +1044,20 @@ const AdminPage: React.FC<AdminPageProps> = ({
                     </div>
 
                     <div>
-                        <label className={labelClass}>한줄 소개</label>
-                        <input type="text" className={inputClass} value={companyFormData.shortDesc || ''} onChange={e => setCompanyFormData({ ...companyFormData, shortDesc: e.target.value })} placeholder="기업을 소개하는 짧은 문구" />
+                        <div className="flex justify-between items-end mb-1.5">
+                            <label className="text-sm font-bold text-ink">한줄 소개</label>
+                            <span className={`text-xs ${(companyFormData.shortDesc || '').length >= SHORT_DESC_MAX ? 'text-red-600 font-bold' : 'text-ink-faint'}`}>
+                                {(companyFormData.shortDesc || '').length} / {SHORT_DESC_MAX}자
+                            </span>
+                        </div>
+                        <input
+                            type="text"
+                            className={inputClass}
+                            value={companyFormData.shortDesc || ''}
+                            maxLength={SHORT_DESC_MAX}
+                            onChange={e => setCompanyFormData({ ...companyFormData, shortDesc: e.target.value.slice(0, SHORT_DESC_MAX) })}
+                            placeholder="기업을 소개하는 짧은 문구 (기업 목록 카드와 상세 페이지 상단에 표시)"
+                        />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -1043,23 +1104,14 @@ const AdminPage: React.FC<AdminPageProps> = ({
                         <label className={labelClass}>주요사업 *</label>
                         <input type="text" className={inputClass} value={companyFormData.business} onChange={e => setCompanyFormData({ ...companyFormData, business: e.target.value })} placeholder="예: AI 기반 솔루션 개발" />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className={labelClass}>입주호실</label>
-                            <input type="text" className={inputClass} value={companyFormData.room} onChange={e => setCompanyFormData({ ...companyFormData, room: e.target.value })} placeholder="예: P동 301호" />
-                        </div>
-                        <div>
-                            <label className={labelClass}>입주일</label>
-                            <input type="date" className={inputClass} value={companyFormData.moveInDate} onChange={e => setCompanyFormData({ ...companyFormData, moveInDate: e.target.value })} />
-                        </div>
+                    <div>
+                        <label className={labelClass}>기업소개</label>
+                        <textarea rows={5} className={inputClass} value={companyFormData.note === '-' ? '' : (companyFormData.note || '')} onChange={e => setCompanyFormData({ ...companyFormData, note: e.target.value })} placeholder="기업 상세 페이지의 '기업 소개' 영역에 표시됩니다. 줄바꿈이 그대로 반영됩니다."></textarea>
                     </div>
                     <div>
                         <label className={labelClass}>홈페이지</label>
                         <input type="text" className={inputClass} value={companyFormData.homepage} onChange={e => setCompanyFormData({ ...companyFormData, homepage: e.target.value })} placeholder="https://" />
-                    </div>
-                    <div>
-                        <label className={labelClass}>비고 / 상세소개</label>
-                        <textarea rows={3} className={inputClass} value={companyFormData.note} onChange={e => setCompanyFormData({ ...companyFormData, note: e.target.value })} placeholder="기업에 대한 상세 설명을 입력하세요"></textarea>
+                        <p className="text-xs text-ink-soft mt-1.5 flex items-center"><HelpCircle className="w-3 h-3 mr-1" /> 입력하면 기업 상세 페이지에 '홈페이지' 버튼이 표시됩니다.</p>
                     </div>
                     <div className="flex items-center gap-2 bg-surface-alt2 p-3 rounded-lg border border-line">
                         <input type="checkbox" id="isTips" className="w-5 h-5 rounded border-line-md text-navy focus:ring-navy" checked={companyFormData.isTips} onChange={e => setCompanyFormData({ ...companyFormData, isTips: e.target.checked })} />

@@ -71,29 +71,35 @@
     .orb, .fade-up { animation: none; }
 }
 
-/* ── Tiptap 에디터 (관리자 전용) ── */
+/* ── 서식 본문 공통 스타일 ──
+   관리자 편집기(.ProseMirror)와 홈페이지 본문(.rich-content)에 동일하게 적용해
+   "편집기에서 보이는 대로 홈페이지에 나온다"를 보장한다. */
 .ProseMirror { outline: none; }
-.ProseMirror p { margin: 0.75em 0; }
-.ProseMirror h1 { font-size: 2em; font-weight: bold; margin: 1em 0 0.5em 0; }
-.ProseMirror h2 { font-size: 1.5em; font-weight: bold; margin: 0.8em 0 0.4em 0; }
-.ProseMirror h3 { font-size: 1.25em; font-weight: bold; margin: 0.6em 0 0.3em 0; }
-.ProseMirror ul, .ProseMirror ol { padding-left: 1.5em; margin: 0.75em 0; }
-.ProseMirror li { margin: 0.25em 0; }
-.ProseMirror blockquote {
+.ProseMirror p, .rich-content p { margin: 0.75em 0; min-height: 1lh; }
+/* 빈 문단(<p></p>)도 한 줄 높이를 차지하도록 (1lh 미지원 브라우저 대비) */
+.rich-content p:empty::before { content: "\00a0"; }
+.ProseMirror h1, .rich-content h1 { font-size: 2em; font-weight: bold; margin: 1em 0 0.5em 0; }
+.ProseMirror h2, .rich-content h2 { font-size: 1.5em; font-weight: bold; margin: 0.8em 0 0.4em 0; }
+.ProseMirror h3, .rich-content h3 { font-size: 1.25em; font-weight: bold; margin: 0.6em 0 0.3em 0; }
+.ProseMirror ul, .rich-content ul { list-style: disc; }
+.ProseMirror ol, .rich-content ol { list-style: decimal; }
+.ProseMirror ul, .ProseMirror ol, .rich-content ul, .rich-content ol { padding-left: 1.5em; margin: 0.75em 0; }
+.ProseMirror li, .rich-content li { margin: 0.25em 0; }
+.ProseMirror blockquote, .rich-content blockquote {
     border-left: 4px solid #003E7E;
     padding-left: 1em;
     margin: 1em 0;
     color: #64748b;
     font-style: italic;
 }
-.ProseMirror code {
+.ProseMirror code, .rich-content code {
     background-color: #f1f5f9;
     padding: 0.2em 0.4em;
     border-radius: 0.25rem;
     font-family: monospace;
     font-size: 0.9em;
 }
-.ProseMirror pre {
+.ProseMirror pre, .rich-content pre {
     background-color: #1e293b;
     color: #e2e8f0;
     padding: 1em;
@@ -101,7 +107,9 @@
     overflow-x: auto;
     margin: 1em 0;
 }
-.ProseMirror pre code { background-color: transparent; padding: 0; color: inherit; }
-.ProseMirror img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1em 0; }
-.ProseMirror a { color: #003E7E; text-decoration: underline; }
-.ProseMirror a:hover { color: #002D5C; }
+.ProseMirror pre code, .rich-content pre code { background-color: transparent; padding: 0; color: inherit; }
+.ProseMirror img, .rich-content img { max-width: 100%; height: auto; border-radius: 0.5rem; margin: 1em 0; }
+.ProseMirror a, .rich-content a { color: #003E7E; text-decoration: underline; }
+.ProseMirror a:hover, .rich-content a:hover { color: #002D5C; }
+.ProseMirror s, .rich-content s { text-decoration: line-through; }
+.ProseMirror hr, .rich-content hr { border: 0; border-top: 1px solid #e2e8f0; margin: 1.5em 0; }

@@ -4,7 +4,7 @@ import {
     Paperclip, FileIcon, Download
 } from 'lucide-react';
 import { Post } from '../../types';
-import { Badge } from '../common';
+import { Badge, RichContent } from '../common';
 import { formatDate } from '../../utils/format';
 
 interface PostDetailProps {
@@ -46,10 +46,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, type, onBack, onPostClick
                 </div>
 
                 <div className="p-8 md:p-10 min-h-[400px]">
-                    <div
-                        className="prose max-w-none text-ink-soft leading-8"
-                        dangerouslySetInnerHTML={{ __html: post.content || '' }}
-                    />
+                    <RichContent content={post.content} className="max-w-none text-ink-soft leading-8" />
                 </div>
 
                 {((post.files && post.files.length > 0) || post.fileName || post.fileType) && (

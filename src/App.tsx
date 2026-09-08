@@ -17,7 +17,7 @@ import { backend } from './lib/api';
 import { AdminActions } from './components/admin/AdminPage';
 
 // Components
-import { Button, Badge, SectionTitle, SkeletonLoader, HomeSkeleton } from './components/common';
+import { Button, Badge, SectionTitle, SkeletonLoader, HomeSkeleton, RichContent } from './components/common';
 import { Header, Footer, QuickMenu, SubPageHeader } from './components/layout';
 import {
     HomePage, PostDetail, CompanyDetail, ContactForm,
@@ -79,7 +79,8 @@ const App: React.FC = () => {
     useEffect(() => {
         if (!dataLoaded) return;
         const path = location.pathname;
-        const pathParts = path.split('/').filter(Boolean);
+        // 기업 id 등 한글 경로는 URL 인코딩되어 들어오므로 복원해서 비교한다.
+        const pathParts = path.split('/').filter(Boolean).map(part => { try { return decodeURIComponent(part); } catch { return part; } });
         
         if (pathParts.length === 0) {
             // 홈
@@ -581,7 +582,7 @@ const App: React.FC = () => {
                                 </summary>
                                 <div className="px-6 pb-8 pt-2 text-ink-soft leading-relaxed border-t border-line mx-6 mt-2 flex gap-4">
                                     <span className="font-bold text-ink-faint">A.</span>
-                                    <div className="whitespace-pre-wrap">{post.content}</div>
+                                    <RichContent content={post.content} className="flex-1 min-w-0" />
                                 </div>
                             </details>
                         ))}
