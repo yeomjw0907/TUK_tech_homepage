@@ -10,8 +10,8 @@ const QuickMenu: React.FC<QuickMenuProps> = ({ onNavigate }) => {
     const menuItems = [
         { icon: Bell, label: "공지사항", action: () => onNavigate('news', 'notice') },
         { icon: Download, label: "자료실", action: () => onNavigate('news', 'resources') },
-        { icon: ExternalLink, label: "창업보육센터", action: () => window.open('https://bi.tukorea.ac.kr', '_blank') },
-        { icon: MessageCircle, label: "지원하기", action: () => onNavigate('contact') },
+        { icon: ExternalLink, label: "창업보육센터", action: () => window.open('https://tukbic.tukorea.ac.kr/', '_blank') },
+        { icon: MessageCircle, label: "문의/신청", action: () => onNavigate('contact') },
     ];
 
     return (

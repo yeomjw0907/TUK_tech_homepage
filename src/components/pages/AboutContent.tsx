@@ -1,6 +1,7 @@
 import React from 'react';
-import { Lightbulb, Rocket, TrendingUp, MapPin, Target, Building2, Users, Briefcase, Award, Star, Globe, Zap, UserCircle2 } from 'lucide-react';
-import { Card, Button, SectionTitle } from '../common';
+import { Lightbulb, Rocket, TrendingUp, Target, Building2, Users, Briefcase, Award, Star, Globe, Zap, UserCircle2 } from 'lucide-react';
+import { Card, SectionTitle } from '../common';
+import CampusKakaoMap from './CampusKakaoMap';
 import { HISTORY_DATA, COMPANY_NAME, PROGRAM_TURN_UP, KEY_STATS } from '../../data/constants';
 
 interface AboutContentProps {
@@ -209,18 +210,7 @@ const AboutContent: React.FC<AboutContentProps> = ({ subPage }) => {
     }
 
     if (subPage === 'location') {
-        return (
-            <div className="space-y-12">
-                <div className="bg-surface-alt rounded-2xl h-[400px] flex items-center justify-center relative overflow-hidden border border-line">
-                    <Card padding="lg" hover={false} className="relative z-10 max-w-sm text-center">
-                        <MapPin className="w-10 h-10 text-navy mx-auto mb-4" />
-                        <h3 className="text-h4 text-ink mb-2">본사 위치</h3>
-                        <p className="text-ink-soft mb-4">경기도 시흥시 산기대학로 237 <br />시흥비즈니스센터 7층</p>
-                        <Button size="sm" onClick={() => window.open('https://map.kakao.com', '_blank')}>지도 보기</Button>
-                    </Card>
-                </div>
-            </div>
-        );
+        return <CampusKakaoMap />;
     }
 
     if (subPage === 'ceo') {

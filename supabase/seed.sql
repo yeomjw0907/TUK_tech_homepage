@@ -2,7 +2,7 @@
 
 insert into public.posts (id, category, title, date, author, views, content, is_new, file_type, file_name, file_url, files) values
 (1, 'notice', '한국공학대학교 기술지주회사 홈페이지 리뉴얼 안내', '2026.08.27', '관리자', 86, '<p>한국공학대학교 기술지주회사 홈페이지가 새롭게 리뉴얼되었습니다.</p><p>투자, 자회사, 회사소식 등 주요 정보를 보다 쉽게 확인하실 수 있습니다.</p>', true, null, null, null, '[]'::jsonb),
-(2, 'notice', '2026년 입주기업 상시 모집 안내', '2026.08.20', '관리자', 142, '<p>시흥비즈니스센터 입주기업을 상시 모집합니다.</p><p>자세한 내용은 지원하기 메뉴를 통해 문의해 주시기 바랍니다.</p>', true, null, null, null, '[]'::jsonb),
+(2, 'notice', '2026년 입주기업 상시 모집 안내', '2026.08.20', '관리자', 142, '<p>시흥비즈니스센터 입주기업을 상시 모집합니다.</p><p>자세한 내용은 문의/신청 메뉴를 통해 문의해 주시기 바랍니다.</p>', true, null, null, null, '[]'::jsonb),
 (4, 'press', '한국공학대 기술지주회사, 시흥창업펀드 70억 조성', '2025.01.20', '관리자', 154, '한국공학대학교 기술지주회사가 시흥산업진흥원과 함께 시흥창업펀드를 조성했다.
 이번 펀드는 총 70억원 규모로, 관내 우수 창업기업 발굴 및 육성에 투입될 예정이다.
 ...', false, null, null, null, '[]'::jsonb),
@@ -30,10 +30,20 @@ insert into public.posts (id, category, title, date, author, views, content, is_
 (21, 'faq', 'IR은 어떻게 접수하나요?', '2026.08.27', '기업투자본부', 0, '홈페이지 IR 접수 또는 이메일을 통해 사업계획서(IR 자료)를 제출해 주시면 기업투자본부에서 검토 후 개별 안내드립니다.', false, null, null, null, '[]'::jsonb),
 (22, 'faq', '투자 검토는 얼마나 걸리나요?', '2026.08.27', '기업투자본부', 0, '제출 자료와 기업 상황에 따라 달라질 수 있으며, 일반적으로 IR 접수 후 검토 결과는 순차적으로 안내드립니다.', false, null, null, null, '[]'::jsonb),
 (23, 'faq', 'TIPS 추천은 어떻게 받을 수 있나요?', '2026.08.27', '기업투자본부', 0, '당사의 투자 및 심사를 거친 기업을 대상으로 기술성, 성장성 등을 종합 검토하여 TIPS 운영사 추천 여부를 결정합니다.', false, null, null, null, '[]'::jsonb),
-(24, 'faq', '어떤 지원을 받을 수 있나요?', '2026.08.27', '기업투자본부', 0, '투자뿐만 아니라 TU-RN Up 프로그램, 창업보육센터, 기술사업화 및 정부 연구개발(R&D) 연계 등 다양한 성장지원 프로그램을 제공합니다.', false, null, null, null, '[]'::jsonb),
+(24, 'faq', '어떤 지원을 받을 수 있나요?', '2026.08.27', '기업투자본부', 0, '투자뿐만 아니라 TU-RN UP 프로그램, 창업보육센터, 기술사업화 및 정부 연구개발(R&D) 연계 등 다양한 성장지원 프로그램을 제공합니다.', false, null, null, null, '[]'::jsonb),
 (25, 'faq', '자회사와 투자기업의 차이는 무엇인가요?', '2026.08.27', '기업투자본부', 0, '자회사는 대학 기술을 활용하여 기술지주회사가 일정 지분을 보유한 기업이며, 투자기업은 기술지주회사가 투자한 포트폴리오 기업을 의미합니다.', false, null, null, null, '[]'::jsonb)
 on conflict (id) do nothing;
 select setval(pg_get_serial_sequence('public.posts', 'id'), greatest((select max(id) from public.posts), 1));
+
+update public.posts p
+set sort_order = o.rn
+from (
+    select id, (row_number() over (order by id) - 1)::integer as rn
+    from public.posts
+    where category = 'faq'
+) o
+where p.id = o.id
+  and p.category = 'faq';
 
 insert into public.companies (id, name, ceo, founded_date, business, room, move_in_date, homepage, note, is_tips, category, logo, bg_image, short_desc, sort_order) values
 ('주링크솔루션', '(주)링크솔루션', '권지수', '2023-02-15', '메타버스 콘텐츠 플랫폼', 'P동 310호', '2023-04-01', 'https://www.tukorea.ac.kr', '-', false, 'subsidiary', '/company-logos/링크솔루션', 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop', '혁신적인 기술로 미래를 선도합니다', 0),

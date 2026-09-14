@@ -82,7 +82,7 @@
 ## 6. 문구·표기
 
 - 회사명: `COMPANY_NAME`("한국공학대학교 기술지주회사") / 법적표기 `COMPANY_NAME_LEGAL`. 하드코딩 금지.
-- 프로그램명: `PROGRAM_TURN_UP`("TU-RN Up"). "TU-RN UP", "TU RN-UP" 금지.
+- 프로그램명: `PROGRAM_TURN_UP`("TU-RN UP"). "TU-RN Up", "TU RN-UP" 금지.
 - 날짜: 화면 출력은 전부 `formatDate()` (YYYY.MM.DD). 기간은 "YYYY.MM ~ YYYY.MM".
 - CTA 문구 2종: 개별 항목 → **"자세히 보기"**, 목록/전체 이동 → **"전체보기"**. ("더 알아보기", "더보기", "…살펴보기" 금지. "목록으로"는 상세→목록 복귀용으로 유지)
 - 통계 수치: `KEY_STATS` 상수 사용, 기업 수는 가능하면 `companies.filter(...).length`로 산출. 기준일은 `KEY_STATS.baseDate`.

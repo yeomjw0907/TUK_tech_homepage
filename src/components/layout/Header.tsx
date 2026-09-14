@@ -97,9 +97,9 @@ const Header: React.FC<HeaderProps> = ({
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-14 md:h-16">
+                <div className="flex items-center h-14 md:h-16 gap-4 lg:gap-6">
                     <div
-                        className="flex items-center cursor-pointer group gap-2"
+                        className="flex items-center cursor-pointer group gap-2 shrink-0"
                         onClick={() => onNavigate('home')}
                     >
                         <img
@@ -109,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({
                         />
                     </div>
 
-                    <nav className="hidden md:flex h-full items-center gap-1">
+                    <nav className="hidden lg:flex flex-1 h-full items-center gap-5 min-w-0">
                         {MENU_STRUCTURE.map((item) => (
                             <div
                                 key={item.id}
@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({
                                 onMouseLeave={() => setHoveredMenu(null)}
                             >
                                 <button
-                                    className={`relative px-3 py-2 text-sm whitespace-nowrap transition-all duration-200 rounded-md ${
+                                    className={`relative px-1 py-2 text-sm whitespace-nowrap transition-all duration-200 rounded-md ${
                                         isTransparent
                                             ? activePage === item.id
                                                 ? 'font-bold text-white bg-white/15'
@@ -157,11 +157,10 @@ const Header: React.FC<HeaderProps> = ({
                                 )}
                             </div>
                         ))}
+                    </nav>
 
-                        <div className="h-4 w-px mx-3 bg-line"></div>
-
-                        {/* 글자 크기 조절 (데스크톱) */}
-                        <div className="hidden md:block relative">
+                    <div className="hidden lg:flex items-center gap-2 shrink-0">
+                        <div className="relative">
                             <button
                                 onClick={() => setIsFontSizeMenuOpen(!isFontSizeMenuOpen)}
                                 className={`p-2 rounded-xl transition-all ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
@@ -212,31 +211,30 @@ const Header: React.FC<HeaderProps> = ({
                             )}
                         </div>
 
-                        {/* 검색 버튼 (데스크톱) */}
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className={`hidden md:block p-2 rounded-xl transition-all ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
+                            className={`p-2 rounded-xl transition-all ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
                             aria-label="검색"
                         >
                             <Search className="w-5 h-5" />
                         </button>
 
                         <a
-                            href="https://bi.tukorea.ac.kr"
+                            href="https://tukbic.tukorea.ac.kr/"
                             target="_blank"
                             rel="noreferrer"
-                            className={`hidden md:flex items-center px-3 py-1.5 rounded-full text-xs font-bold border transition-all uppercase tracking-wide group whitespace-nowrap ${isTransparent
+                            className={`flex items-center px-3 py-1.5 rounded-full text-xs font-bold border transition-all uppercase tracking-wide group whitespace-nowrap ${isTransparent
                                 ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-navy'
                                 : 'bg-surface-alt border-line-md text-ink-soft hover:border-line-strong hover:text-navy'
                                 }`}
                         >
                             창업보육센터 <ExternalLink className="w-3 h-3 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
-                    </nav>
+                    </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex lg:hidden items-center gap-2 ml-auto">
                         {/* 글자 크기 조절 (모바일) */}
-                        <div className="md:hidden relative">
+                        <div className="lg:hidden relative">
                             <button
                                 onClick={() => setIsFontSizeMenuOpen(!isFontSizeMenuOpen)}
                                 className={`p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
@@ -287,14 +285,14 @@ const Header: React.FC<HeaderProps> = ({
                         {/* 검색 버튼 (모바일) */}
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className={`md:hidden p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
+                            className={`lg:hidden p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
                             aria-label="검색"
                         >
                             <Search className="w-5 h-5" />
                         </button>
 
                         <button
-                            className={`md:hidden p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
+                            className={`lg:hidden p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             aria-label={isMobileMenuOpen ? '메뉴 닫기' : '메뉴 열기'}
                         >
@@ -318,7 +316,7 @@ const Header: React.FC<HeaderProps> = ({
             )}
 
             {isMobileMenuOpen && (
-                <div className="md:hidden bg-white border-t border-line absolute w-full shadow-popover h-[calc(100vh-80px)] overflow-y-auto">
+                <div className="lg:hidden bg-white border-t border-line absolute w-full shadow-popover h-[calc(100vh-80px)] overflow-y-auto">
                     <div className="px-5 py-6 space-y-6">
                         {MENU_STRUCTURE.map((item) => (
                             <div key={item.id} className="space-y-3">

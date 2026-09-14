@@ -1,6 +1,6 @@
 // Type Definitions
 
-export type PageId = 'home' | 'about' | 'investment' | 'subsidiary' | 'portfolio' | 'news' | 'contact' | 'admin';
+export type PageId = 'home' | 'about' | 'investment' | 'subsidiary' | 'tech-transfer' | 'portfolio' | 'news' | 'contact' | 'admin';
 export type SubPageId = string;
 
 export interface MenuItem {
@@ -46,9 +46,10 @@ export interface Post {
   fileName?: string; // 기존 호환성을 위해 유지
   fileUrl?: string;
   files?: PostFile[]; // 여러 파일 지원
+  sortOrder?: number; // Q&A 등 노출 순서 (작을수록 위)
 }
 
-export type InquiryType = '일반 문의' | 'IR 접수' | 'TIPS 문의' | '기술사업화 문의';
+export type InquiryType = '일반 문의' | 'IR 접수' | '자회사 접수' | 'TIPS 문의' | '기술이전 문의';
 
 export interface Inquiry {
   id: number;
@@ -60,6 +61,8 @@ export interface Inquiry {
   content: string;
   date: string;
   status: '대기' | '완료';
+  files?: PostFile[];
+  privacyAgreed?: boolean;
 }
 
 export interface Popup {

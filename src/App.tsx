@@ -9,7 +9,7 @@ import {
 import { PageId, Company, Post, Inquiry, Popup } from './types';
 
 // Data
-import { MENU_STRUCTURE, FUNDS_DATA, KEY_STATS } from './data/constants';
+import { MENU_STRUCTURE } from './data/constants';
 
 // Utils
 import { formatDate } from './utils/format';
@@ -17,11 +17,11 @@ import { backend } from './lib/api';
 import { AdminActions } from './components/admin/AdminPage';
 
 // Components
-import { Button, Badge, SectionTitle, SkeletonLoader, HomeSkeleton, RichContent } from './components/common';
+import { Button, Badge, SkeletonLoader, HomeSkeleton, RichContent } from './components/common';
 import { Header, Footer, QuickMenu, SubPageHeader } from './components/layout';
 import {
     HomePage, PostDetail, CompanyDetail, ContactForm,
-    AboutContent, InvestmentContent, SubsidiaryContent
+    AboutContent, InvestmentContent, SubsidiaryContent, TechTransferContent
 } from './components/pages';
 import { AdminPage } from './components/admin';
 import PopupOverlay from './components/PopupOverlay';
@@ -120,7 +120,7 @@ const App: React.FC = () => {
             const page = pathParts[0] as PageId;
             const subPage = pathParts[1];
             
-            if (['home', 'about', 'investment', 'subsidiary', 'portfolio', 'news', 'contact', 'admin'].includes(page)) {
+            if (['home', 'about', 'investment', 'subsidiary', 'tech-transfer', 'portfolio', 'news', 'contact', 'admin'].includes(page)) {
                 setActivePage(page);
                 setActiveSubPage(subPage);
                 setSelectedPost(null);
@@ -204,9 +204,29 @@ const App: React.FC = () => {
         }, 300);
     };
 
-    const handleInquirySubmit = async (data: { inquiryType: string; name: string; contact: string; email: string; companyName: string; content: string }) => {
+    const handleInquirySubmit = async (data: {
+        inquiryType: string;
+        name: string;
+        contact: string;
+        email: string;
+        companyName: string;
+        content: string;
+        files: File[];
+        privacyAgreed: boolean;
+    }) => {
+        const uploaded = [];
+        for (const file of data.files) {
+            uploaded.push(await backend.uploadFile(file, 'inquiries'));
+        }
         await backend.createInquiry({
-            ...data,
+            inquiryType: data.inquiryType,
+            name: data.name,
+            contact: data.contact,
+            email: data.email,
+            companyName: data.companyName,
+            content: data.content,
+            files: uploaded,
+            privacyAgreed: data.privacyAgreed,
             date: new Date().toISOString().split('T')[0],
             status: '대기'
         });
@@ -247,6 +267,10 @@ const App: React.FC = () => {
         },
         importCompanies: async (items) => {
             for (const item of items) await backend.createCompany(item);
+            await reloadData();
+        },
+        reorderPosts: async (items) => {
+            await Promise.all(items.map(item => backend.updatePost(item.id, { sortOrder: item.sortOrder })));
             await reloadData();
         },
     };
@@ -444,16 +468,6 @@ const App: React.FC = () => {
             );
         }
 
-        // Investment Fields — 분야 소개는 InvestmentContent에 위임하고, 조합 운용 현황 표만 이어서 노출
-        if (activePage === 'investment' && activeSubPage === 'fields') {
-            return (
-                <div className="space-y-16 animate-in fade-in slide-in-from-bottom-8 duration-700">
-                    <InvestmentContent subPage="fields" onNavigate={handleNavigate} />
-                    <FundsSection />
-                </div>
-            );
-        }
-
         // News - Notice
         if (activePage === 'news' && activeSubPage === 'notice') {
             const noticePosts = filterBySearch(posts.filter(p => p.category === 'notice'));
@@ -563,7 +577,10 @@ const App: React.FC = () => {
 
         // News - FAQ
         if (activePage === 'news' && activeSubPage === 'faq') {
-            const faqPosts = posts.filter(p => p.category === 'faq');
+            const faqPosts = posts
+                .filter(p => p.category === 'faq')
+                .slice()
+                .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.id - b.id);
             return (
                 <div className="space-y-10 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                     <div className="text-center mb-12">
@@ -603,7 +620,7 @@ const App: React.FC = () => {
 
         // Investment
         if (activePage === 'investment' && ['process', 'growth', 'tips', 'fields', 'portfolio', 'apply'].includes(activeSubPage!)) {
-            return <InvestmentContent subPage={activeSubPage!} onNavigate={handleNavigate} />;
+            return <InvestmentContent subPage={activeSubPage!} onNavigate={handleNavigate} companies={companies} />;
         }
 
         // Subsidiary
@@ -611,9 +628,14 @@ const App: React.FC = () => {
             return <SubsidiaryContent subPage={activeSubPage!} />;
         }
 
+        // Tech transfer
+        if (activePage === 'tech-transfer') {
+            return <TechTransferContent />;
+        }
+
         // Contact
         if (activePage === 'contact') {
-            return <ContactForm onSubmit={handleInquirySubmit} />;
+            return <ContactForm onSubmit={handleInquirySubmit} initialInquiryType={activeSubPage === 'ir' ? 'IR 접수' : undefined} />;
         }
 
         // Default Empty State
@@ -680,24 +702,6 @@ const SearchBar: React.FC<{ value: string; onChange: (v: string) => void }> = ({
             />
             <Button size="sm" type="submit">검색</Button>
         </form>
-    );
-};
-
-const FundsSection: React.FC = () => {
-    return (
-        <div className="bg-surface-alt rounded-2xl p-6 md:p-12 border border-line relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-surface-alt2/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-            <div className="relative z-10">
-                <SectionTitle title="투자 조합 운용 현황" subtitle="Investment Funds" />
-
-                <div className="bg-white rounded-2xl shadow-card border border-line px-8 py-10 text-center">
-                    <p className="text-body-lg text-ink tracking-tight">
-                        총 <span className="text-navy font-bold">{FUNDS_DATA.length}개</span> 투자조합 운용 중 AUM <span className="text-navy font-bold">{KEY_STATS.fundTotal.replace('+', '')}원</span> 규모
-                    </p>
-                </div>
-            </div>
-        </div>
     );
 };
 

@@ -3,7 +3,8 @@ import {
     Building, Bell, Layers, Inbox, LayoutDashboard,
     Settings, Home, LogOut, Plus, Trash2, Edit, Eye,
     Paperclip, HelpCircle, XCircle, Image as ImageIcon,
-    Phone, Mail, ArrowLeft, AlertTriangle, UploadCloud, RefreshCw
+    Phone, Mail, ArrowLeft, AlertTriangle, UploadCloud, RefreshCw,
+    ChevronUp, ChevronDown
 } from 'lucide-react';
 import { Company, Post, Inquiry, Popup, PostFile } from '../../types';
 import { Button, Modal } from '../common';
@@ -52,6 +53,7 @@ export interface AdminActions {
     uploadFile: (file: File, folder: string) => Promise<PostFile & { url: string }>;
     importPosts: (items: Post[]) => Promise<void>;
     importCompanies: (items: Company[]) => Promise<void>;
+    reorderPosts: (items: { id: number; sortOrder: number }[]) => Promise<void>;
 }
 
 interface AdminPageProps {
@@ -184,7 +186,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
         { id: 'companies', label: '자회사/기업 관리', icon: Building },
         { id: 'posts', label: '게시글(회사소식) 관리', icon: Bell },
         { id: 'popups', label: '팝업 관리', icon: Layers },
-        { id: 'inquiries', label: '지원하기 관리', icon: Inbox },
+        { id: 'inquiries', label: '문의/신청 관리', icon: Inbox },
     ];
 
     const POST_CATEGORIES = [
@@ -300,7 +302,10 @@ const AdminPage: React.FC<AdminPageProps> = ({
             setPostFormData({ ...post, files });
         } else {
             setEditingId(null);
-            setPostFormData({ title: '', author: '관리자', content: '', category: 'notice', files: [] });
+            const defaultCategory = postCategoryFilter !== 'all'
+                ? (postCategoryFilter as Post['category'])
+                : 'notice';
+            setPostFormData({ title: '', author: '관리자', content: '', category: defaultCategory, files: [] });
         }
         setPostEditorMode('edit');
     };
@@ -326,6 +331,18 @@ const AdminPage: React.FC<AdminPageProps> = ({
             fileType: first?.type,
             fileUrl: first?.url,
         };
+
+        if (saveData.category === 'faq') {
+            const wasFaq = editingId
+                ? posts.find(p => p.id === Number(editingId))?.category === 'faq'
+                : false;
+            if (!wasFaq) {
+                const maxOrder = posts
+                    .filter(p => p.category === 'faq')
+                    .reduce((max, p) => Math.max(max, p.sortOrder ?? 0), -1);
+                saveData.sortOrder = maxOrder + 1;
+            }
+        }
 
         const ok = await run('게시글 저장', async () => {
             if (editingId) {
@@ -409,8 +426,27 @@ const AdminPage: React.FC<AdminPageProps> = ({
     };
 
     const getFilteredPosts = () => {
-        if (postCategoryFilter === 'all') return posts;
-        return posts.filter(p => p.category === postCategoryFilter);
+        const list = postCategoryFilter === 'all' ? posts : posts.filter(p => p.category === postCategoryFilter);
+        if (postCategoryFilter !== 'faq') return list;
+        return [...list].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.id - b.id);
+    };
+
+    const moveFaq = async (id: number, direction: -1 | 1) => {
+        const faqs = getFilteredPosts();
+        const index = faqs.findIndex(p => p.id === id);
+        const nextIndex = index + direction;
+        if (index < 0 || nextIndex < 0 || nextIndex >= faqs.length) return;
+
+        const reordered = [...faqs];
+        [reordered[index], reordered[nextIndex]] = [reordered[nextIndex], reordered[index]];
+        const updates = reordered
+            .map((post, order) => ({ id: post.id, sortOrder: order }))
+            .filter(item => {
+                const original = faqs.find(p => p.id === item.id);
+                return (original?.sortOrder ?? 0) !== item.sortOrder;
+            });
+        if (updates.length === 0) return;
+        await run('Q&A 순서 변경', () => actions.reorderPosts(updates));
     };
 
     const handleImportLocal = async () => {
@@ -439,6 +475,8 @@ const AdminPage: React.FC<AdminPageProps> = ({
 
     const inputClass = "w-full px-4 py-3 border border-line-md rounded-lg focus:ring-2 focus:ring-navy focus:border-transparent outline-none transition-all bg-white shadow-sm text-ink placeholder-ink-faint";
     const labelClass = "block text-sm font-bold text-ink mb-1.5";
+    const filteredPosts = getFilteredPosts();
+    const isFaqList = postCategoryFilter === 'faq';
 
     return (
         <div className="min-h-screen bg-surface-alt flex">
@@ -634,7 +672,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                 {activeTab === 'posts' && postEditorMode !== 'edit' && (
                     <div className="bg-white rounded-xl shadow-sm border border-line overflow-hidden">
                         <div className="p-4 border-b border-line flex flex-col md:flex-row justify-between items-center bg-surface-alt gap-4">
-                            <h3 className="font-bold text-ink flex items-center">게시글 목록 <span className="ml-2 text-xs font-normal text-ink-soft">({getFilteredPosts().length})</span></h3>
+                            <h3 className="font-bold text-ink flex items-center">게시글 목록 <span className="ml-2 text-xs font-normal text-ink-soft">({filteredPosts.length})</span></h3>
                             <div className="flex items-center gap-3">
                                 <div className="flex bg-white rounded-lg border border-line p-1">
                                     {POST_CATEGORIES.map(cat => (
@@ -650,10 +688,16 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 <Button size="sm" onClick={() => openPostEditor()}><Plus className="w-4 h-4 mr-1" /> 글쓰기</Button>
                             </div>
                         </div>
+                        {isFaqList && (
+                            <div className="px-6 py-3 text-xs text-ink-soft bg-surface-alt2 border-b border-line">
+                                위·아래 버튼으로 Q&A 페이지 노출 순서를 변경할 수 있습니다.
+                            </div>
+                        )}
                         <div className="overflow-x-auto">
                             <table className="w-full text-sm text-left">
                                 <thead className="bg-surface-alt text-ink-soft font-bold border-b border-line">
                                     <tr>
+                                        {isFaqList && <th className="px-6 py-4 w-28">순서</th>}
                                         <th className="px-6 py-4 w-20">구분</th>
                                         <th className="px-6 py-4">제목</th>
                                         <th className="px-6 py-4">작성자</th>
@@ -663,8 +707,38 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-line">
-                                    {getFilteredPosts().map((post) => (
+                                    {filteredPosts.map((post, index) => {
+                                        const isFirst = index === 0;
+                                        const isLast = index === filteredPosts.length - 1;
+                                        return (
                                         <tr key={post.id} className="hover:bg-surface-alt">
+                                            {isFaqList && (
+                                                <td className="px-6 py-4">
+                                                    <div className="inline-flex items-center gap-1">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => moveFaq(post.id, -1)}
+                                                            disabled={busy || isFirst}
+                                                            className="p-1.5 rounded-xl text-ink-faint hover:text-navy hover:bg-white disabled:opacity-30 disabled:hover:text-ink-faint disabled:hover:bg-transparent transition-colors"
+                                                            title="위로"
+                                                            aria-label="위로"
+                                                        >
+                                                            <ChevronUp className="w-4 h-4" />
+                                                        </button>
+                                                        <span className="w-6 text-center text-ink-soft">{index + 1}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => moveFaq(post.id, 1)}
+                                                            disabled={busy || isLast}
+                                                            className="p-1.5 rounded-xl text-ink-faint hover:text-navy hover:bg-white disabled:opacity-30 disabled:hover:text-ink-faint disabled:hover:bg-transparent transition-colors"
+                                                            title="아래로"
+                                                            aria-label="아래로"
+                                                        >
+                                                            <ChevronDown className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            )}
                                             <td className="px-6 py-4">
                                                 <span className="px-2 py-1 rounded text-xs font-bold bg-surface-alt text-ink-soft border border-line">
                                                     {POST_CATEGORIES.find(c => c.id === post.category)?.label}
@@ -696,7 +770,8 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                                 </div>
                                             </td>
                                         </tr>
-                                    ))}
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
@@ -1020,6 +1095,31 @@ const AdminPage: React.FC<AdminPageProps> = ({
                                 {viewingInquiry.content}
                             </div>
                         </div>
+
+                        {viewingInquiry.files && viewingInquiry.files.length > 0 && (
+                            <div>
+                                <div className="text-sm font-bold text-ink mb-2">첨부파일</div>
+                                <ul className="space-y-2">
+                                    {viewingInquiry.files.map((file, index) => (
+                                        <li key={`${file.name}-${index}`}>
+                                            <a
+                                                href={file.url}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="flex items-center gap-2 text-navy hover:underline text-sm"
+                                            >
+                                                <Paperclip className="w-4 h-4" />
+                                                {file.name}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        {viewingInquiry.privacyAgreed && (
+                            <p className="text-caption text-ink-soft">개인정보 수집 및 이용에 동의함</p>
+                        )}
 
                         <div className="flex justify-end gap-2 pt-4 border-t border-line">
                             <Button variant="ghost" onClick={() => deleteInquiry(viewingInquiry.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">삭제하기</Button>

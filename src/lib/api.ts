@@ -26,6 +26,7 @@ type PostRow = {
     id: number; category: Post['category']; title: string; date: string; author: string | null;
     views: number | null; content: string | null; is_new: boolean | null;
     file_type: string | null; file_name: string | null; file_url: string | null; files: PostFile[] | null;
+    sort_order: number | null;
 };
 type CompanyRow = {
     id: string; name: string; ceo: string | null; founded_date: string | null; business: string | null;
@@ -36,6 +37,7 @@ type CompanyRow = {
 type InquiryRow = {
     id: number; inquiry_type: string | null; name: string; contact: string; email: string;
     company_name: string | null; content: string; date: string; status: Inquiry['status'];
+    files: PostFile[] | null; privacy_agreed: boolean | null;
 };
 type PopupRow = {
     id: number; title: string; image: string | null; content: string | null; link: string | null;
@@ -50,6 +52,7 @@ const postFromRow = (r: PostRow): Post => ({
     isNew: nz(r.is_new, false),
     fileType: r.file_type ?? undefined, fileName: r.file_name ?? undefined, fileUrl: r.file_url ?? undefined,
     files: nz(r.files, []),
+    sortOrder: nz(r.sort_order, 0),
 });
 const postToRow = (p: Partial<Post>): Partial<PostRow> => ({
     ...(p.category !== undefined && { category: p.category }),
@@ -63,6 +66,7 @@ const postToRow = (p: Partial<Post>): Partial<PostRow> => ({
     ...('fileName' in p && { file_name: p.fileName ?? null }),
     ...('fileUrl' in p && { file_url: p.fileUrl ?? null }),
     ...(p.files !== undefined && { files: p.files }),
+    ...(p.sortOrder !== undefined && { sort_order: p.sortOrder }),
 });
 
 const companyFromRow = (r: CompanyRow): Company => ({
@@ -91,6 +95,7 @@ const companyToRow = (c: Partial<Company>): Partial<CompanyRow> => ({
 const inquiryFromRow = (r: InquiryRow): Inquiry => ({
     id: r.id, inquiryType: r.inquiry_type ?? undefined, name: r.name, contact: r.contact, email: r.email,
     companyName: r.company_name ?? undefined, content: r.content, date: r.date, status: r.status,
+    files: nz(r.files, []), privacyAgreed: nz(r.privacy_agreed, false),
 });
 
 const popupFromRow = (r: PopupRow): Popup => ({
@@ -201,6 +206,7 @@ const createSupabaseBackend = (): Backend => {
             const { error } = await db.from('inquiries').insert({
                 inquiry_type: data.inquiryType ?? null, name: data.name, contact: data.contact, email: data.email,
                 company_name: data.companyName || null, content: data.content, date: data.date, status: data.status,
+                files: data.files ?? [], privacy_agreed: data.privacyAgreed ?? false,
             });
             fail('문의 접수', error);
         },

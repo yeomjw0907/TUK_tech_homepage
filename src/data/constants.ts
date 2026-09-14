@@ -6,8 +6,8 @@ import { MenuItem } from '../types';
 export const COMPANY_NAME = '한국공학대학교 기술지주회사';
 /** 법인 공식 표기 — 푸터 카피라이트·공문서 맥락에서만 사용 */
 export const COMPANY_NAME_LEGAL = '㈜한국공학대학교기술지주회사';
-/** 성장지원 프로그램 공식 표기 (TU-RN UP / TU RN-UP 등 변형 금지) */
-export const PROGRAM_TURN_UP = 'TU-RN Up';
+/** 성장지원 프로그램 공식 표기 (TU-RN Up / TU RN-UP 등 변형 금지) */
+export const PROGRAM_TURN_UP = 'TU-RN UP';
 
 /**
  * 핵심 성과 수치 — 화면에 노출되는 모든 통계는 이 객체를 단일 기준으로 사용.
@@ -43,7 +43,7 @@ export const MENU_STRUCTURE: MenuItem[] = [
         subItems: [
             { id: 'fields', label: '투자분야' },
             { id: 'process', label: '투자프로세스' },
-            { id: 'growth', label: '성장지원(TU-RN Up)' },
+            { id: 'growth', label: '성장지원(TU-RN UP 프로그램)' },
             { id: 'tips', label: 'TIPS 프로그램' },
             { id: 'portfolio', label: '투자 포트폴리오' },
             { id: 'apply', label: 'IR 접수' },
@@ -58,6 +58,10 @@ export const MENU_STRUCTURE: MenuItem[] = [
             { id: 'support', label: '자회사 성장지원' },
             { id: 'exit', label: '자회사 투자회수 현황' },
         ]
+    },
+    {
+        id: 'tech-transfer',
+        label: '기술이전·사업화',
     },
     {
         id: 'portfolio',
@@ -81,7 +85,7 @@ export const MENU_STRUCTURE: MenuItem[] = [
     },
     {
         id: 'contact',
-        label: '지원하기',
+        label: '문의/신청',
     },
 ];
 
@@ -102,7 +106,53 @@ export const TIPS_COOP = [
     "피앤피인베스트먼트", "코맥스벤처러스", "벤처박스", "하이브워크", "한양대학교에리카 산학협력단"
 ];
 
-export const INQUIRY_TYPES = ['일반 문의', 'IR 접수', 'TIPS 문의', '기술사업화 문의'] as const;
+export const INQUIRY_TYPES = ['일반 문의', 'IR 접수', '자회사 접수', 'TIPS 문의', '기술이전 문의'] as const;
+
+/** 우수기술·맞춤기술 찾기 — 산학협력단 페이지로 새 탭 이동 */
+export const TECH_TRANSFER_LINKS = {
+    excellentTech: 'https://sac.tukorea.ac.kr/companySupport/techMarket/tech/smk/smkList.hs?sso=ok',
+    findTech: 'https://sac.tukorea.ac.kr/companySupport/techMarket/findTech/findTechList.hs?sso=ok',
+} as const;
+
+/** IR·자회사 접수 시 첨부파일·개인정보 동의가 필요한 유형 */
+export const INQUIRY_APPLICATION_TYPES = ['IR 접수', '자회사 접수'] as const;
+
+export const INQUIRY_NOTICES = {
+    'IR 접수': {
+        title: 'IR 접수 전 확인사항',
+        items: [
+            '기술기반 창업기업 또는 예비창업자',
+            '차별화된 기술 또는 사업화 가능한 핵심기술 보유',
+            '시장성과 성장 가능성을 갖춘 사업모델(BM) 보유',
+        ],
+    },
+    '자회사 접수': {
+        title: '자회사 접수 전 확인사항',
+        items: [
+            '한국공학대학교 보유기술을 활용한 사업화를 추진하고 있거나 희망하는 기업',
+            '해당 기술을 기반으로 사업화 가능한 제품·서비스 또는 사업모델(BM)을 보유한 기업',
+            '기술지주회사 자회사 편입 및 사업화 협력을 희망하는 기업',
+        ],
+    },
+    '기술이전 문의': {
+        title: '기술이전 문의 전 확인사항',
+        items: [
+            '한국공학대학교 보유기술의 이전 또는 활용을 희망하는 기업',
+            '도입을 희망하는 기술 분야 또는 해결하고자 하는 기술적 수요가 있는 기업',
+            '이전받은 기술을 제품·서비스 개발 및 사업화에 활용하고자 하는 기업',
+        ],
+    },
+} as const;
+
+export const PRIVACY_CONSENT_NOTICE = {
+    title: '개인정보 수집 및 이용 동의',
+    body: [
+        { label: '수집 항목', text: '이름, 연락처, 이메일, 기업명, 문의내용, 첨부파일' },
+        { label: '수집 목적', text: 'IR·자회사 접수 검토, 회신 및 사후 안내' },
+        { label: '보유 기간', text: '접수일로부터 3년 (목적 달성 시 지체 없이 파기)' },
+        { label: '동의 거부 권리', text: '동의를 거부할 수 있으나, 이 경우 접수 처리가 제한됩니다.' },
+    ],
+} as const;
 
 // Company History Data
 export const HISTORY_DATA: { year: string; events: { month: string; title: string; desc?: string }[] }[] = [
@@ -140,3 +190,72 @@ export const HISTORY_DATA: { year: string; events: { month: string; title: strin
         ]
     }
 ];
+
+/** 오시는길 — 한국공학대학교 제1캠퍼스(시흥비즈니스센터) 좌표·주소 */
+export const CAMPUS_LOCATION = {
+    name: '한국공학대학교',
+    lat: 37.33996728377462,
+    lng: 126.73398077869885,
+    level: 3,
+    kakaoPlaceId: '11213437',
+    wcongnamulX: 441060,
+    wcongnamulY: 1066940,
+    roadAddress: '[15073] 경기도 시흥시 산기대학로 237 (정왕동) 한국공학대학교',
+    jibunAddress: '[15073] 경기도 시흥시 정왕동 2121-1',
+    office: '시흥비즈니스센터 7층',
+} as const;
+
+/** 오시는길 — 자가용·지하철·버스 안내 */
+export const CAMPUS_DIRECTIONS = {
+    car: [
+        {
+            label: '제2경인고속도로',
+            route: '신천IC → 남인천톨게이트 → 서창분기점 → 월곶분기점 → 정왕역 → 한국공학대학교',
+        },
+        {
+            label: '제3경인고속도로',
+            route: '정왕IC → 정왕톨게이트 → 정왕교차로 → 동원아파트삼거리 → 정왕역 → 한국공학대학교',
+        },
+        {
+            label: '영동고속도로',
+            route: '서안산IC → 서안산톨게이트 → 시화산단방면 → 고가도로 → 만해사거리 → 한국공학대학교',
+        },
+    ],
+    subway: {
+        line: '4호선, 수인분당선',
+        route: '정왕역(한국공학대학교역) 하차 → 1번출구 → 학교셔틀버스',
+        time: '약5분',
+    },
+    bus: [
+        {
+            type: '일반버스',
+            routes: '11-A, 11-B, 20-1, 21, 26, 28, 29, 30, 350, 5602',
+            stop: '한국공학대학교, 시흥터미널, 기타정류장하차',
+            time: '약10분',
+        },
+        {
+            type: '광역버스',
+            routes: '3400(사당/서초/역삼/양재), 5200(신도림)',
+            stop: '한국공학대학교, 시흥터미널, 기타정류장하차',
+            time: '약5분',
+        },
+        {
+            type: '일반버스',
+            routes: '1, 22, 23, 25, 55, 99, 99-2, 123, 125',
+            stop: '성담스퀘어앞하차',
+            time: '약15분',
+        },
+        {
+            type: '광역버스',
+            routes: '3401(석수/광명역), 3402(성남), P6540(판교), P9541(사당)',
+            stop: '성담스퀘어앞하차',
+            time: '약15분',
+        },
+        {
+            type: '기타',
+            routes: '7000(인천국제공항)',
+            stop: '성담스퀘어앞하차',
+            time: '약15분',
+        },
+    ],
+} as const;

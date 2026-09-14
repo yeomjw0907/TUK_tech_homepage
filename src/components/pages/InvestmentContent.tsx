@@ -1,27 +1,22 @@
 import React from 'react';
-import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, ArrowRight, DollarSign, BarChart3, Building, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Mail, Phone } from 'lucide-react';
+import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, DollarSign, BarChart3, Building, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Phone } from 'lucide-react';
 import { Card, SectionTitle, Badge } from '../common';
 import { TIPS_COOP, PROGRAM_TURN_UP, COMPANY_NAME_LEGAL, KEY_STATS } from '../../data/constants';
-import { PageId } from '../../types';
+import { Company, PageId } from '../../types';
 
 interface InvestmentContentProps {
     subPage: string;
     onNavigate?: (page: PageId, subPage?: string) => void;
+    companies?: Company[];
 }
 
-const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNavigate }) => {
+const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNavigate, companies = [] }) => {
     if (subPage === 'fields') {
         const fields = [
             { num: "01", Icon: Cpu, title: "AI·ICT", desc: "인공지능(AI), 빅데이터, 클라우드, IoT, SW 등 디지털 혁신을 선도하는 첨단 ICT 기술 분야" },
             { num: "02", Icon: Microscope, title: "바이오·헬스케어", desc: "디지털 헬스케어, 의료기기, 바이오 소재 및 바이오테크 분야의 혁신 기술" },
             { num: "03", Icon: Factory, title: "스마트제조·반도체", desc: "스마트 제조, 반도체 공정·장비, 첨단 제조기술 등 미래 제조산업을 선도하는 핵심 기술 분야" },
             { num: "04", Icon: Layers, title: "첨단소재·부품", desc: "신소재, 고기능성 부품 및 소재 기술을 기반으로 산업 경쟁력을 높이는 핵심 기술 분야" }
-        ];
-
-        const criteria = [
-            { title: "기술성", desc: "혁신적이고 차별화된 원천 기술 보유" },
-            { title: "시장성", desc: "명확한 타겟 시장과 성장 가능성" },
-            { title: "팀 역량", desc: "실행력 있는 창업팀과 전문성" }
         ];
 
         return (
@@ -39,7 +34,7 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                 </div>
 
                 {/* 4 Field Cards 2x2 */}
-                <div className="grid md:grid-cols-2 gap-6 mb-10">
+                <div className="grid md:grid-cols-2 gap-6">
                     {fields.map((field) => (
                         <Card key={field.num} padding="lg" className="overflow-hidden">
                             <span className="absolute top-6 right-6 display-num text-6xl text-surface-alt2 leading-none select-none">{field.num}</span>
@@ -48,14 +43,30 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                             </div>
                             <h3 className="text-h4 text-ink mb-3 relative z-10">{field.title}</h3>
                             <p className="text-caption text-ink-soft relative z-10">{field.desc}</p>
-                            <div className="mt-6 pt-4 border-t border-line inline-flex items-center gap-1.5 text-sm font-bold text-navy group-hover:gap-2.5 transition-all">
-                                자세히 보기 <ArrowRight className="w-4 h-4" />
-                            </div>
                         </Card>
                     ))}
                 </div>
+            </div>
+        );
+    }
 
-                {/* Investment Criteria */}
+    if (subPage === 'process') {
+        const criteria = [
+            { title: "기술성", desc: "혁신적이고 차별화된 원천 기술 보유" },
+            { title: "시장성", desc: "명확한 타겟 시장과 성장 가능성" },
+            { title: "팀 역량", desc: "실행력 있는 창업팀과 전문성" }
+        ];
+
+        const steps = [
+            { num: "01", Icon: MessageSquare, title: "투자상담", desc: "사업계획서 접수 및 기초 상담" },
+            { num: "02", Icon: BarChart3, title: "IR 및 예비심사", desc: "기업 현황 파악 및 예비 투자심의위원회" },
+            { num: "03", Icon: CheckSquare, title: "본심사", desc: "본 투자심의위원회 개최 및 투자 승인" },
+            { num: "04", Icon: DollarSign, title: "투자집행", desc: "계약 체결 및 납입" },
+            { num: "05", Icon: LineChart, title: "사후관리", desc: "기업 성장 지원 및 모니터링" }
+        ];
+
+        return (
+            <div className="space-y-16">
                 <div className="bg-surface-alt rounded-2xl p-8">
                     <h3 className="text-h4 text-ink mb-6">투자 기준</h3>
                     <div className="grid md:grid-cols-3 gap-4">
@@ -70,46 +81,34 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                         ))}
                     </div>
                 </div>
-            </div>
-        );
-    }
 
-    if (subPage === 'process') {
-        const steps = [
-            { num: "01", Icon: MessageSquare, title: "투자상담", desc: "사업계획서 접수 및 기초 상담" },
-            { num: "02", Icon: BarChart3, title: "IR 및 예비심사", desc: "기업 현황 파악 및 예비 투자심의위원회" },
-            { num: "03", Icon: CheckSquare, title: "본심사", desc: "본 투자심의위원회 개최 및 투자 승인" },
-            { num: "04", Icon: DollarSign, title: "투자집행", desc: "계약 체결 및 납입" },
-            { num: "05", Icon: LineChart, title: "사후관리", desc: "기업 성장 지원 및 모니터링" }
-        ];
-
-        return (
-            <div className="max-w-4xl mx-auto space-y-0">
-                {steps.map((step, idx) => (
-                    <div key={idx} className="flex gap-6 group">
-                        {/* Left: step indicator + vertical line */}
-                        <div className="flex flex-col items-center">
-                            <div className="w-12 h-12 rounded-full bg-navy text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-card group-hover:bg-navy-light transition-colors duration-300 z-10">
-                                {step.num}
-                            </div>
-                            {idx < steps.length - 1 && (
-                                <div className="w-0.5 h-12 bg-gradient-to-b from-navy/30 to-transparent mt-1" />
-                            )}
-                        </div>
-                        {/* Right: content card */}
-                        <div className="flex-1 pb-8">
-                            <div className="bg-white rounded-2xl border border-line shadow-card p-6 hover:border-line-strong hover:shadow-card-hover transition-all duration-300 group-hover:-translate-y-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-8 h-8 rounded-xl bg-surface-alt2 flex items-center justify-center text-navy">
-                                        <step.Icon className="w-4 h-4" />
-                                    </div>
-                                    <h3 className="text-h4 text-ink">{step.title}</h3>
+                <div className="max-w-4xl mx-auto space-y-0">
+                    {steps.map((step, idx) => (
+                        <div key={idx} className="flex gap-6 group">
+                            {/* Left: step indicator + vertical line */}
+                            <div className="flex flex-col items-center">
+                                <div className="w-12 h-12 rounded-full bg-navy text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-card group-hover:bg-navy-light transition-colors duration-300 z-10">
+                                    {step.num}
                                 </div>
-                                <p className="text-caption text-ink-soft ml-11">{step.desc}</p>
+                                {idx < steps.length - 1 && (
+                                    <div className="w-0.5 h-12 bg-gradient-to-b from-navy/30 to-transparent mt-1" />
+                                )}
+                            </div>
+                            {/* Right: content card */}
+                            <div className="flex-1 pb-8">
+                                <div className="bg-white rounded-2xl border border-line shadow-card p-6 hover:border-line-strong hover:shadow-card-hover transition-all duration-300 group-hover:-translate-y-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="w-8 h-8 rounded-xl bg-surface-alt2 flex items-center justify-center text-navy">
+                                            <step.Icon className="w-4 h-4" />
+                                        </div>
+                                        <h3 className="text-h4 text-ink">{step.title}</h3>
+                                    </div>
+                                    <p className="text-caption text-ink-soft ml-11">{step.desc}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         );
     }
@@ -321,36 +320,22 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                     </div>
                 </div>
 
-                {/* TU-RN Up 프로그램 (일반) */}
+                {/* TU-RN UP 프로그램 (일반) */}
                 <div className="space-y-16">
-                    <div className="relative overflow-hidden bg-navy rounded-2xl p-10 md:p-16">
-                        <div className="relative z-10">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
-                                    <Rocket className="w-7 h-7 text-white" />
-                                </div>
-                                <h3 className="text-h3 text-white">{PROGRAM_TURN_UP} 프로그램</h3>
-                            </div>
-                            <p className="text-body-lg text-white/80">
-                                기술사업화를 통한 비즈니스 모델 구성부터 성장 지원까지
-                            </p>
-                        </div>
-                    </div>
-
                     {/* 컴퍼니 빌더 */}
-                    <div className="group bg-white rounded-2xl border border-line shadow-card hover:border-line-strong hover:shadow-card-hover transition-all duration-300 overflow-hidden">
-                        <div className="relative bg-surface-alt border-b border-line p-8">
-                            <div className="relative flex items-center gap-4">
-                                <div className="w-14 h-14 bg-navy text-white rounded-xl flex items-center justify-center group-hover:bg-navy-light transition-colors duration-300">
-                                    <Building2 className="w-7 h-7" />
+                    <div className="space-y-8">
+                        <div className="relative overflow-hidden bg-navy rounded-2xl p-10 md:p-16">
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
+                                        <Building2 className="w-7 h-7 text-white" />
+                                    </div>
+                                    <h3 className="text-h3 text-white">컴퍼니 빌더</h3>
                                 </div>
-                                <div>
-                                    <h4 className="text-h3 text-ink mb-1">컴퍼니 빌더</h4>
-                                    <p className="text-caption text-ink-soft">Company Builder</p>
-                                </div>
+                                <p className="text-body-lg text-white/80">Company Builder</p>
                             </div>
                         </div>
-                        <div className="p-8 md:p-10 space-y-6">
+                        <div className="bg-white rounded-2xl border border-line shadow-card p-8 md:p-10 space-y-6">
                             <div className="space-y-5">
                                 <div className="relative bg-surface-alt rounded-2xl p-6 border border-line hover:border-line-strong transition-colors duration-300">
                                     <div className="absolute top-4 right-4 w-12 h-12 bg-surface-alt2 rounded-xl flex items-center justify-center">
@@ -408,19 +393,19 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                     </div>
 
                     {/* 성장지원 프로그램 */}
-                    <div className="group bg-white rounded-2xl border border-line shadow-card hover:border-line-strong hover:shadow-card-hover transition-all duration-300 overflow-hidden">
-                        <div className="relative bg-surface-alt border-b border-line p-8">
-                            <div className="relative flex items-center gap-4">
-                                <div className="w-14 h-14 bg-navy text-white rounded-xl flex items-center justify-center group-hover:bg-navy-light transition-colors duration-300">
-                                    <TrendingUp className="w-7 h-7" />
+                    <div className="space-y-8">
+                        <div className="relative overflow-hidden bg-navy rounded-2xl p-10 md:p-16">
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
+                                        <TrendingUp className="w-7 h-7 text-white" />
+                                    </div>
+                                    <h3 className="text-h3 text-white">성장지원 프로그램</h3>
                                 </div>
-                                <div>
-                                    <h4 className="text-h3 text-ink mb-1">성장지원 프로그램</h4>
-                                    <p className="text-caption text-ink-soft">Scale Up Program</p>
-                                </div>
+                                <p className="text-body-lg text-white/80">Scale Up Program</p>
                             </div>
                         </div>
-                        <div className="p-8 md:p-10 space-y-6">
+                        <div className="bg-white rounded-2xl border border-line shadow-card p-8 md:p-10 space-y-6">
                             <div className="relative bg-surface-alt rounded-2xl p-6 border border-line hover:border-line-strong transition-colors duration-300">
                                 <div className="absolute top-4 right-4 w-12 h-12 bg-surface-alt2 rounded-xl flex items-center justify-center">
                                     <Target className="w-6 h-6 text-navy" />
@@ -464,7 +449,7 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                     </div>
                 </div>
 
-                {/* TU-RN Up 프로그램 (대학 연계 프로그램) */}
+                {/* TU-RN UP 프로그램 (대학 연계 프로그램) */}
                 <div className="space-y-16 pt-12 border-t border-line">
                     <div className="relative overflow-hidden bg-navy rounded-2xl p-10 md:p-16">
                         <div className="relative z-10">
@@ -481,29 +466,27 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                         </div>
                     </div>
 
-                    {/* RISE 사업 - C-SET 프로그램 */}
-                    <div className="group bg-white rounded-2xl border border-line shadow-card hover:border-line-strong hover:shadow-card-hover transition-all duration-300 overflow-hidden">
-                        <div className="relative bg-surface-alt border-b border-line p-8">
-                            <div className="relative">
-                                <div className="flex items-center gap-4 mb-3">
-                                    <div className="w-14 h-14 bg-navy text-white rounded-xl flex items-center justify-center group-hover:bg-navy-light transition-colors duration-300">
-                                        <ClipboardCheck className="w-7 h-7" />
+                    {/* 앵커사업 C-SET 프로그램 */}
+                    <div className="space-y-8">
+                        <div className="relative overflow-hidden bg-navy rounded-2xl p-10 md:p-16">
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
+                                        <ClipboardCheck className="w-7 h-7 text-white" />
                                     </div>
-                                    <div>
-                                        <h4 className="text-h3 text-ink">RISE 사업 - C-SET 프로그램</h4>
-                                        <p className="text-caption text-ink-soft">지역혁신중심 대학지원체계</p>
-                                    </div>
+                                    <h3 className="text-h3 text-white">앵커사업 C-SET 프로그램</h3>
                                 </div>
-                                <p className="text-ink-soft text-body leading-relaxed mb-3">
+                                <p className="text-body-lg text-white/80">지역혁신중심 대학지원체계</p>
+                                <p className="text-white/70 text-body-lg mt-2">
                                     산학협력 전문가 Pool 구성에 따른 기업유형별·성장단계별 맞춤형 현장방문형 종합컨설팅 및 Biz-LINK 연계 지원 프로그램
                                 </p>
-                                <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/25 rounded-xl px-4 py-2">
+                                <div className="inline-flex items-center gap-2 bg-white/10 border border-gold/40 rounded-xl px-4 py-2 mt-6">
                                     <span className="w-2 h-2 bg-gold rounded-full animate-pulse"></span>
                                     <span className="text-xs font-bold text-gold">가족회사 가입 기업 대상으로 진행되며 신규 가입 후 프로그램 참여 가능</span>
                                 </div>
                             </div>
                         </div>
-                        <div className="p-8 md:p-10 space-y-8">
+                        <div className="bg-white rounded-2xl border border-line shadow-card p-8 md:p-10 space-y-8">
                             {/* 현장방문형 종합컨설팅 */}
                             <div className="relative bg-surface-alt rounded-2xl p-6 md:p-8 border border-line hover:border-line-strong transition-colors duration-300">
                                 <div className="absolute top-4 right-4 w-14 h-14 bg-surface-alt2 rounded-xl flex items-center justify-center">
@@ -585,20 +568,20 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                         </div>
                     </div>
 
-                    {/* TLO혁신형 기업지원 */}
-                    <div className="group bg-white rounded-2xl border border-line shadow-card hover:border-line-strong hover:shadow-card-hover transition-all duration-300 overflow-hidden">
-                        <div className="relative bg-surface-alt border-b border-line p-8">
-                            <div className="relative flex items-center gap-4">
-                                <div className="w-14 h-14 bg-navy text-white rounded-xl flex items-center justify-center group-hover:bg-navy-light transition-colors duration-300">
-                                    <Lightbulb className="w-7 h-7" />
+                    {/* TLO혁신형 기업지원 프로그램 */}
+                    <div className="space-y-8">
+                        <div className="relative overflow-hidden bg-navy rounded-2xl p-10 md:p-16">
+                            <div className="relative z-10">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
+                                        <Lightbulb className="w-7 h-7 text-white" />
+                                    </div>
+                                    <h3 className="text-h3 text-white">TLO혁신형 기업지원 프로그램</h3>
                                 </div>
-                                <div>
-                                    <h4 className="text-h3 text-ink mb-1">TLO혁신형 기업지원</h4>
-                                    <p className="text-caption text-ink-soft">대학기술경영촉진사업</p>
-                                </div>
+                                <p className="text-body-lg text-white/80">대학기술경영촉진사업</p>
                             </div>
                         </div>
-                        <div className="p-8 md:p-10">
+                        <div className="bg-white rounded-2xl border border-line shadow-card p-8 md:p-10">
                             <div className="relative bg-surface-alt rounded-2xl p-6 md:p-8 border border-line overflow-hidden">
                                 <div className="relative">
                                     <div className="absolute top-4 right-4 w-12 h-12 bg-surface-alt2 rounded-xl flex items-center justify-center">
@@ -628,33 +611,9 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
     }
 
     if (subPage === 'portfolio') {
-        const goToCompanies = (sub?: string) => onNavigate?.('portfolio', sub || 'all_portfolio');
-        const portfolioCompanies = [
-            '(주)링크솔루션',
-            '(주)인터루얼',
-            '엘포톤*',
-            '기억*',
-            '와첸',
-            '네이앤컴퍼니',
-            '유쾌한프로젝트',
-            '메디앤리서치',
-            '이안나노텍',
-            '셀바크이노베이션*',
-            '이트렌코텍*',
-            '쉘피아',
-            '㈜제이케이테크놀로지*',
-            '스카일리*',
-            '퀀텀매트릭스*',
-            '액티부키',
-            '큐티뮨바이오*',
-            '어플라이드서멀',
-            '크림',
-            '에버트레져',
-            '프로미엘*',
-            '엘엠케이',
-            '㈜메이즈'
-        ];
-        const tipsCompanies = portfolioCompanies.filter((company) => company.includes('*'));
+        const goToCompanies = (sub?: string) => onNavigate?.('portfolio', sub || 'investees');
+        const investees = companies.filter((company) => company.category === 'portfolio');
+        const tipsCompanies = companies.filter((company) => company.isTips);
 
         return (
             <div className="space-y-16">
@@ -680,9 +639,9 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                             {
                                 Icon: Building,
                                 label: "포트폴리오",
-                                display: `총 ${portfolioCompanies.length}개사`,
+                                display: `총 ${investees.length}개사`,
                                 desc: "기업리스트 보기",
-                                onClick: () => goToCompanies('all_portfolio'),
+                                onClick: () => goToCompanies('investees'),
                             },
                             {
                                 Icon: DollarSign,
@@ -812,22 +771,26 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-6">
-                            <div className="bg-surface-alt rounded-2xl p-6 border border-line">
+                            <button
+                                type="button"
+                                onClick={() => onNavigate?.('contact', 'ir')}
+                                className="bg-surface-alt rounded-2xl p-6 border border-line text-left hover:border-line-strong hover:shadow-card-hover transition-all duration-300"
+                            >
                                 <h4 className="text-h4 text-ink mb-3 flex items-center gap-2">
-                                    <Mail className="w-5 h-5 text-navy" />
-                                    이메일 접수
+                                    <FileText className="w-5 h-5 text-navy" />
+                                    IR 접수
                                 </h4>
-                                <p className="text-ink-soft text-sm mb-4">IR 자료(사업계획서)를 첨부하여 이메일로 제출해 주세요. 접수된 자료는 검토 후 순차적으로 회신 드립니다.</p>
-                                <a href="mailto:tuholdings@tukorea.ac.kr" className="text-navy-light font-bold hover:underline">
-                                    tuholdings@tukorea.ac.kr
-                                </a>
-                            </div>
+                                <p className="text-ink-soft text-sm mb-4">문의/신청을 통해 IR 자료(사업계획서)를 제출해 주세요. 접수된 자료는 검토 후 순차적으로 회신 드립니다.</p>
+                                <span className="text-navy-light font-bold inline-flex items-center gap-1">
+                                    문의/신청하기 <ChevronRight className="w-4 h-4" />
+                                </span>
+                            </button>
                             <div className="bg-surface-alt rounded-2xl p-6 border border-line">
                                 <h4 className="text-h4 text-ink mb-3 flex items-center gap-2">
                                     <Phone className="w-5 h-5 text-navy" />
                                     전화 문의
                                 </h4>
-                                <p className="text-ink-soft text-sm mb-4">IR 접수 및 투자 검토 관련 문의는 투자사업팀으로 연락해 주세요.</p>
+                                <p className="text-ink-soft text-sm mb-4">IR 접수 및 투자 검토 관련 문의는 기업투자본부로 연락해 주세요.</p>
                                 <a href="tel:031-8041-0965" className="text-navy-light font-bold hover:underline">
                                     031-8041-0965
                                 </a>

@@ -15,14 +15,13 @@ interface SubPageHeaderProps {
 
 const SubPageHeader: React.FC<SubPageHeaderProps> = ({ title, parent, menuItems, activeSub, onSubNav }) => {
     return (
-        <div className="pt-32 pb-14 px-4 text-center relative overflow-hidden bg-gradient-to-br from-navy to-navy-deep">
-            {/* Subtle grid */}
-            <div className="absolute inset-0 grid-pattern opacity-20" />
-            {/* Orbs */}
-            <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-white/5 orb -translate-y-1/2" />
-            <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-cyan/10 orb -translate-y-1/2" style={{ animationDelay: '-5s' }} />
-            {/* Bottom fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-navy-deep/50 to-transparent" />
+        <div className="pt-32 pb-14 px-4 text-center relative overflow-hidden bg-navy-deep">
+            <img
+                src="/page-banner.png"
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover object-[80%_70%] pointer-events-none select-none"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-navy-deep/10 via-transparent to-navy-deep/20" />
 
             <div className="relative z-10 fade-up">
                 {parent && (
