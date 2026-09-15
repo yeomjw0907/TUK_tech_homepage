@@ -10,6 +10,7 @@ import { PageId, Company, Post, Inquiry, Popup } from './types';
 
 // Data
 import { MENU_STRUCTURE } from './data/constants';
+import { notifyInquiryByEmail } from './lib/notifyInquiry';
 
 // Utils
 import { formatDate } from './utils/format';
@@ -230,6 +231,19 @@ const App: React.FC = () => {
             date: new Date().toISOString().split('T')[0],
             status: '대기'
         });
+        try {
+            await notifyInquiryByEmail({
+                inquiryType: data.inquiryType,
+                name: data.name,
+                contact: data.contact,
+                email: data.email,
+                companyName: data.companyName,
+                content: data.content,
+                files: uploaded.map((file) => ({ name: file.name, url: file.url })),
+            });
+        } catch (error) {
+            console.error('문의 메일 발송 실패', error);
+        }
     };
 
     // 관리자 페이지에서 사용하는 저장/삭제 동작 — 서버 반영 후 목록을 다시 불러온다.

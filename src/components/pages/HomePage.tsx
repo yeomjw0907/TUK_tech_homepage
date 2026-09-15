@@ -34,7 +34,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
         <div>
 
             {/* ── 1. HERO ──────────────────────────────────────────────────── */}
-            <section className="relative bg-navy-deep text-white min-h-[36rem] md:min-h-[44rem] flex flex-col justify-end overflow-hidden">
+            <section className="relative bg-navy-deep text-white min-h-[30rem] md:min-h-[min(36rem,calc(100dvh-13rem))] flex flex-col justify-end overflow-hidden">
                 <style>{`
                     @keyframes fadeInUp {
                         from { opacity: 0; transform: translateY(20px); }
@@ -52,14 +52,14 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                     <div className="absolute inset-0 bg-gradient-to-t from-navy-deep/80 via-transparent to-navy-deep/20" />
                 </div>
 
-                <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 pb-10 md:pb-12">
+                <div className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-24 md:pt-28 pb-6 md:pb-8">
                     <p className="text-label uppercase text-white/70 mb-4 animate-fade-in-up opacity-0" style={{ animationDelay: '0.05s' }}>
                         Turning University Tech Into Reality
                     </p>
                     <h1 className="text-display mb-5 max-w-xl animate-fade-in-up opacity-0" style={{ animationDelay: '0.15s' }}>
                         대학의 기술이<br /><span className="text-cyan-text">세상의 가능성</span>이 됩니다.
                     </h1>
-                    <p className="text-body-lg text-white/80 max-w-xl mb-8 animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s' }}>
+                    <p className="text-body-lg text-white/80 max-w-xl mb-6 animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s' }}>
                         한국공학대학교의 혁신적인 연구 성과를 발굴하고,<br className="hidden md:block" />
                         성공적인 사업화를 통해 더 나은 미래를 만듭니다.
                     </p>
@@ -79,7 +79,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                 <div className="relative z-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex items-end gap-6 pr-16 lg:pr-24">
-                            <div className="grid grid-cols-2 md:grid-cols-4 flex-1 gap-y-6 py-6 md:py-8">
+                            <div className="grid grid-cols-2 md:grid-cols-4 flex-1 gap-y-6 py-4 md:py-6">
                                 {stats.map((s, i) => (
                                     <div key={i} className="flex items-start gap-3 md:gap-4 px-2 md:px-4">
                                         <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-cyan shrink-0">
@@ -102,14 +102,14 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-center pb-5">
+                    <div className="flex justify-center pb-3">
                         <ChevronDown className="w-5 h-5 text-white/40" aria-hidden />
                     </div>
                 </div>
             </section>
 
             {/* ── 1b. TECHNOLOGY COMMERCIALIZATION ────────────────────────── */}
-            <section className="py-20 md:py-28 bg-surface-alt">
+            <section className="pt-14 md:pt-16 pb-20 md:pb-28 bg-surface-alt">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                         <div className="lg:col-span-5">

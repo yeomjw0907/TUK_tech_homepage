@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, ExternalLink, Search, ZoomIn, ZoomOut } from 'lucide-react';
-import { PageId, Post, Company } from '../../types';
-import { MENU_STRUCTURE, COMPANY_NAME } from '../../data/constants';
+import { PageId, Post, Company, MenuItem, MenuItemId } from '../../types';
+import { MENU_STRUCTURE, COMPANY_NAME, EXTERNAL_LINKS } from '../../data/constants';
 import SearchModal from '../common/SearchModal';
 
 interface HeaderProps {
@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({
     onCompanyClick
 }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [hoveredMenu, setHoveredMenu] = useState<PageId | null>(null);
+    const [hoveredMenu, setHoveredMenu] = useState<MenuItemId | null>(null);
     const [scrolled, setScrolled] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [fontSize, setFontSize] = useState(100);
@@ -87,6 +87,25 @@ const Header: React.FC<HeaderProps> = ({
 
     const isTransparent = hasHero && !scrolled;
 
+    const handleMenuClick = (item: MenuItem) => {
+        if (item.href) {
+            window.open(item.href, '_blank', 'noopener,noreferrer');
+            return;
+        }
+        onNavigate(item.id as PageId, item.subItems?.[0]?.id);
+    };
+
+    const navItemClass = (item: MenuItem) =>
+        `relative px-1 py-2 text-sm whitespace-nowrap transition-all duration-200 rounded-md ${
+            isTransparent
+                ? activePage === item.id
+                    ? 'font-bold text-white bg-white/15'
+                    : 'font-medium text-white hover:bg-white/10'
+                : activePage === item.id
+                    ? 'font-bold text-navy bg-surface-alt2'
+                    : 'font-medium text-ink-soft hover:text-navy hover:bg-surface-alt'
+        }`;
+
     if (activePage === 'admin') return null;
 
     return (
@@ -109,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({
                         />
                     </div>
 
-                    <nav className="hidden lg:flex flex-1 h-full items-center gap-5 min-w-0">
+                    <nav className="hidden lg:flex flex-1 h-full items-center justify-center gap-3 xl:gap-5 min-w-0">
                         {MENU_STRUCTURE.map((item) => (
                             <div
                                 key={item.id}
@@ -117,24 +136,29 @@ const Header: React.FC<HeaderProps> = ({
                                 onMouseEnter={() => setHoveredMenu(item.id)}
                                 onMouseLeave={() => setHoveredMenu(null)}
                             >
-                                <button
-                                    className={`relative px-1 py-2 text-sm whitespace-nowrap transition-all duration-200 rounded-md ${
-                                        isTransparent
-                                            ? activePage === item.id
-                                                ? 'font-bold text-white bg-white/15'
-                                                : 'font-medium text-white hover:bg-white/10'
-                                            : activePage === item.id
-                                                ? 'font-bold text-navy bg-surface-alt2'
-                                                : 'font-medium text-ink-soft hover:text-navy hover:bg-surface-alt'
-                                    }`}
-                                    onClick={() => onNavigate(item.id, item.subItems?.[0]?.id)}
-                                >
-                                    {item.label}
-                                    <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 ${isTransparent ? 'bg-white' : 'bg-navy'} ${activePage === item.id
-                                        ? 'opacity-100 scale-100'
-                                        : 'opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100'
-                                        }`}></span>
-                                </button>
+                                {item.href ? (
+                                    <a
+                                        href={item.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className={navItemClass(item)}
+                                        aria-label={`${item.label} 홈페이지, 새 창에서 열기`}
+                                    >
+                                        {item.label}
+                                        <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 ${isTransparent ? 'bg-white' : 'bg-navy'} opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100`}></span>
+                                    </a>
+                                ) : (
+                                    <button
+                                        className={navItemClass(item)}
+                                        onClick={() => handleMenuClick(item)}
+                                    >
+                                        {item.label}
+                                        <span className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 ${isTransparent ? 'bg-white' : 'bg-navy'} ${activePage === item.id
+                                            ? 'opacity-100 scale-100'
+                                            : 'opacity-0 scale-0 group-hover/nav:opacity-100 group-hover/nav:scale-100'
+                                            }`}></span>
+                                    </button>
+                                )}
 
                                 {item.subItems && hoveredMenu === item.id && (
                                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 pt-3 w-64 z-50">
@@ -145,7 +169,7 @@ const Header: React.FC<HeaderProps> = ({
                                                     <button
                                                         key={sub.id}
                                                         className="relative block w-full text-left px-6 py-3 text-sm text-ink-soft hover:text-navy hover:bg-surface-alt transition-all duration-200 group/item"
-                                                        onClick={() => onNavigate(item.id, sub.id)}
+                                                        onClick={() => onNavigate(item.id as PageId, sub.id)}
                                                     >
                                                         <span className="relative z-10">{sub.label}</span>
                                                         <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-navy opacity-0 group-hover/item:opacity-100 transition-opacity duration-200"></div>
@@ -220,15 +244,15 @@ const Header: React.FC<HeaderProps> = ({
                         </button>
 
                         <a
-                            href="https://tukbic.tukorea.ac.kr/"
+                            href={EXTERNAL_LINKS.tipsOperator}
                             target="_blank"
                             rel="noreferrer"
-                            className={`flex items-center px-3 py-1.5 rounded-full text-xs font-bold border transition-all uppercase tracking-wide group whitespace-nowrap ${isTransparent
+                            className={`flex items-center px-3 py-1.5 rounded-full text-xs font-bold border transition-all tracking-wide group whitespace-nowrap ${isTransparent
                                 ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-navy'
                                 : 'bg-surface-alt border-line-md text-ink-soft hover:border-line-strong hover:text-navy'
                                 }`}
                         >
-                            창업보육센터 <ExternalLink className="w-3 h-3 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            TIPS 운영사 <ExternalLink className="w-3 h-3 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
                     </div>
 
@@ -323,12 +347,14 @@ const Header: React.FC<HeaderProps> = ({
                                 <button
                                     className="w-full text-left font-bold text-base py-3 border-l-2 border-transparent hover:border-navy pl-3 hover:pl-5 transition-all duration-300 flex items-center justify-between group text-ink hover:text-navy"
                                     onClick={() => {
-                                        onNavigate(item.id, item.subItems?.[0]?.id);
+                                        handleMenuClick(item);
                                         setIsMobileMenuOpen(false);
                                     }}
                                 >
                                     <span>{item.label}</span>
-                                    {item.subItems && <ChevronDown className="w-5 h-5 text-ink-faint group-hover:text-navy" />}
+                                    {item.href
+                                        ? <ExternalLink className="w-4 h-4 text-ink-faint group-hover:text-navy" />
+                                        : item.subItems && <ChevronDown className="w-5 h-5 text-ink-faint group-hover:text-navy" />}
                                 </button>
                                 {item.subItems && (
                                     <div className="pl-4 grid grid-cols-2 gap-2">
@@ -337,7 +363,7 @@ const Header: React.FC<HeaderProps> = ({
                                                 key={sub.id}
                                                 className="text-left text-sm text-ink-soft py-3 px-4 bg-surface-alt rounded-xl hover:bg-surface-alt2 hover:text-navy transition-all"
                                                 onClick={() => {
-                                                    onNavigate(item.id, sub.id);
+                                                    onNavigate(item.id as PageId, sub.id);
                                                     setIsMobileMenuOpen(false);
                                                 }}
                                             >
@@ -348,6 +374,16 @@ const Header: React.FC<HeaderProps> = ({
                                 )}
                             </div>
                         ))}
+                        <a
+                            href={EXTERNAL_LINKS.tipsOperator}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center justify-between font-bold text-base py-3 pl-3 text-ink hover:text-navy border-l-2 border-transparent hover:border-navy hover:pl-5 transition-all"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            <span>TIPS 운영사</span>
+                            <ExternalLink className="w-4 h-4 text-ink-faint" />
+                        </a>
                     </div>
                 </div>
             )}

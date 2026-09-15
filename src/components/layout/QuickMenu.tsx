@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bell, Download, ExternalLink, MessageCircle } from 'lucide-react';
 import { PageId } from '../../types';
+import { EXTERNAL_LINKS } from '../../data/constants';
 
 interface QuickMenuProps {
     onNavigate: (page: PageId, subPage?: string) => void;
@@ -10,7 +11,7 @@ const QuickMenu: React.FC<QuickMenuProps> = ({ onNavigate }) => {
     const menuItems = [
         { icon: Bell, label: "공지사항", action: () => onNavigate('news', 'notice') },
         { icon: Download, label: "자료실", action: () => onNavigate('news', 'resources') },
-        { icon: ExternalLink, label: "창업보육센터", action: () => window.open('https://tukbic.tukorea.ac.kr/', '_blank') },
+        { icon: ExternalLink, label: "창업보육센터", action: () => window.open(EXTERNAL_LINKS.incubator, '_blank') },
         { icon: MessageCircle, label: "문의/신청", action: () => onNavigate('contact') },
     ];
 

@@ -2,11 +2,16 @@
 
 export type PageId = 'home' | 'about' | 'investment' | 'subsidiary' | 'tech-transfer' | 'portfolio' | 'news' | 'contact' | 'admin';
 export type SubPageId = string;
+/** 내부 페이지가 아닌 메인탭(외부 링크)용 id */
+export type ExternalMenuId = 'incubator';
+export type MenuItemId = PageId | ExternalMenuId;
 
 export interface MenuItem {
-  id: PageId;
+  id: MenuItemId;
   label: string;
   subItems?: { id: SubPageId; label: string }[];
+  /** 있으면 내부 이동 대신 해당 URL로 연동 */
+  href?: string;
 }
 
 export interface Company {

@@ -23,6 +23,12 @@ export const KEY_STATS = {
     cumulativeInvestment: '313억+',
 } as const;
 
+/** 헤더·퀵메뉴 등에서 쓰는 외부 사이트 */
+export const EXTERNAL_LINKS = {
+    incubator: 'https://tukbic.tukorea.ac.kr/',
+    tipsOperator: 'https://jointips.or.kr/network/operators/detail?companyId=efef6522-9a20-41b2-b9d5-b55775504940&returnUrl=%2Fnetwork%2Foperators%3Fregion%3D41%26sort%3Dupdated%26dir%3Ddesc',
+} as const;
+
 // Menu Structure
 export const MENU_STRUCTURE: MenuItem[] = [
     {
@@ -58,6 +64,11 @@ export const MENU_STRUCTURE: MenuItem[] = [
             { id: 'support', label: '자회사 성장지원' },
             { id: 'exit', label: '자회사 투자회수 현황' },
         ]
+    },
+    {
+        id: 'incubator',
+        label: '창업보육',
+        href: EXTERNAL_LINKS.incubator,
     },
     {
         id: 'tech-transfer',
