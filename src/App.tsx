@@ -418,11 +418,22 @@ const App: React.FC = () => {
 
             const filteredCompanies = [...baseCompanies];
 
+            const foundedTime = (date: string) => {
+                const t = new Date(date).getTime();
+                return Number.isNaN(t) ? null : t;
+            };
+
             filteredCompanies.sort((a, b) => {
                 if (portfolioSort === 'name_asc') return a.name.localeCompare(b.name, 'ko');
                 if (portfolioSort === 'name_desc') return b.name.localeCompare(a.name, 'ko');
-                if (portfolioSort === 'date_newest') return new Date(b.foundedDate).getTime() - new Date(a.foundedDate).getTime();
-                if (portfolioSort === 'date_oldest') return new Date(a.foundedDate).getTime() - new Date(b.foundedDate).getTime();
+                if (portfolioSort === 'date_newest' || portfolioSort === 'date_oldest') {
+                    const ta = foundedTime(a.foundedDate);
+                    const tb = foundedTime(b.foundedDate);
+                    if (ta === null && tb === null) return a.name.localeCompare(b.name, 'ko');
+                    if (ta === null) return 1;
+                    if (tb === null) return -1;
+                    return portfolioSort === 'date_newest' ? tb - ta : ta - tb;
+                }
                 return 0;
             });
 
@@ -464,12 +475,16 @@ const App: React.FC = () => {
                                         )}
                                     </div>
                                     <h4 className="font-bold text-ink text-lg mb-2 truncate group-hover:text-navy transition-colors tracking-tight">{company.name}</h4>
-                                    <p className="text-xs text-ink-soft truncate font-medium mb-4">{company.shortDesc || company.business}</p>
+                                    {(company.shortDesc || company.business) && (
+                                        <p className="text-xs text-ink-soft truncate font-medium mb-4">{company.shortDesc || company.business}</p>
+                                    )}
                                     <div className="flex gap-2 flex-wrap mb-2">
                                         {company.isTips && <Badge variant="gold">TIPS</Badge>}
                                         <Badge variant="navy">{company.category === 'subsidiary' ? '자회사' : '투자기업'}</Badge>
                                     </div>
-                                    <div className="text-xs text-ink-faint text-right">설립일: {formatDate(company.foundedDate)}</div>
+                                    {company.foundedDate && (
+                                        <div className="text-xs text-ink-faint text-right">설립일: {formatDate(company.foundedDate)}</div>
+                                    )}
                                 </div>
                             ))}
                         </div>

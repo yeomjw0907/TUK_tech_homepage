@@ -22,6 +22,7 @@ const CompanyDetail: React.FC<CompanyDetailProps> = ({ company, onBack }) => {
     const hasIntro = intro !== '' && intro !== '-';
     const homepage = (company.homepage || '').trim();
     const homepageHref = homepage && !/^https?:\/\//i.test(homepage) ? `https://${homepage}` : homepage;
+    const hasCompanyInfo = Boolean(company.ceo || company.foundedDate || company.business);
 
     return (
         <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-500">
@@ -74,33 +75,43 @@ const CompanyDetail: React.FC<CompanyDetailProps> = ({ company, onBack }) => {
                         )}
                     </div>
 
+                    {(hasCompanyInfo || hasIntro) && (
                     <div className="grid md:grid-cols-2 gap-12 mt-4 pt-10 border-t border-line">
+                        {hasCompanyInfo && (
                         <div>
                             <h3 className="text-lg font-bold text-ink mb-6 flex items-center"><User className="w-5 h-5 mr-2 text-navy" /> 기업 정보</h3>
                             <div className="space-y-4">
+                                {company.ceo && (
                                 <div className="flex border-b border-line pb-3">
                                     <span className="w-24 shrink-0 text-ink-soft font-medium text-sm">대표자</span>
-                                    <span className="text-ink font-bold">{company.ceo || '-'}</span>
+                                    <span className="text-ink font-bold">{company.ceo}</span>
                                 </div>
+                                )}
+                                {company.foundedDate && (
                                 <div className="flex border-b border-line pb-3">
                                     <span className="w-24 shrink-0 text-ink-soft font-medium text-sm">설립일</span>
-                                    <span className="text-ink font-bold">{formatDate(company.foundedDate) || '-'}</span>
+                                    <span className="text-ink font-bold">{formatDate(company.foundedDate)}</span>
                                 </div>
+                                )}
+                                {company.business && (
                                 <div className="flex border-b border-line pb-3">
                                     <span className="w-24 shrink-0 text-ink-soft font-medium text-sm">주요사업</span>
-                                    <span className="text-ink font-bold break-keep">{company.business || '-'}</span>
+                                    <span className="text-ink font-bold break-keep">{company.business}</span>
                                 </div>
+                                )}
                             </div>
                         </div>
+                        )}
+                        {hasIntro && (
                         <div>
                             <h3 className="text-lg font-bold text-ink mb-6 flex items-center"><FileText className="w-5 h-5 mr-2 text-navy" /> 기업 소개</h3>
                             <p className="text-ink-soft leading-relaxed whitespace-pre-wrap break-keep">
-                                {hasIntro
-                                    ? intro
-                                    : `${company.name}은(는) ${company.business || '해당'} 분야에서 혁신적인 솔루션을 제공하는 기업입니다.`}
+                                {intro}
                             </p>
                         </div>
+                        )}
                     </div>
+                    )}
                 </div>
             </div>
         </div>

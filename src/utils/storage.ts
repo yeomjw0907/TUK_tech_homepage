@@ -1,4 +1,4 @@
-const PREFIX = 'tuk_holdings_v1_';
+const PREFIX = 'tuk_holdings_v2_';
 
 export function loadState<T>(key: string, fallback: T): T {
     if (typeof window === 'undefined') return fallback;
