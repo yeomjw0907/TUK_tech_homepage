@@ -170,8 +170,18 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                     </div>
                     <div className="p-8 md:p-10">
                         <div className="flex flex-wrap gap-3">
-                            {TIPS_COOP.map((partner, idx) => (
-                                <Badge key={idx} variant="neutral">{partner}</Badge>
+                            {TIPS_COOP.map((partner) => (
+                                <a
+                                    key={partner.name}
+                                    href={partner.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`${partner.name} 홈페이지 새 창에서 열기`}
+                                >
+                                    <Badge variant="neutral" className="cursor-pointer hover:border-navy hover:text-navy">
+                                        {partner.name}
+                                    </Badge>
+                                </a>
                             ))}
                         </div>
                     </div>

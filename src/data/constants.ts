@@ -110,12 +110,22 @@ export const FUNDS_DATA = [
     { name: '케이도움주기 투자조합 3호', agency: '중소벤처기업부', size: '4억원', status: '운용중', period: '2025.09.~2033.09.' },
 ];
 
-// TIPS Cooperation Partners
+// TIPS Cooperation Partners — 클릭 시 각 기관 공식 홈페이지로 이동
 export const TIPS_COOP = [
-    "JC VALLEY", "경기테크노파크", "특허법인 이노", "수원대학교 창업지원단", "아이티엘",
-    "시흥산업진흥원", "경기과학기술대학교 산학협력단", "한국공학대학교",
-    "피앤피인베스트먼트", "코맥스벤처러스", "벤처박스", "하이브워크", "한양대학교에리카 산학협력단"
-];
+    { name: 'JC VALLEY', url: 'https://www.jcvalley.co/' },
+    { name: '경기테크노파크', url: 'https://www.gtp.or.kr/' },
+    { name: '특허법인 이노', url: 'http://innolaw.co.kr/' },
+    { name: '수원대학교 창업지원단', url: 'https://wow.suwon.ac.kr/' },
+    { name: '아이티엘', url: 'http://www.itlist.co.kr/' },
+    { name: '시흥산업진흥원', url: 'https://www.sida.kr/' },
+    { name: '경기과학기술대학교 산학협력단', url: 'https://www.gtec.ac.kr/iacf/index.do' },
+    { name: '한국공학대학교', url: 'https://www.tukorea.ac.kr/' },
+    { name: '피앤피인베스트먼트', url: 'http://pnpinvest.co.kr/' },
+    { name: '코맥스벤처러스', url: 'https://iventurus.com/' },
+    { name: '벤처박스', url: 'https://venturebox.co.kr/' },
+    { name: '하이브워크', url: 'https://hivework.co.kr/' },
+    { name: '한양대학교에리카 산학협력단', url: 'http://ericaresearch.hanyang.ac.kr/' },
+] as const;
 
 export const INQUIRY_TYPES = ['일반 문의', 'IR 접수', '자회사 접수', 'TIPS 문의', '기술이전 문의'] as const;
 

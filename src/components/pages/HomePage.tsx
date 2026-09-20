@@ -60,7 +60,7 @@ const HomePage: React.FC<HomePageProps> = ({ onNavigate, onCompanyClick, onPostC
                         대학의 기술이<br /><span className="text-cyan-text">세상의 가능성</span>이 됩니다.
                     </h1>
                     <p className="text-body-lg text-white/80 max-w-xl mb-6 animate-fade-in-up opacity-0" style={{ animationDelay: '0.3s' }}>
-                        한국공학대학교의 혁신적인 연구 성과를 발굴하고,<br className="hidden md:block" />
+                        공공기술의 혁신적인 연구 성과를 발굴하고,<br className="hidden md:block" />
                         성공적인 사업화를 통해 더 나은 미래를 만듭니다.
                     </p>
                     <div className="flex flex-wrap gap-3 animate-fade-in-up opacity-0" style={{ animationDelay: '0.45s' }}>
