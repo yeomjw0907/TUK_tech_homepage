@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://holdings.tukorea.ac.kr/sitemap.xml
