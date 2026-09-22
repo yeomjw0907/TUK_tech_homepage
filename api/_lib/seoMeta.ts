@@ -129,8 +129,11 @@ export function firstImageUrl(html: string | null | undefined): string | undefin
     return undefined;
 }
 
+/** 경로 세그먼트를 항상 퍼센트 인코딩 형태로 통일한다(서버는 디코딩된 경로, 브라우저는 인코딩된 경로를 넘기므로). */
 const normalizePath = (pathname: string): string => {
-    const parts = pathname.split('/').filter(Boolean);
+    const parts = pathname.split('/').filter(Boolean).map(part => {
+        try { return encodeURIComponent(decodeURIComponent(part)); } catch { return encodeURIComponent(part); }
+    });
     return parts.length ? `/${parts.join('/')}` : '/';
 };
 
