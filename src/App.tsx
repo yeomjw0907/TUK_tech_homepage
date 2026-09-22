@@ -11,6 +11,8 @@ import { PageId, Company, Post, Inquiry, Popup } from './types';
 // Data
 import { MENU_STRUCTURE } from './data/constants';
 import { notifyInquiryByEmail } from './lib/notifyInquiry';
+import { staticMetaFor, postMeta, companyMeta } from './seo/meta';
+import { useDocumentMeta } from './hooks/useDocumentMeta';
 
 // Utils
 import { formatDate } from './utils/format';
@@ -71,6 +73,13 @@ const App: React.FC = () => {
     }, []);
 
     useEffect(() => { reloadData(); }, [reloadData]);
+
+    // 페이지별 SEO 메타 태그 (제목·설명·Open Graph·canonical)
+    useDocumentMeta(
+        selectedPost ? postMeta(selectedPost, location.pathname)
+        : selectedCompany ? companyMeta(selectedCompany, location.pathname)
+        : staticMetaFor(location.pathname)
+    );
 
     // Filters
     const [portfolioSort, setPortfolioSort] = useState('name_asc');
