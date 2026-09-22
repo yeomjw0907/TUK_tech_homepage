@@ -2,7 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import {
     applyMetaToHtml, staticMetaFor, postMeta, companyMeta, parseDynamicRoute,
     type PageMeta, type MetaPost, type MetaCompany,
-} from './_lib/seoMeta';
+} from './_lib/seoMeta.js';
 
 /**
  * 검색엔진·메신저 크롤러(네이버 Yeti, 구글봇, 카카오톡 등)에게 페이지별 메타 태그가 채워진

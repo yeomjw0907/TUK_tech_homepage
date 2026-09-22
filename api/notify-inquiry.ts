@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { sendInquiryEmail, type InquiryNotifyPayload } from './_lib/sendInquiryEmail';
+import { sendInquiryEmail, type InquiryNotifyPayload } from './_lib/sendInquiryEmail.js';
 
 type NodeReq = IncomingMessage & { body?: InquiryNotifyPayload };
 
