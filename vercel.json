@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
       "source": "/:path((?!api/|assets/).*)",
       "has": [
         {
@@ -11,6 +15,9 @@
       ],
       "destination": "/api/seo?path=/:path"
     },
-    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!api/|assets/).*)",
+      "destination": "/index.html"
+    }
   ]
 }
