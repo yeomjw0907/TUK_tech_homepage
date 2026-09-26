@@ -124,7 +124,7 @@ const Header: React.FC<HeaderProps> = ({
                         <img
                             src={isTransparent ? '/logo_white.svg' : '/logo.svg'}
                             alt={COMPANY_NAME}
-                            className="h-10 md:h-11 w-auto object-contain"
+                            className="h-7 min-[400px]:h-8 sm:h-10 md:h-11 w-auto object-contain"
                         />
                     </div>
 
@@ -257,17 +257,17 @@ const Header: React.FC<HeaderProps> = ({
                         </a>
                     </div>
 
-                    <div className="flex lg:hidden items-center gap-2 ml-auto">
+                    <div className="flex lg:hidden items-center gap-1 sm:gap-2 ml-auto shrink-0">
                         {/* 글자 크기 조절 (모바일) */}
                         <div className="lg:hidden relative">
                             <button
                                 onClick={() => setIsFontSizeMenuOpen(!isFontSizeMenuOpen)}
-                                className={`p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
+                                className={`p-1.5 sm:p-2 transition-colors rounded-xl ${isTransparent ? 'text-white hover:bg-white/10' : 'text-ink-soft hover:text-navy hover:bg-surface-alt'}`}
                                 aria-label="글자 크기 조절"
                             >
                                 <div className="flex items-center gap-0.5">
                                     <ZoomOut className="w-4 h-4" />
-                                    <span className="text-xs font-bold">{fontSize}%</span>
+                                    <span className="hidden min-[400px]:inline text-xs font-bold">{fontSize}%</span>
                                     <ZoomIn className="w-4 h-4" />
                                 </div>
                             </button>
