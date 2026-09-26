@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronDown, ExternalLink, Search, ZoomIn, ZoomOut } from 'lucide-react';
 import { PageId, Post, Company, MenuItem, MenuItemId } from '../../types';
-import { MENU_STRUCTURE, COMPANY_NAME, EXTERNAL_LINKS } from '../../data/constants';
+import { MENU_STRUCTURE, COMPANY_NAME, EXTERNAL_LINKS, TIPS_LOGO } from '../../data/constants';
 import SearchModal from '../common/SearchModal';
 
 interface HeaderProps {
@@ -247,12 +247,13 @@ const Header: React.FC<HeaderProps> = ({
                             href={EXTERNAL_LINKS.tipsOperator}
                             target="_blank"
                             rel="noreferrer"
-                            className={`flex items-center px-3 py-1.5 rounded-full text-xs font-bold border transition-all tracking-wide group whitespace-nowrap ${isTransparent
-                                ? 'bg-white/10 border-white/30 text-white hover:bg-white hover:text-navy'
-                                : 'bg-surface-alt border-line-md text-ink-soft hover:border-line-strong hover:text-navy'
+                            className={`flex items-center gap-2 pl-2 pr-3 py-1 rounded-full text-xs font-bold border transition-all tracking-wide group whitespace-nowrap ${isTransparent
+                                ? 'bg-white border-white/60 text-navy shadow-sm hover:shadow-md'
+                                : 'bg-white border-line-md text-ink hover:border-line-strong hover:text-navy'
                                 }`}
                         >
-                            TIPS 운영사 <ExternalLink className="w-3 h-3 ml-1 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            <img src={TIPS_LOGO} alt="TIPS KOREA" className="h-6 w-auto" />
+                            TIPS 운영사 <ExternalLink className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </a>
                     </div>
 
@@ -381,7 +382,10 @@ const Header: React.FC<HeaderProps> = ({
                             className="flex items-center justify-between font-bold text-base py-3 pl-3 text-ink hover:text-navy border-l-2 border-transparent hover:border-navy hover:pl-5 transition-all"
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
-                            <span>TIPS 운영사</span>
+                            <span className="flex items-center gap-2">
+                                <img src={TIPS_LOGO} alt="TIPS KOREA" className="h-7 w-auto" />
+                                TIPS 운영사
+                            </span>
                             <ExternalLink className="w-4 h-4 text-ink-faint" />
                         </a>
                     </div>

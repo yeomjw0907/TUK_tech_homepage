@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, DollarSign, BarChart3, Building, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Phone } from 'lucide-react';
+import { CheckCircle, Building2, TrendingUp, Lightbulb, FileText, Briefcase, Target, Award, GraduationCap, ClipboardCheck, Link as LinkIcon, FileCheck, Rocket, Sparkles, DollarSign, BarChart3, Building, Microscope, Network, Cpu, Layers, Factory, ChevronRight, MessageSquare, CheckSquare, LineChart, Phone, ExternalLink } from 'lucide-react';
 import { Card, SectionTitle, Badge } from '../common';
 import { TIPS_COOP, PROGRAM_TURN_UP, COMPANY_NAME_LEGAL, KEY_STATS } from '../../data/constants';
 import { Company, PageId } from '../../types';
@@ -160,16 +160,16 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                     </div>
                 </div>
 
-                {/* 운영사 컨소시엄 */}
+                {/* TIPS 컨소시엄 기관 */}
                 <div className="bg-white rounded-2xl border border-line shadow-card overflow-hidden">
                     <div className="bg-navy p-8">
                         <h3 className="text-h3 text-white flex items-center gap-3">
                             <Network className="w-6 h-6 md:w-8 md:h-8 text-white/80" />
-                            운영사 컨소시엄
+                            TIPS 컨소시엄 기관
                         </h3>
                     </div>
-                    <div className="p-8 md:p-10">
-                        <div className="flex flex-wrap gap-3">
+                    <div className="p-6 md:p-8">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {TIPS_COOP.map((partner) => (
                                 <a
                                     key={partner.name}
@@ -177,10 +177,23 @@ const InvestmentContent: React.FC<InvestmentContentProps> = ({ subPage, onNaviga
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={`${partner.name} 홈페이지 새 창에서 열기`}
+                                    className="group flex items-center gap-4 p-4 rounded-2xl border border-line bg-white hover:border-navy hover:shadow-card-hover transition-all duration-300"
                                 >
-                                    <Badge variant="neutral" className="cursor-pointer hover:border-navy hover:text-navy">
-                                        {partner.name}
-                                    </Badge>
+                                    <div className="w-24 h-14 shrink-0 rounded-xl border border-line bg-white flex items-center justify-center p-2 overflow-hidden">
+                                        <img
+                                            src={partner.logo}
+                                            alt={`${partner.name} 로고`}
+                                            loading="lazy"
+                                            className="max-w-full max-h-full object-contain"
+                                        />
+                                    </div>
+                                    <div className="flex-grow min-w-0">
+                                        <div className="flex items-start gap-1.5 text-ink font-bold text-sm md:text-base leading-snug break-keep group-hover:text-navy transition-colors">
+                                            <span>{partner.name}</span>
+                                            <ExternalLink className="w-3.5 h-3.5 shrink-0 mt-1 text-ink-faint group-hover:text-navy group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                                        </div>
+                                        <p className="text-xs text-ink-faint mt-0.5 truncate">{partner.url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/.*$/, '')}</p>
+                                    </div>
                                 </a>
                             ))}
                         </div>

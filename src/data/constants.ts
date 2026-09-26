@@ -111,20 +111,24 @@ export const FUNDS_DATA = [
 ];
 
 // TIPS Cooperation Partners — 클릭 시 각 기관 공식 홈페이지로 이동
+/** TIPS KOREA 공식 로고 (jointips.or.kr) */
+export const TIPS_LOGO = '/partner-logos/tips-korea.png';
+
+/** TIPS 컨소시엄 기관 — 로고는 각 기관 홈페이지에서 수집 (public/partner-logos) */
 export const TIPS_COOP = [
-    { name: 'JC VALLEY', url: 'https://www.jcvalley.co/' },
-    { name: '경기테크노파크', url: 'https://www.gtp.or.kr/' },
-    { name: '특허법인 이노', url: 'http://innolaw.co.kr/' },
-    { name: '수원대학교 창업지원단', url: 'https://wow.suwon.ac.kr/' },
-    { name: '아이티엘', url: 'http://www.itlist.co.kr/' },
-    { name: '시흥산업진흥원', url: 'https://www.sida.kr/' },
-    { name: '경기과학기술대학교 산학협력단', url: 'https://www.gtec.ac.kr/iacf/index.do' },
-    { name: '한국공학대학교', url: 'https://www.tukorea.ac.kr/' },
-    { name: '피앤피인베스트먼트', url: 'http://pnpinvest.co.kr/' },
-    { name: '코맥스벤처러스', url: 'https://iventurus.com/' },
-    { name: '벤처박스', url: 'https://venturebox.co.kr/' },
-    { name: '하이브워크', url: 'https://hivework.co.kr/' },
-    { name: '한양대학교에리카 산학협력단', url: 'http://ericaresearch.hanyang.ac.kr/' },
+    { name: 'JC VALLEY', logo: '/partner-logos/jcvalley.png', url: 'https://www.jcvalley.co/' },
+    { name: '경기테크노파크', logo: '/partner-logos/gtp.png', url: 'https://www.gtp.or.kr/' },
+    { name: '특허법인 이노', logo: '/partner-logos/innolaw.png', url: 'http://innolaw.co.kr/' },
+    { name: '수원대학교 창업지원단', logo: '/partner-logos/suwon.png', url: 'https://wow.suwon.ac.kr/' },
+    { name: '아이티엘', logo: '/partner-logos/itl.png', url: 'http://www.itlist.co.kr/' },
+    { name: '시흥산업진흥원', logo: '/partner-logos/sida.png', url: 'https://www.sida.kr/' },
+    { name: '경기과학기술대학교 산학협력단', logo: '/partner-logos/gtec.png', url: 'https://www.gtec.ac.kr/iacf/index.do' },
+    { name: '한국공학대학교', logo: '/partner-logos/tukorea.svg', url: 'https://www.tukorea.ac.kr/' },
+    { name: '피앤피인베스트먼트', logo: '/partner-logos/pnp.png', url: 'http://pnpinvest.co.kr/' },
+    { name: '코맥스벤처러스', logo: '/partner-logos/venturus.png', url: 'https://iventurus.com/' },
+    { name: '벤처박스', logo: '/partner-logos/venturebox.png', url: 'https://venturebox.co.kr/' },
+    { name: '하이브워크', logo: '/partner-logos/hivework.png', url: 'https://hivework.co.kr/' },
+    { name: '한양대학교에리카 산학협력단', logo: '/partner-logos/erica.png', url: 'http://ericaresearch.hanyang.ac.kr/' },
 ] as const;
 
 export const INQUIRY_TYPES = ['일반 문의', 'IR 접수', '자회사 접수', 'TIPS 문의', '기술이전 문의'] as const;
